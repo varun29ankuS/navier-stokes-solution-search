@@ -875,6 +875,37 @@ member of both in any family tried. The searcher's antiparallel-sheet field is t
 topological candidate (helicity, linking, crossing number all vanish on it while it is pressed without bound), and
 the pressure's cubic flux is what breaks every energy-like candidate. If a 3-D member exists it is neither.
 
+## The quantum seam: the same collapse in a fluid where the cut is guaranteed to win
+
+Every physical fluid stops being the idealised equation before a singularity could form - mean free path, thermal
+noise, and for a superfluid the quantum pressure. The quantum case is the clean one, because it is *solved*. The
+Gross-Pitaevskii equation i psi_t = -1/2 lap psi + (|psi|^2 - 1) psi becomes, under psi = sqrt(rho) e^{iS} (Madelung
+1927), Euler for (rho, v = grad S) plus one extra term, the quantum pressure (1/2) grad(lap sqrt(rho)/sqrt(rho)): a
+stiffness that forbids density collapse below the healing length xi. The equation is globally regular (defocusing NLS,
+3-D cubic is H^1-subcritical), circulation is quantised (2 pi), a vortex line is a smooth zero of psi, and
+reconnection - our seam - is two zero-lines crossing, smoothly, with a burst of sound (Koplik-Levine 1993; Kerr 2011;
+Villois-Proment-Krstulovic 2017: the gap closes as (t_r - t)^{1/2}).
+
+`gpe_seam.py` is a split-step spectral GP solver (exact in each half-step, energy to 1e-6) with the Nore-Abid-Brachet
+energy decomposition (incompressible kinetic / sound / quantum / interaction) and vortex lines located as phase
+windings, sub-cell. Registered before the CI run (CLAIMS C18): 2-D, two counter-propagating dipoles at separation
+d = 6 travel within 20% of the point-vortex speed 1/d (local check: +6%, energy drift 1e-6); 3-D, two antiparallel
+pairs bowed toward each other reconnect at a finite t_r, the gap law before the cut has exponent 0.5 +/- 0.15, the
+sound energy rises across the cut while the incompressible energy falls, and the lines never re-approach. A local
+48^3 pilot shows the approach phase (gap 3.56 -> 1.01 over 16 time units, accelerating); `results/gpe_seam_*.txt`
+will hold the 64^3 and 96^3 runs through the cut.
+
+**What this says we are missing - exactly.** Not a term that produces energy (the ledger above is exact) but a
+*regulator whose length does not move with the flow.* The quantum pressure acts at fourth order (lap^2 on the
+density) with a fixed coefficient; viscosity acts at second order and its scale sqrt(nu/s) is set by the strain
+the flow itself generates, so the roll-up can lower its own floor. The gap is quantifiable: Navier-Stokes with
+(-lap)^alpha in place of -lap is *proven* regular for alpha >= 5/4 (Lions 1969; Tao 2009 shaves a logarithm off
+5/4), because at 5/4 the energy budget becomes scale-invariant and the free collapse of the section above stops
+being free - it costs a fixed, finite amount, and the budget forbids it. The quantum fluid regularises at alpha = 2,
+comfortably past the line; real viscosity sits at alpha = 1, a quarter of a Laplacian short. Everything this
+repository has measured on the sheet - phase 1 external squeeze stopped at sqrt(nu/s), phase 2 self-generated
+roll-up that the budget cannot price - is what that quarter-power looks like from inside one flow.
+
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
 Theorem 4 (Tao 2016) says that the exact structure this repository verifies - energy conservation, the scaling, the

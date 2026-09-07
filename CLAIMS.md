@@ -118,6 +118,15 @@ the pressure Hessian on the high-vorticity set capped at T, the maximal amplific
 negative (aids the stretching) in all eleven runs. Refuted by: a fast amplifier (> 3x) found with share < 0.35, or
 one whose global Hessian opposes the stretching. Test: `OBJ=quiet SMAX=0.35 N=48 python adversarial_ic.py`.
 
+**C18 (registered 2026-09-07, before the CI run). The Gross-Pitaevskii seam reconnects, with the known gap law, and
+releases sound.** 2-D: two counter-propagating dipoles at d = 6 in a 64^2 box travel within 20% of the point-vortex
+speed 1/d with total energy conserved to 1e-5 (local pilot: +6%, 1e-6). 3-D: two antiparallel pairs of lines bowed to
+a closest gap of 4 xi reconnect at a finite t_r; the gap closes as (t_r - t)^p with p = 0.5 +/- 0.15; the compressible
+(sound) energy rises across t_r while the incompressible energy falls; the lines do not re-approach afterwards.
+Refuted by: no reconnection by T = 60, or p outside [0.25, 0.8], or sound energy not rising across the cut. Test:
+`MODE=3d N=64 L=32 D=6 A=1 T=60 python gpe_seam.py`. This is a control for the viscous seam race, not a statement
+about Navier-Stokes.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
