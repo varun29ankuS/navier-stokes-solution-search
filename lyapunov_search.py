@@ -38,6 +38,8 @@ GLOBAL = int(os.environ.get("GLOBAL", 0))        # GLOBAL=1: broadcast global sc
 BETA = int(os.environ.get("BETA", 0))            # BETA=1: signed two-point direction features beta = 1 - xi(x).xi(x+h) in [0,2] (antiparallel = 2), h = 1 and 2 cells
 V2 = int(os.environ.get("V2", 1))                # v2 learner (linear global head + margin loss); requires GLOBAL=1 for the linear part
 MARGIN = float(os.environ.get("MARGIN", 0.02))
+LOSS = os.environ.get("LOSS", "relu")           # relu: mean relu(v+m)^2 (one-sided, no push once satisfied) | soft: log-sum-exp over the batch of softplus(v+m)^2 (worst-case, keeps pushing into the feasible region)
+TAU = float(os.environ.get("TAU", 0.05))
 HEADS = int(os.environ.get("HEADS", 1))
 ATTACK = os.environ.get("ATTACK", "")            # ATTACK=path.pt: load a trained candidate, skip training, attack it with RESTARTS x ADV_ITERS adversaries
 RESTARTS = int(os.environ.get("RESTARTS", 4))          # HEADS > 1: a society of candidates, M = Z exp(min_i Phi_i) (multiple Lyapunov functions, Branicky 1998):
@@ -299,11 +301,16 @@ for rnd in range(ROUNDS):
     print("\n== round %d ==" % rnd, flush=True)
     for it in range(TRAIN):
         batch = [data[i] for i in torch.randperm(len(data))[:6].tolist()]
-        loss = 0.0
+        vs = []
         for name, t, S in batch:
             v, M, Phi, Z = violation(S)
-            loss = loss + torch.relu(v + (MARGIN if V2 else 0.0)) ** 2
-        loss = loss / len(batch)
+            vs.append(v + (MARGIN if V2 else 0.0))
+        vs = torch.stack(vs)
+        if LOSS == "soft":
+            per = torch.nn.functional.softplus(vs / TAU) * TAU              # smooth one-sided: ~relu but never zero-gradient
+            loss = TAU * torch.logsumexp(per**2 / TAU, 0)                    # soft maximum over the batch: train what the attack tests
+        else:
+            loss = (torch.relu(vs) ** 2).mean()
         opt.zero_grad()
         loss.backward()
         opt.step()
