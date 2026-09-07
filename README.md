@@ -493,7 +493,16 @@ Phi = log(Z/P) gives M = Z exactly). It failed the same way: attack violations +
 leaning on the right feature and never reaching it. The 3-D failures were evidence about the *learner*, not about
 Navier-Stokes. What survives: the searcher is a good refuter (every candidate it broke was broken), and no candidate
 has passed - but "no candidate exists in this class" was never established. The learner needs a positive control it
-can pass before its 3-D silence means anything. This is feedback,
+can pass before its 3-D silence means anything.
+
+**Control, second attempt (v2 learner: the global scalars enter linearly so the answer is exactly representable;
+least-squares with a margin).** Viscous 2-D: passes the attack (no violation found, best -0.004) with learned
+coefficients a = [1.001, -3.4] on [log(Z/P), log(E/Z)] - i.e. it recovered the enstrophy coefficient to three digits
+and found M ~ Z^4.4 / E^3.4, which is a genuine monotone quantity under 2-D Navier-Stokes (from Z^2 <= E P) that the
+author had not thought of; the registered wording "led by log(Z/P)" was too narrow and it prints "between", but in
+substance it passes. Inviscid 2-D: fails (a = 1.114 where only a = 1 exactly is monotone; attack +0.34): the learner
+finds monotone quantities where dissipation gives slack and cannot land on an exact conservation law. The 3-D problem
+is the viscous one, so the 3-D run with this learner (`lyapunov3d_v2`) is the first whose verdict counts. This is feedback,
 not imitation, applied to the proof itself: the machine cannot produce a theorem, but it produces the counterexamples
 a human would need to see before trying to.
 
