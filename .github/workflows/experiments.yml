@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       which:
-        description: "which experiments to run: all | burgers | taylor_green | budgets | kolmogorov | ns_d | exact | spectra | midpoint | criteria3d | adversarial | overnight | leashed | leashed64 | lyapunov | lyapunov_attack | lyapunov_long | lyapunov_global | lyapunov_beta | sheet_conjecture | strip_hi | jacobi_reverse | lyapunov_attack_beta | memory_paths | lyapunov_attack_r20 | blowup_type | frequency_matching | memory_paths3d | interference | minimal_datum | quiet_pressure | quiet_pressure2 | help_fades | lyapunov2d | jacobi | helicity_ladder | strip | kp_ladder | mechanism3d | budgets3d | highres | kolmogorov_v2 | kolmogorov_v3"
+        description: "which experiments to run: all | burgers | taylor_green | budgets | kolmogorov | ns_d | exact | spectra | midpoint | criteria3d | adversarial | overnight | leashed | leashed64 | lyapunov | lyapunov_attack | lyapunov_long | lyapunov_global | lyapunov_beta | sheet_conjecture | strip_hi | jacobi_reverse | lyapunov_attack_beta | memory_paths | lyapunov_attack_r20 | blowup_type | frequency_matching | memory_paths3d | interference | minimal_datum | quiet_pressure | quiet_pressure2 | help_fades | lyapunov2d | lyapunov3d_v2 | jacobi | helicity_ladder | strip | kp_ladder | mechanism3d | budgets3d | highres | kolmogorov_v2 | kolmogorov_v3"
         default: "all"
       n3:
         description: "3-D grid for the spectra job"
@@ -190,6 +190,11 @@ jobs:
         run: |
           LR=2e-2 N=64 NU=1e-3 T=1.0 ROUNDS=6 TRAIN=400 ADV_ITERS=20 python -u lyapunov2d.py 2>/dev/null | tee results/lyapunov2d_64_v2.txt
           LR=2e-2 N=64 NU=0 T=1.0 ROUNDS=6 TRAIN=400 ADV_ITERS=20 python -u lyapunov2d.py 2>/dev/null | tee results/lyapunov2d_64_euler_v2.txt
+      - name: lyapunov3d_v2
+        if: ${{ github.event.inputs.which == 'lyapunov3d_v2' }}
+        run: |
+          TAG=v2_g1 GLOBAL=1 V2=1 LR=1e-2 N=32 NU=1e-3 T=0.6 ROUNDS=8 TRAIN=300 ADV_ITERS=15 python -u lyapunov_search.py 2>/dev/null | tee results/lyapunov3d_v2_g1.txt
+          ATTACK=results/lyapunov_g_v2_g1.pt GLOBAL=1 V2=1 N=32 NU=1e-3 T=0.6 ADV_ITERS=60 RESTARTS=5 TRAIN=0 python -u lyapunov_search.py 2>/dev/null | tee results/lyapunov3d_v2_g1_attack.txt
       - name: kp_ladder
         if: ${{ github.event.inputs.which == 'kp_ladder' }}
         run: |

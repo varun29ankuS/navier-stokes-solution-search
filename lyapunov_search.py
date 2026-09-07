@@ -36,6 +36,8 @@ TOL = float(os.environ.get("TOL", 1e-3))
 PHESS = int(os.environ.get("PHESS", 0))          # PHESS=1: add three pressure-Hessian features (nonlocal: -lap p = du_i/dx_j du_j/dx_i solved spectrally)
 GLOBAL = int(os.environ.get("GLOBAL", 0))        # GLOBAL=1: broadcast global scalars (the state of the cascade) to every point: global decides the law, local applies it
 BETA = int(os.environ.get("BETA", 0))            # BETA=1: signed two-point direction features beta = 1 - xi(x).xi(x+h) in [0,2] (antiparallel = 2), h = 1 and 2 cells
+V2 = int(os.environ.get("V2", 1))                # v2 learner (linear global head + margin loss); requires GLOBAL=1 for the linear part
+MARGIN = float(os.environ.get("MARGIN", 0.02))
 HEADS = int(os.environ.get("HEADS", 1))
 ATTACK = os.environ.get("ATTACK", "")            # ATTACK=path.pt: load a trained candidate, skip training, attack it with RESTARTS x ADV_ITERS adversaries
 RESTARTS = int(os.environ.get("RESTARTS", 4))          # HEADS > 1: a society of candidates, M = Z exp(min_i Phi_i) (multiple Lyapunov functions, Branicky 1998):
@@ -113,7 +115,7 @@ def energy(U):
 
 
 FEATURES = ["stretch xi.S.xi / sqrt Z", "|S|^2 / Z", "det S / Z^1.5", "xi.S^2.xi / |S|^2", "|grad xi| / k_rms",
-            "|w|^2 / 2Z", "|u|^2 / 2E", "(xi.S.xi)^2 / |S|^2"] + (["xi.P.xi / Z", "|P|^2 / Z^2", "tr(P S) / (|P| |S|)"] if PHESS else []) +            (["G: log Z", "G: helicity / 2 sqrt(EZ)", "G: log k_rms", "G: palinstrophy / Z^2", "G: max|w| / sqrt Z", "G: strip delta"] if GLOBAL else []) +            (["beta(h=1) = 1 - xi.xi'", "beta(h=2)", "max_h beta(h=1) over 6 nbrs", "|Dxi/Dt|^2 / |S|^2 (direction erasure rate)"] if BETA else [])
+            "|w|^2 / 2Z", "|u|^2 / 2E", "(xi.S.xi)^2 / |S|^2"] + (["xi.P.xi / Z", "|P|^2 / Z^2", "tr(P S) / (|P| |S|)"] if PHESS else []) +            (["beta(h=1) = 1 - xi.xi'", "beta(h=2)", "max_h beta(h=1) over 6 nbrs", "|Dxi/Dt|^2 / |S|^2 (direction erasure rate)"] if BETA else []) +            (["G: log Z", "G: helicity / 2 sqrt(EZ)", "G: log k_rms", "G: log(palinstrophy / Z^2)", "G: max|w| / sqrt Z", "G: strip delta"] if GLOBAL else [])
 NF = len(FEATURES)
 
 
@@ -177,18 +179,27 @@ def features(U):
         shell = torch.stack([spec_e[(KMAG_T >= n - 0.5) & (KMAG_T < n + 0.5)].sum() for n in ks])
         y = torch.log(shell + 1e-30)
         slope = ((ks - ks.mean()) * (y - y.mean())).sum() / ((ks - ks.mean()) ** 2).sum()
-        glob = [torch.log(Z), H / (2 * torch.sqrt(E * Z) + 1e-30), 0.5 * torch.log(Z / (E + 1e-30)), pal / Z**2, wmag.max() / sZ, -slope / 2]
+        glob = [torch.log(Z), H / (2 * torch.sqrt(E * Z) + 1e-30), 0.5 * torch.log(Z / (E + 1e-30)), torch.log(pal / Z**2 + 1e-30), wmag.max() / sZ, -slope / 2]
         feats += [gq.expand_as(wmag) for gq in glob]
     f = torch.stack(feats, 0)
     return f, wmag**2 / (wmag**2).sum(), Z
 
 
 class G(torch.nn.Module):
+    """v2 (after the 2-D positive control): Phi = a . globals + B tanh(net(local)). The global scalars enter LINEARLY so a
+    monotone combination like log(Z/P) is exactly representable; the local part is bounded. V2=0 restores the old head."""
     def __init__(self, nf=8, h=32, heads=1):
         super().__init__()
-        self.net = torch.nn.Sequential(torch.nn.Linear(nf, h), torch.nn.Tanh(), torch.nn.Linear(h, h), torch.nn.Tanh(), torch.nn.Linear(h, heads))
+        self.nloc = nf - (6 if (GLOBAL and V2) else 0)
+        self.net = torch.nn.Sequential(torch.nn.Linear(self.nloc, h), torch.nn.Tanh(), torch.nn.Linear(h, h), torch.nn.Tanh(), torch.nn.Linear(h, heads))
+        self.a = torch.nn.Parameter(torch.zeros(6, heads))
+        self.c = torch.nn.Parameter(torch.zeros(heads))
 
     def forward(self, f):
+        if GLOBAL and V2:
+            loc = f[:self.nloc].permute(1, 2, 3, 0); glob = f[self.nloc:]                     # globals are the last 6 features
+            lin = self.c + sum(self.a[i] * glob[i][..., None] for i in range(6))
+            return lin + B * torch.tanh(self.net(loc))
         return B * torch.sigmoid(self.net(f.permute(1, 2, 3, 0)))        # [N,N,N,heads]
 
 
@@ -196,7 +207,7 @@ g = G(nf=NF, heads=HEADS)
 if ATTACK:
     g.load_state_dict(torch.load(ATTACK))
     print("ATTACK mode: loaded %s; %d restarts x %d adversary iterations, no training" % (ATTACK, RESTARTS, ADV_ITERS), flush=True)
-opt = torch.optim.Adam(g.parameters(), lr=3e-3)
+opt = torch.optim.Adam(g.parameters(), lr=float(os.environ.get("LR", 3e-3)))
 
 
 def M_of(U):
@@ -291,7 +302,7 @@ for rnd in range(ROUNDS):
         loss = 0.0
         for name, t, S in batch:
             v, M, Phi, Z = violation(S)
-            loss = loss + torch.relu(v) ** 2
+            loss = loss + torch.relu(v + (MARGIN if V2 else 0.0)) ** 2
         loss = loss / len(batch)
         opt.zero_grad()
         loss.backward()
@@ -350,6 +361,8 @@ for name, t, S in trajectories(heldout):
     sens += (gr * f.detach()).abs().sum(dim=(1, 2, 3))
     cnt += 1
 sens = sens / cnt
+if GLOBAL and V2:
+    print("learned linear coefficients on the globals [log Z, hel, log k_rms, log(P/Z^2), max|w|/sqrtZ, delta]: %s" % g.a.detach().numpy().round(3).tolist())
 print("feature sensitivity of the learned Phi (|dPhi/df . f| summed over the field, held-out states):")
 for name, s in sorted(zip(FEATURES, sens.tolist()), key=lambda z: -z[1]):
     print("   %-28s %.3e" % (name, s))
