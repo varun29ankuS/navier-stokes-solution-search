@@ -1,0 +1,20 @@
+N=128^3, nu=0, all flows at Z0=0.375; high-vorticity set |w| > 0.5 max
+flow                             t    Z(t)/Z0      share      back      corr   beta(h=2)   anti frac     delta
+2dx = 0.0982; back = <xi.Pdev.xi>/<xi.S2.xi> (negative: the global Hessian helps the stretching)
+found:leashed64_dmin030       0.00      1.000      0.521    -0.500    -0.237       0.012       0.000    -0.010  <-- past the clock
+found:leashed64_dmin030       0.10      1.052      0.498    -0.471    -0.405       0.012       0.000     0.395
+found:leashed64_dmin030       0.20      1.142      0.488    -0.548    -0.465       0.012       0.000     0.367
+found:leashed64_dmin030       0.30      1.268      0.463    -0.851    -0.373       0.013       0.000     0.268
+found:leashed64_dmin030       0.40      1.433      0.449    -1.467    -0.205       0.014       0.000     0.207
+found:leashed64_dmin030       0.50      1.633      0.452    -2.448    -0.012       0.016       0.000     0.167
+found:leashed64_dmin030       0.60      1.870      0.465    -3.738    +0.148       0.022       0.000     0.140
+found:leashed64_dmin030       0.70      2.140      0.480    -5.223    +0.282       0.035       0.014     0.119
+found:leashed64_dmin030       0.80      2.446      0.495    -6.660    +0.405       0.061       0.058     0.105
+found:leashed64_dmin030       0.90      2.789      0.506    -7.176    +0.501       0.115       0.155     0.091  <-- past the clock
+found:leashed64_dmin030       1.00      3.175      0.521    -5.946    +0.500       0.182       0.321     0.071  <-- past the clock
+found:leashed64_dmin030       1.10      3.609      0.532    -4.647    +0.433       0.243       0.452     0.065  <-- past the clock
+found:leashed64_dmin030       1.20      4.103      0.538    -4.257    +0.281       0.291       0.538     0.059  <-- past the clock
+found:leashed64_dmin030       1.30      4.676      0.541    -4.412    +0.120       0.347       0.653     0.061  <-- past the clock
+found:leashed64_dmin030       1.40      5.357      0.482    -5.300    +0.081       0.407       0.725     0.068  <-- past the clock
+found:leashed64_dmin030       1.50      6.191      0.429    -5.792    +0.092       0.489       0.763     0.057  <-- past the clock
+found:leashed64_dmin030       1.60      7.194      0.416    -4.766    +0.111       0.557       0.718     0.049  <-- past the clock
