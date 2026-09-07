@@ -1,0 +1,40 @@
+2-D Lyapunov search (positive control): N=64^2 nu=0.001 T=1.0 rounds=6 train=400 adversary iters=20; M = P exp(Phi), P = palinstrophy (grows), global scalars available
+== round 0
+  training states      worst relative dM/dt = -4.0000e-03  (taylor-green at t=0.00)
+  held-out flows       worst relative dM/dt = +3.6076e-03  (random-9 at t=0.00)
+  adversary best violation +1.2694e+00   (43s)
+== round 1
+  training states      worst relative dM/dt = -4.0000e-03  (taylor-green at t=0.12)
+  held-out flows       worst relative dM/dt = -1.9371e-02  (random-11 at t=0.00)
+  adversary best violation +1.4941e-01   (86s)
+== round 2
+  training states      worst relative dM/dt = -4.0000e-03  (taylor-green at t=0.12)
+  held-out flows       worst relative dM/dt = -2.0363e-02  (random-9 at t=0.75)
+  adversary best violation +3.9205e-02   (129s)
+== round 3
+  training states      worst relative dM/dt = -4.0000e-03  (taylor-green at t=0.38)
+  held-out flows       worst relative dM/dt = -2.4638e-02  (random-9 at t=0.38)
+  adversary best violation +6.4869e-03   (173s)
+== round 4
+  training states      worst relative dM/dt = -4.0000e-03  (taylor-green at t=0.38)
+  held-out flows       worst relative dM/dt = -2.6858e-02  (random-9 at t=0.00)
+  adversary best violation -4.1957e-03   (217s)
+== round 5
+  training states      worst relative dM/dt = -4.0000e-03  (taylor-green at t=0.12)
+  held-out flows       worst relative dM/dt = -2.8453e-02  (random-9 at t=0.00)
+  adversary best violation -9.4199e-03   (260s)
+
+== ATTACK: 5 restarts x 60 iterations against the final candidate
+learned global coefficients a = [ 1.001 -3.435] (the known answer is a = [1, 0]: Phi = log(Z/P) gives M = Z)
+feature sensitivity of the learned Phi (held-out):
+   G: log(E/Z)                          5.280e+00
+   G: log(Z/P)                          2.069e+00
+   (w^2 - 2|S|^2)/Z                     1.226e-03
+   w / sqrt(2Z) (signed)                8.545e-04
+   |S|^2 / Z                            4.472e-04
+   |w|^2 / 2Z                           2.584e-04
+   |grad w|^2 / 2P                      2.110e-04
+   |u|^2 / 2E                           2.080e-04
+   |grad w|.u / (P E)^1/2               1.477e-04
+
+REGISTERED  attack worst violation -3.928e-03 (tol 1e-03); leading feature: G: log(E/Z) -> between: survives the attack but is not enstrophy-led
