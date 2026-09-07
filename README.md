@@ -739,6 +739,18 @@ sheet's orbits outward, the sign result of the quiet-pressure searches seen from
 strategy, in Mandelbrot's language: go to the boundary of the set and recruit c. A snapshot diagnostic (H frozen,
 horizon a choice), not a theorem.
 
+**The sheet under the map, measured** (`nilpotent_sheet.py`, 48^3, `results/nilpotent_sheet_48.txt`). Registered:
+on a sheet the gradient is nilpotent (a pure shear has A^2 = 0), so the local term of dA/dt = -A^2 - H is silent.
+Holds: on the high-vorticity set the nilpotency ratio |A^2|/|A|^2 falls from 0.44 to 0.17 as the searcher's sheets
+form, against 0.46-0.47 for Kida-Pelz and Taylor-Green and exactly 0 for the pure-shear control. Fails as first
+stated: the pressure does not then dominate in norm - |H_dev|/|A^2| is 0.67 on the sheet, lower than the classical
+flows' 0.75-0.89 - because a flat sheet has no pressure either: A^2 = 0 and H_dev = 0, a plane shear is steady.
+Everything that happens to a real sheet is external and weak: the large-scale strain thinning it (the residual 0.17)
+and curvature-induced pressure rolling it, against viscosity thickening it - which is why it thins slowly and
+exponentially rather than collapsing. Caveat added to the "help" sign above: on rotation cores xi.H_dev.xi < 0 is
+forced by the trace subtraction (lap p = 2Q > 0 at a pressure minimum), so the negative sign on the classical flows
+is partly local; on the sheet, where Q ~ 0, the sign is genuinely nonlocal and small (-0.04).
+
 ## The constant that is really a function
 
 Navier-Stokes assumes friction -nu Laplacian u with nu a constant. Make it a function and regularity is a theorem:

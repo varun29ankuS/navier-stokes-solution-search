@@ -1,0 +1,14 @@
+N=48^3, nu=0, Z0=0.375, high set |w| > 0.5 max.  nil = <|A^2|>/<|A|^2>, dom = <|H_dev|>/<|A^2|>
+flow                               t      Z/Z0       nil       dom    <Q>/|A|2   frac xiHxi<0   <xiHxi>/|A|2
+sheet (searcher's field)        0.00     1.000     0.440      0.40      +0.117          0.892   -0.068   (0s)
+sheet (searcher's field)        0.50     1.632     0.198      0.50      +0.072          0.838   -0.040   (18s)
+sheet (searcher's field)        1.00     3.040     0.174      0.67      +0.081          0.831   -0.043   (34s)
+kida-pelz                       0.00     1.000     0.615      0.60      +0.409          0.981   -0.197   (0s)
+kida-pelz                       0.50     1.025     0.569      0.64      +0.363          0.995   -0.194   (16s)
+kida-pelz                       1.00     1.104     0.461      0.75      +0.198          0.968   -0.151   (26s)
+taylor-green                    0.00     1.000     0.613      0.65      +0.388          1.000   -0.209   (0s)
+taylor-green                    0.50     1.027     0.539      0.78      +0.307          1.000   -0.222   (9s)
+taylor-green                    1.00     1.112     0.467      0.89      +0.175          0.988   -0.186   (19s)
+C:\Users\Varun Sharma\OneDrive\Desktop\zero-entropy-flow\nilpotent_sheet.py:54: RuntimeWarning: invalid value encountered in scalar divide
+  return Z, nA2.mean() / (nA**2).mean(), nH.mean() / nA2.mean(), (Q / nA**2).mean(), (xiHxi < 0).mean(), xiHxi.mean() / (nA**2).mean()
+pure shear (control: A^2 = 0)   0.00     1.000     0.000       nan      +0.000          0.000   +0.000   (0s)
