@@ -40,6 +40,7 @@ V2 = int(os.environ.get("V2", 1))                # v2 learner (linear global hea
 MARGIN = float(os.environ.get("MARGIN", 0.02))
 LOSS = os.environ.get("LOSS", "relu")           # relu: mean relu(v+m)^2 (one-sided, no push once satisfied) | soft: log-sum-exp over the batch of softplus(v+m)^2 (worst-case, keeps pushing into the feasible region)
 TAU = float(os.environ.get("TAU", 0.05))
+DOMW = float(os.environ.get("DOMW", 10.0))         # weight of the dominance term M >= Z
 HEADS = int(os.environ.get("HEADS", 1))
 ATTACK = os.environ.get("ATTACK", "")            # ATTACK=path.pt: load a trained candidate, skip training, attack it with RESTARTS x ADV_ITERS adversaries
 RESTARTS = int(os.environ.get("RESTARTS", 4))          # HEADS > 1: a society of candidates, M = Z exp(min_i Phi_i) (multiple Lyapunov functions, Branicky 1998):
@@ -306,11 +307,12 @@ for rnd in range(ROUNDS):
             v, M, Phi, Z = violation(S)
             vs.append(v + (MARGIN if V2 else 0.0))
         vs = torch.stack(vs)
+        dom = sum(torch.relu(-M_of([fft(ifft(Si).real) for Si in S])[1]) ** 2 for _, _, S in batch) / len(batch) if V2 else 0.0   # M >= Z: Phi >= 0 (closes the energy loophole)
         if LOSS == "soft":
             per = torch.nn.functional.softplus(vs / TAU) * TAU              # smooth one-sided: ~relu but never zero-gradient
-            loss = TAU * torch.logsumexp(per**2 / TAU, 0)                    # soft maximum over the batch: train what the attack tests
+            loss = TAU * torch.logsumexp(per**2 / TAU, 0) + DOMW * dom       # soft maximum over the batch: train what the attack tests
         else:
-            loss = (torch.relu(vs) ** 2).mean()
+            loss = (torch.relu(vs) ** 2).mean() + DOMW * dom
         opt.zero_grad()
         loss.backward()
         opt.step()
@@ -369,6 +371,8 @@ for name, t, S in trajectories(heldout):
     cnt += 1
 sens = sens / cnt
 if GLOBAL and V2:
+    with torch.no_grad():
+        print("min Phi over held-out states (M >= Z requires >= 0): %.3f" % min(M_of([fft(ifft(Si).real) for Si in S])[1].item() for _, _, S in trajectories(heldout)))
     print("learned linear coefficients on the globals [log Z, hel, log k_rms, log(P/Z^2), max|w|/sqrtZ, delta]: %s" % g.a.detach().numpy().round(3).tolist())
 print("feature sensitivity of the learned Phi (|dPhi/df . f| summed over the field, held-out states):")
 for name, s in sorted(zip(FEATURES, sens.tolist()), key=lambda z: -z[1]):

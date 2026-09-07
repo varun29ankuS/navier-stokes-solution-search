@@ -193,8 +193,7 @@ jobs:
       - name: lyapunov3d_v2
         if: ${{ github.event.inputs.which == 'lyapunov3d_v2' }}
         run: |
-          TAG=v2_g1 GLOBAL=1 V2=1 LR=1e-2 N=32 NU=1e-3 T=0.6 ROUNDS=8 TRAIN=300 ADV_ITERS=15 python -u lyapunov_search.py 2>/dev/null | tee results/lyapunov3d_v2_g1.txt
-          ATTACK=results/lyapunov_g_v2_g1.pt GLOBAL=1 V2=1 N=32 NU=1e-3 T=0.6 ADV_ITERS=60 RESTARTS=5 TRAIN=0 python -u lyapunov_search.py 2>/dev/null | tee results/lyapunov3d_v2_g1_attack.txt
+          for L in relu soft; do TAG=v3_$L LOSS=$L GLOBAL=1 V2=1 LR=1e-2 N=32 NU=1e-3 T=0.6 ROUNDS=8 TRAIN=300 ADV_ITERS=15 python -u lyapunov_search.py 2>/dev/null | tee results/lyapunov3d_v3_$L.txt; ATTACK=results/lyapunov_g_v3_$L.pt LOSS=$L GLOBAL=1 V2=1 N=32 NU=1e-3 T=0.6 ADV_ITERS=60 RESTARTS=5 TRAIN=0 python -u lyapunov_search.py 2>/dev/null | tee results/lyapunov3d_v3_${L}_attack.txt; done
       - name: kp_ladder
         if: ${{ github.event.inputs.which == 'kp_ladder' }}
         run: |
