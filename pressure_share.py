@@ -14,6 +14,9 @@ import os, glob, time, numpy as np
 
 N = int(os.environ.get("N", 64))
 T = float(os.environ.get("T", 1.0))
+EVERY = float(os.environ.get("EVERY", 0.25))
+ONLY = os.environ.get("ONLY", "")            # e.g. ONLY=found to run just the searcher field
+KMAG = None
 fft, ifft = np.fft.fftn, np.fft.ifftn
 k = np.fft.fftfreq(N, d=1.0 / N)
 kx, ky, kz = np.meshgrid(k, k, k, indexing="ij")
@@ -50,6 +53,17 @@ def step(U, dt):
     return [U[i] + dt / 6 * (a[i] + 2 * b[i] + 2 * c[i] + d[i]) for i in range(3)]
 
 
+def strip(U):
+    global KMAG
+    if KMAG is None:
+        KMAG = np.sqrt(k2)
+    NB = int(N / 3)
+    e = 0.5 * sum(np.abs(Ui) ** 2 for Ui in U) / N**6
+    spec = np.array([e[(KMAG >= n - 0.5) & (KMAG < n + 0.5)].sum() for n in range(1, NB)]); ks = np.arange(1, NB)
+    sel = (ks >= NB // 2) & (spec > 1e-300)
+    return -np.polyfit(ks[sel], np.log(spec[sel]), 1)[0] / 2 if sel.sum() > 4 else np.nan
+
+
 def diag(U):
     Ud = [Ui * deal for Ui in U]
     G = [[ifft(1j * K[i] * Ud[j]).real for j in range(3)] for i in range(3)]
@@ -81,7 +95,7 @@ def diag(U):
     back = xiPxi[high].mean() / (xiS2xi[high].mean() + 1e-30)
     corr = np.corrcoef(xiPxi[high], (alpha**2)[high])[0, 1]
     Z = 0.5 * np.mean(wmag**2)
-    return share, back, corr, Z, beta_mean, anti_frac
+    return share, back, corr, Z, beta_mean, anti_frac, strip(U)
 
 
 flows = {}
@@ -109,17 +123,20 @@ for path in sorted(glob.glob("results/found/*.npz")):
 # common initial enstrophy, as in the searches
 Z0 = 0.375
 print("N=%d^3, nu=0, all flows at Z0=%.3f; high-vorticity set |w| > 0.5 max" % (N, Z0))
-print("%-28s %5s   %8s   %8s   %7s   %7s   %9s   %9s" % ("flow", "t", "Z(t)/Z0", "share", "back", "corr", "beta(h=2)", "anti frac"))
+print("%-28s %5s   %8s   %8s   %7s   %7s   %9s   %9s   %7s" % ("flow", "t", "Z(t)/Z0", "share", "back", "corr", "beta(h=2)", "anti frac", "delta"))
+print("2dx = %.4f; back = <xi.Pdev.xi>/<xi.S2.xi> (negative: the global Hessian helps the stretching)" % (2 * 2 * np.pi / N))
 for name, U in flows.items():
+    if ONLY and ONLY not in name:
+        continue
     Zi = 0.5 * np.mean(sum(ifft(1j * K[a] * U[b] - 1j * K[b] * U[a]).real ** 2 for a, b in ((1, 2), (2, 0), (0, 1))))
     U = [Ui * np.sqrt(Z0 / Zi) for Ui in U]
     t, mark = 0.0, 0.0
     t0 = time.time()
     while t <= T + 1e-9:
         if t >= mark - 1e-9:
-            share, back, corr, Z, bm, af = diag(U)
-            print("%-28s %5.2f   %8.3f   %8.3f   %+7.3f   %+7.3f   %9.3f   %9.3f" % (name, t, Z / Z0, share, back, corr, bm, af), flush=True)
-            mark += 0.25
+            share, back, corr, Z, bm, af, d = diag(U)
+            print("%-28s %5.2f   %8.3f   %8.3f   %+7.3f   %+7.3f   %9.3f   %9.3f   %7.3f%s" % (name, t, Z / Z0, share, back, corr, bm, af, d, "" if d > 2 * 2 * np.pi / N else "  <-- past the clock"), flush=True)
+            mark += EVERY
             if t >= T - 1e-9:
                 break
         umax = max(np.abs(ifft(Ui).real).max() for Ui in U)
