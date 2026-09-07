@@ -891,9 +891,28 @@ energy decomposition (incompressible kinetic / sound / quantum / interaction) an
 windings, sub-cell. Registered before the CI run (CLAIMS C18): 2-D, two counter-propagating dipoles at separation
 d = 6 travel within 20% of the point-vortex speed 1/d (local check: +6%, energy drift 1e-6); 3-D, two antiparallel
 pairs bowed toward each other reconnect at a finite t_r, the gap law before the cut has exponent 0.5 +/- 0.15, the
-sound energy rises across the cut while the incompressible energy falls, and the lines never re-approach. A local
-48^3 pilot shows the approach phase (gap 3.56 -> 1.01 over 16 time units, accelerating); `results/gpe_seam_*.txt`
-will hold the 64^3 and 96^3 runs through the cut.
+sound energy rises across the cut while the incompressible energy falls, and the lines never re-approach. Result
+(`results/gpe_seam_3d_64.txt`, `_96.txt`; the two resolutions agree on every number below):
+
+```
+                              64^3 (dx 0.50)      96^3 (dx 0.33)
+reconnection t_r              15.8                15.5           (closest gap 3.5 xi at t = 0; all slices cut until then)
+gap ~ (t_r - t)^p, gap 1.5-3.6   p = 0.39            0.37        (includes the Crow-instability phase, not a power law)
+                  gap 1.0-2.5   p = 0.65            0.55         (the asymptotic window: consistent with 1/2)
+sound E_kc across t_r +/- 3   +32%                +36%
+sound E_kc, cut -> peak       15.5 -> 37.5 (t 36)  15.5 -> 36.6 (t 36)   2.4x, released over ~20 time units, not at the instant
+E_ki across t_r +/- 3         +3%                 +3%            <- registered "falls": it does not, at the cut
+E_ki, t_r -> t = 36           600 -> 576 (-4%)    601 -> 577     it falls over the release window
+slices still cut by all 4     0.89 -> 0.58        0.89 -> 0.59   (t = 18 -> 60): the rings retract steadily
+re-approach after the cut     none                none
+```
+
+C18 stands: the pair reconnects at a finite time in both resolutions, the gap law in the asymptotic window is the
+literature's 1/2, sound rises across the cut and never stops rising for twenty time units, the lines never come back.
+The one registered element that failed as written: the incompressible energy does not drop *at* the cut (+3%); it
+drops over the release window that follows. The cut itself is cheap; the price is paid afterwards, by the retracting
+cusps and the Kelvin waves radiating - which is the template: in the quantum fluid the seam is cut on contact, and
+what would have been a collapse leaves as sound.
 
 **What this says we are missing - exactly.** Not a term that produces energy (the ledger above is exact) but a
 *regulator whose length does not move with the flow.* The quantum pressure acts at fourth order (lap^2 on the

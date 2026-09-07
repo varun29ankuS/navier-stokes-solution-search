@@ -125,7 +125,10 @@ a closest gap of 4 xi reconnect at a finite t_r; the gap closes as (t_r - t)^p w
 (sound) energy rises across t_r while the incompressible energy falls; the lines do not re-approach afterwards.
 Refuted by: no reconnection by T = 60, or p outside [0.25, 0.8], or sound energy not rising across the cut. Test:
 `MODE=3d N=64 L=32 D=6 A=1 T=60 python gpe_seam.py`. This is a control for the viscous seam race, not a statement
-about Navier-Stokes.
+about Navier-Stokes. **Result (2026-09-07, 64^3 and 96^3 agree):** t_r = 15.8 / 15.5; p = 0.65 / 0.55 on gap in
+[1, 2.5] (0.39 / 0.37 on the full window, which includes the Crow phase); E_kc +32% / +36% across the cut, 2.4x by
+t = 36; no re-approach. Failed as written: E_ki rises 3% across t_r +/- 3 and falls only over the release window
+after it. Stands on the parts that matter; the "E_ki falls at the cut" clause was wrong and is retracted.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
