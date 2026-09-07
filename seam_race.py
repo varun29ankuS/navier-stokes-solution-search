@@ -56,11 +56,14 @@ def diag(U):
     w = [G[1][2] - G[2][1], G[2][0] - G[0][2], G[0][1] - G[1][0]]
     wm = np.sqrt(sum(wi**2 for wi in w)) + 1e-30; xi = [wi / wm for wi in w]
     high = wm > 0.5 * wm.max()
-    anti2 = np.zeros_like(high); anti1 = np.zeros_like(high)
+    anti2 = np.zeros_like(high); anti1 = np.zeros_like(high); w2 = wm**2; soft = 0.0
     for ax in range(3):
         for sgn in (1, -1):
-            anti2 |= (1 - sum(xi[c] * np.roll(xi[c], sgn * 2, axis=ax) for c in range(3))) > 1.0
-            anti1 |= (1 - sum(xi[c] * np.roll(xi[c], sgn * 1, axis=ax) for c in range(3))) > 1.0
+            b2 = 1 - sum(xi[c] * np.roll(xi[c], sgn * 2, axis=ax) for c in range(3)); b1 = 1 - sum(xi[c] * np.roll(xi[c], sgn * 1, axis=ax) for c in range(3))
+            anti2 |= b2 > 1.0; anti1 |= b1 > 1.0
+            if sgn == 1:                                   # strong twist: enstrophy-weighted sharp reversal at 1 and 2 cells (the searcher's penalised measure)
+                soft += (w2 * np.roll(w2, 1, axis=ax) * np.maximum(b1 - 1, 0) ** 2).mean() + (w2 * np.roll(w2, 2, axis=ax) * np.maximum(b2 - 1, 0) ** 2).mean()
+    soft /= (w2**2).mean()
     S = [[0.5 * (G[i][j] + G[j][i]) for j in range(3)] for i in range(3)]
     stretch = sum(w[i] * S[i][j] * w[j] for i in range(3) for j in range(3))
     wh = [fft(wi) for wi in w]
@@ -68,7 +71,7 @@ def diag(U):
     annih = -NU * sum(w[i] * lapw[i] for i in range(3))                     # viscous cancellation rate of |w|^2/2 (positive = destroying)
     tw = high & anti2
     return (0.5 * np.mean(wm**2), wm.max(), anti2[high].mean(), anti1[high].mean(),
-            (annih[tw] > stretch[tw]).mean() if tw.sum() > 0 else 0.0, strip(U))
+            (annih[tw] > stretch[tw]).mean() if tw.sum() > 0 else 0.0, strip(U), soft)
 
 
 p = os.environ.get("FOUND", "results/found/leashed64_dmin030.npz"); uf = np.load(p)["u"].astype(float); n0 = uf.shape[1]; U = []
@@ -82,13 +85,14 @@ for c in range(3):
 U = project(U)
 Z0 = diag(U)[0]; U = [Ui * np.sqrt(0.375 / Z0) for Ui in U]; Z0 = 0.375
 print("seam race: searcher's sheet field, N=%d^3, nu=%g, T=%.1f; 2dx = %.4f" % (N, NU, T, 2 * 2 * np.pi / N))
-print("   t     Z/Z0     max|w|    anti(2 cells)   anti(1 cell)   annihilation > stretching on the twist   delta")
-t, mark, t0 = 0.0, 0.0, time.time()
+print("   t     Z/Z0     max|w|    anti(2 cells)   anti(1 cell)   annih>stretch   strong twist   dlogZ/dt   delta")
+t, mark, t0 = 0.0, 0.0, time.time(); prev = None
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
-        Z, wmax, a2, a1, an, d = diag(U)
-        print("%5.2f   %6.3f   %7.2f      %.3f           %.3f           %.3f                                   %.3f%s   (%.0fs)" % (t, Z / Z0, wmax, a2, a1, an, d, "" if d > 2 * 2 * np.pi / N else "  <-- past the clock", time.time() - t0), flush=True)
-        mark += EVERY
+        Z, wmax, a2, a1, an, d, soft = diag(U)
+        rate = (np.log(Z / prev[0]) / (t - prev[1])) if prev else float("nan")
+        print("%5.2f   %6.3f   %7.2f      %.3f           %.3f          %.3f        %.5f      %+6.3f     %.3f%s   (%.0fs)" % (t, Z / Z0, wmax, a2, a1, an, soft, rate, d, "" if d > 2 * 2 * np.pi / N else "  <-- past the clock", time.time() - t0), flush=True)
+        prev = (Z, t); mark += EVERY
         if t >= T - 1e-9: break
     umax = max(np.abs(ifft(Ui).real).max() for Ui in U)
     dt = min(2.0 / N, 0.5 * (2 * np.pi / N) / max(umax, 1e-9), mark - t + 1e-12)

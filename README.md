@@ -936,7 +936,31 @@ fast growth? `adversarial_ic.py` now takes `TWISTW`, a differentiable enstrophy-
 (1- and 2-cell neighbours), with the hard anti fraction printed in the search and in the verification. Registered as
 C19 before the run: at matched leash and iterations, forbidding the twist halves the attainable growth at both 32^3
 and 64^3. Refuted by a fast, coherent amplifier - which would bypass both theorems and would be new.
-Results in `results/twist*.txt` when the CI job lands.
+Results in `results/twist*.txt` when the CI job lands. First rows (32^3 search, 128^3 verification): the three
+classical flows have anti = 0.000 at 128^3 with growth 1.01-1.11; at weight 3 the searcher removes the twist, stalls
+near 1.3, buys it back and ends at 3.15 (4.32 at 128^3, anti 0.32, unresolved); at weight 10 the *strong* twist (the
+enstrophy-weighted measure) is held at 0.0035 - a tenth of the weight-3 value - and growth ends at 1.49 against the
+8.28 baseline, while the plain count of antiparallel neighbours creeps to 0.40 by placing faint reversed vorticity
+next to strong structures. Re-scoping of C19 recorded there: the count was the wrong instrument; growth tracks the
+strong reversal. Denied the twist, the searcher first went helical (H/Hmax to -0.32, the regime where stretching
+dies) and abandoned it as soon as any weak twist was available.
+
+**Is the strong twist the monotone quantity?** If growth needs it, it dominates; the other half is whether
+Navier-Stokes makes it non-increasing. Quick local test (`seam_race.py`, strong-twist column added, 32^3, T = 1.2,
+the clock at ~1.1):
+
+```
+                          strong twist 0 -> 1.2     Z/Z0 at 1.2     dlogZ/dt at t = 1
+nu = 0                    0.026 -> 0.298            1.25            +0.27
+nu = 1e-3                 0.026 -> 0.267            1.17            +0.19
+nu = 2e-3                 0.026 -> 0.239            1.09            +0.12
+nu = 5e-3                 0.026 -> 0.174            0.90            -0.07
+```
+
+It rises at every viscosity, every step, including nu = 5e-3 where the enstrophy falls throughout: the sheets are
+pressed together by the external strain, which viscosity does not touch at these thicknesses. Refuted as the
+monotone quantity within the window; it sits in the dominating set, like every candidate before it. What would turn
+it over is reconnection at the viscous seam thickness, which this window does not reach - the seam race again.
 
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
