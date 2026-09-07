@@ -248,3 +248,49 @@ reliable window by the sign of the change of the local decay rate $-\,d\log\delt
 rising as $1/(t^* - t)$ for linear. **Measured** (`strip_tracker.py`) by flow and by resolution.
 
 Status of all of the above: **[measured or in progress]**; none bears on Theorem 4, which stands.
+
+
+## 8. The pressure conjecture, stated precisely (from the searches of 2026-09-06/07)
+
+**Setting.** $u$ a smooth solution of 3-D Euler on $\mathbb{T}^3$, $\omega = \nabla\times u$, $\xi = \omega/|\omega|$,
+$S = \tfrac12(\nabla u + \nabla u^{T})$, and $p$ the pressure, $-\Delta p = \partial_i u_j\,\partial_j u_i$. Write the
+pressure Hessian $P = \nabla\nabla p$ and its traceless part $P^{\circ} = P - \tfrac13(\operatorname{tr}P)\,I$; the trace
+is local ($\operatorname{tr}P = \Delta p = \tfrac12|\omega|^2 - |S|^2$), the traceless part is the nonlocal image of the
+whole field. For a set $A\subset\mathbb{T}^3$ define the **global share**
+
+$$ s_A(u) \;=\; \frac{\int_A |P^{\circ}|^2}{\int_A |P|^2}\,, \qquad
+   h_A(u) \;=\; \frac{\int_A \xi\cdot P^{\circ}\xi}{\int_A \xi\cdot S^2\xi}\,, $$
+
+with $A = \{|\omega| > \tfrac12 \max|\omega|\}$ the high-vorticity set; $h_A < 0$ means the nonlocal part of the pressure
+Hessian pushes with the self-stretching along the vorticity.
+
+**Observed** (`results/quiet*_pressure_*.txt`; search over data with $\hat u$ supported in $|k|\le 4$, enstrophy
+$Z_0$ fixed, on $32^3$ and $48^3$ grids, over $T = 0.5, 1, 1.5$; verifier at $64$-$96^3$): the maximal amplification
+$Z(T)/Z_0$ attainable with $s_A(u(T)) \le \sigma$ imposed is
+
+| $\sigma$ | 0.5 | 0.45 | 0.4 | 0.35 | 0.3 |
+|---|---|---|---|---|---|
+| $\sup Z(T)/Z_0$, $48^3$, $T=1$ | 5.6 | 4.2 | 2.1 | 1.11 | 1.10 |
+
+with the same knee and collapse at $32^3$ and at $T = 0.5, 1.5$; the searcher cannot realise $s_A < 0.35$ at all in
+this class; and $h_A < 0$ in every fast field found (eleven of eleven). Along the fastest field, $h_A$ grows from
+$-0.5$ to $-6.7$ up to the last resolved time and does not fade at any resolved scale (`help_fades_*`).
+
+**Conjecture C17 (necessary condition).** There is $\sigma_* \in (0.35, 0.45)$ and a function $f$ with $f(\sigma)\to 1$
+as $\sigma \downarrow \sigma_*$ such that for smooth Euler solutions on $\mathbb{T}^3$ with $\hat u_0$ supported in
+$|k| \le K$,
+$$ \sup_{t \le T}\, s_A(u(t)) \;\le\; \sigma \quad\Longrightarrow\quad \frac{Z(T)}{Z_0} \;\le\; f(\sigma)\,, $$
+and moreover any solution with $Z(T)/Z_0 \ge 2$ has $h_A(u(t)) < 0$ on a set of times of positive measure in $[0,T]$.
+In words: enstrophy cannot grow substantially unless the nonlocal part of the pressure carries at least a fixed share of
+the Hessian on the high-vorticity set and acts with the stretching.
+
+**What it would and would not give.** C17 is a necessary condition for growth, not a bound: the searcher's fields
+satisfy it and keep satisfying it. A regularity argument along this line would need a second statement,
+$$ \text{(C17b)}\qquad \int_A \big(\xi\cdot P^{\circ}\xi\big)_{-} \;\le\; C\, E^{a} Z^{b}\,, $$
+a bound on the nonlocal help in terms of quantities the energy inequality controls, with exponents making the pair
+critical. `help_fades` says C17b is *not* visible at any resolved scale in the class searched: the help grows to the
+clock. If C17b holds it holds in the limit. Refutation of C17: a smooth datum with $Z(T)/Z_0 \ge 3$ and
+$\sup_t s_A < 0.35$, or a fast amplifier with $h_A \ge 0$ throughout. Both are one run of `adversarial_ic.py`
+(`OBJ=quiet`).
+
+Status: **[conjecture with a stable curve; not a theorem; the closing statement C17b is unsupported at resolved scales]**.
