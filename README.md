@@ -771,6 +771,18 @@ bound is the second phase - the roll-up of a thinning sheet under its own curvat
 Birkhoff-Rott with thickness, in three dimensions. (The triad xi, n, t is not exactly orthonormal, so the budget
 closes to ~85%.)
 
+**The thinnest squeeze, and a candidate inequality refuted** (`thinnest_squeeze.py`, `results/thinnest_squeeze_48.txt`).
+Every collapse is a material element pressed to zero thickness; along a path the deformation gradient F obeys
+dF/dt = A F with det F = 1 (measured 1.0000 on every path), and sigma_min(F) is the thinnest that parcel has been
+pressed. The natural guess in the memory picture - nothing can be squeezed thinner than the jitter sqrt(2 nu t) smears
+it, which would give the Type I bound - is false: along the searcher's sheet under Navier-Stokes (nu = 2e-3) sigma_min
+falls by half every quarter time unit and crosses below the jitter scale between t = 0.75 and 1.0 (ratio 1.5 -> 0.68),
+in a flow that is perfectly resolved and regular. The reason: material lines in any smooth flow thin exponentially
+without bound (Batchelor's regime for a dye filament) while the velocity stays smooth; the label map's features below
+the diffusive scale are averaged away by the jitter and say nothing about grad u. What does hold: 1/sigma_min tracks
+max|w| (23 vs 21 on the sheet, 1.6 vs 1.8 on Kida-Pelz) - sheet thickness is 1/|w| - so the Lagrangian side returns
+the same exponential thinning law as the Eulerian side.
+
 ## The constant that is really a function
 
 Navier-Stokes assumes friction -nu Laplacian u with nu a constant. Make it a function and regularity is a theorem:
