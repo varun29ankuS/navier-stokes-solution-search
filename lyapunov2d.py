@@ -6,10 +6,11 @@ that verdict means something only if the same machine FINDS the known quantity i
 lyapunov_search.py: M = Z_ref exp(Phi), Phi an enstrophy-weighted average of a small network over dimensionless local
 features; dM/dt the exact Lie derivative by autograd against the 2-D vorticity equation (skew transport + exact
 viscosity); an adversary searching low-k initial data for the trajectory along which M grows fastest; a strong
-attack at the end. Z_ref is a FIXED reference (the initial enstrophy of the reference flow), so the prefactor carries
-no dynamics and the candidate must find the monotone quantity in Phi itself.
+attack at the end. The prefactor is the PALINSTROPHY P = 1/2 int |grad w|^2, which grows transiently in 2-D (so a constant Phi fails),
+and Phi may use the global scalars log(Z/P), log(E/Z) besides the local features; the known monotone quantity
+Z = P (Z/P) is therefore reachable only by LEARNING Phi = log(Z/P) - the answer is available, not built in.
 REGISTERED: PASS if the final candidate survives ATTACK (5 restarts x 60 iterations) with violation < 1e-3 and its
-feature sensitivity is led by |w|^2 (the enstrophy density); FAIL otherwise. A FAIL here retracts the 3-D verdict.
+feature sensitivity is led by log(Z/P) (i.e. it rediscovered M = Z) or |w|^2; FAIL otherwise. A FAIL here retracts the 3-D verdict.
 usage: N=64 NU=1e-3 T=1.0 ROUNDS=6 python lyapunov2d.py"""
 import os, time, math, numpy as np, torch
 
@@ -65,7 +66,7 @@ def energy(wh):
     u, v = vel(wh * DEAL); return 0.5 * (u**2 + v**2).mean()
 
 
-FEATURES = ["|w|^2 / 2Z", "w / sqrt(2Z) (signed)", "|grad w|^2 / 2P", "|u|^2 / 2E", "|S|^2 / Z", "(w^2 - 2|S|^2)/Z", "|grad w|.u / (P E)^1/2"]
+FEATURES = ["|w|^2 / 2Z", "w / sqrt(2Z) (signed)", "|grad w|^2 / 2P", "|u|^2 / 2E", "|S|^2 / Z", "(w^2 - 2|S|^2)/Z", "|grad w|.u / (P E)^1/2", "G: log(Z/P)", "G: log(E/Z)"]
 
 
 def features(wh):
@@ -76,25 +77,25 @@ def features(wh):
     P = 0.5 * (gx**2 + gy**2).mean()
     ux, uy, vx, vy = ifft(1j * KX * fft(u)).real, ifft(1j * KY * fft(u)).real, ifft(1j * KX * fft(v)).real, ifft(1j * KY * fft(v)).real
     s2 = ux**2 + vy**2 + 0.5 * (uy + vx) ** 2
-    f = torch.stack([w**2 / (2 * Z), w / torch.sqrt(2 * Z), (gx**2 + gy**2) / (2 * P), (u**2 + v**2) / (2 * E), s2 / Z, (w**2 - 2 * s2) / Z, (gx * u + gy * v) / torch.sqrt(P * E)], 0)
-    return f, w**2 / (w**2).sum(), Z
+    f = torch.stack([w**2 / (2 * Z), w / torch.sqrt(2 * Z), (gx**2 + gy**2) / (2 * P), (u**2 + v**2) / (2 * E), s2 / Z, (w**2 - 2 * s2) / Z, (gx * u + gy * v) / torch.sqrt(P * E),
+                     torch.log(Z / P).expand_as(w), torch.log(E / Z).expand_as(w)], 0)
+    return f, w**2 / (w**2).sum(), P
 
 
 class G(torch.nn.Module):
-    def __init__(self, nf=7, h=32):
+    def __init__(self, nf=9, h=32):
         super().__init__()
         self.net = torch.nn.Sequential(torch.nn.Linear(nf, h), torch.nn.Tanh(), torch.nn.Linear(h, h), torch.nn.Tanh(), torch.nn.Linear(h, 1))
-    def forward(self, f): return B * torch.sigmoid(self.net(f.permute(1, 2, 0)).squeeze(-1))
+    def forward(self, f): return B * torch.tanh(self.net(f.permute(1, 2, 0)).squeeze(-1))      # Phi in [-B, B]: log(Z/P) is negative
 
 
 g = G(); opt = torch.optim.Adam(g.parameters(), lr=3e-3)
-ZREF = None
 
 
 def M_of(wh):
-    f, wgt, Z = features(wh)
+    f, wgt, P = features(wh)
     Phi = (wgt * g(f)).sum()
-    return ZREF * torch.exp(Phi), Phi, Z
+    return P * torch.exp(Phi), Phi, P
 
 
 def violation(wh):
@@ -119,11 +120,10 @@ def random_ic(seed): return field_from_params(torch.randn(N, N, generator=torch.
 
 
 tg = fft(2 * torch.sin(X) * torch.sin(Y)); tg = tg * torch.sqrt(torch.tensor(0.375) / enstrophy(tg))
-ZREF = enstrophy(tg).detach()
 train_ics = {"taylor-green": tg, **{"random-%d" % s: random_ic(s) for s in range(5)}}
 heldout = {"random-9": random_ic(9), "random-11": random_ic(11)}
 EVERY = T / 8
-print("2-D Lyapunov search (positive control): N=%d^2 nu=%g T=%.1f rounds=%d train=%d adversary iters=%d; M = Z_ref exp(Phi), Z_ref fixed" % (N, NU, T, ROUNDS, TRAIN, ADV_ITERS), flush=True)
+print("2-D Lyapunov search (positive control): N=%d^2 nu=%g T=%.1f rounds=%d train=%d adversary iters=%d; M = P exp(Phi), P = palinstrophy (grows), global scalars available" % (N, NU, T, ROUNDS, TRAIN, ADV_ITERS), flush=True)
 
 
 def trajectories(ics):
@@ -177,13 +177,13 @@ for rnd in range(ROUNDS):
 
 print("\n== ATTACK: %d restarts x %d iterations against the final candidate" % (RESTARTS, ATTACK_ITERS), flush=True)
 worst_attack = max(adversary(ATTACK_ITERS, 500 + r)[0] for r in range(RESTARTS))
-sens = torch.zeros(7); cnt = 0
+sens = torch.zeros(9); cnt = 0
 for name, t, S in trajectories(heldout):
     f, wgt, Z = features(S); f = f.detach().requires_grad_(True)
     gr = torch.autograd.grad((wgt * g(f)).sum(), f)[0]; sens += (gr * f.detach()).abs().sum(dim=(1, 2)); cnt += 1
 print("feature sensitivity of the learned Phi (held-out):")
 order = sorted(zip(FEATURES, (sens / cnt).tolist()), key=lambda z: -z[1])
 for name, s_ in order: print("   %-36s %.3e" % (name, s_))
-led = order[0][0].startswith("|w|^2")
-print("\nREGISTERED  attack worst violation %+.3e (tol %.0e); leading feature: %s -> %s" % (worst_attack, TOL, order[0][0], "PASS: the machine finds the known monotone quantity in 2-D" if worst_attack < TOL and led else ("FAIL: the machine does not find enstrophy where it exists - the 3-D verdict is retracted" if worst_attack >= TOL else "between: survives the attack but is not enstrophy-led")))
+led = order[0][0].startswith("G: log(Z/P)") or order[0][0].startswith("|w|^2")
+print("\nREGISTERED  attack worst violation %+.3e (tol %.0e); leading feature: %s -> %s" % (worst_attack, TOL, order[0][0], "PASS: the machine finds the known monotone quantity (P x Z/P = Z) in 2-D" if worst_attack < TOL and led else ("FAIL: the machine does not find enstrophy where it exists - the 3-D verdict is retracted" if worst_attack >= TOL else "between: survives the attack but is not enstrophy-led")))
 torch.save(g.state_dict(), "results/lyapunov2d_g.pt")
