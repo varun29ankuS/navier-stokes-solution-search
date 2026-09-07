@@ -95,7 +95,10 @@ reliable window and delta reaches zero at t* = 0.5585 with energy conserved to 3
 64/96/128^3 it falls by half. Refuted by: a resolution at which the Kida-Pelz decay rate rises, or a choice of the
 fit range that makes the dyadic rate flat. Test: `python dyadic.py`, `IC=kp N=128 python strip_tracker.py`.
 
-**C15 (negative). Within the class of bounded local functionals M = Z exp(Phi), Phi a learned enstrophy-weighted
+**C15 (negative, about the METHOD - re-scoped 2026-09-07). The Lyapunov learner, as built, cannot find a monotone
+functional even where one is a theorem: in 2-D with log(Z/P) supplied as a feature it fails its positive control
+(attack +0.45 / +0.41, `results/lyapunov2d_64*.txt`). Its 3-D failures therefore say nothing about 3-D. Original
+statement, withdrawn as a claim about the equation: Within the class of bounded local functionals M = Z exp(Phi), Phi a learned enstrophy-weighted
 average of pointwise vorticity/strain features, an adversary finds a violating trajectory every round.** Three rounds
 at 24^3: adversary violations +0.40, +2.40, +0.71 (relative dM/dt) with no closing trend; held-out classical flows
 never violate. An eight-round 32^3 series that fell to 0.03-0.09 was re-attacked with a stronger adversary and broken at +0.40 to

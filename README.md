@@ -484,8 +484,16 @@ pressure-Hessian features the eight-round series plateaued at 0.3 and the attack
 (`results/lyapunov_32_b1_attack.txt`). A twenty-round candidate with a 25-iteration training adversary fell to 0.01-0.04 over its last five rounds
 and, attacked with five restarts of sixty iterations, breaks at +1.03 (`results/lyapunov_32_r20_attack.txt`). Three
 candidates, three falling series, three breaks. A candidate is only as good as the strongest adversary that has
-failed against it; none has, and the class - bounded local functionals of the present vorticity and strain field, at
-this resolution and window - is closed by this register: the fixed-budget searcher tires before the candidate holds. This is feedback,
+failed against it; none has.
+
+**Retraction (2026-09-07).** The verdict drawn from those failures - that the class of local functionals is closed in
+3-D - is withdrawn. A positive control (`lyapunov2d.py`, `results/lyapunov2d_64*.txt`) ran the same machine in 2-D,
+where a monotone quantity is a theorem (the enstrophy), with the answer available as a feature (log(Z/P), so that
+Phi = log(Z/P) gives M = Z exactly). It failed the same way: attack violations +0.45 (viscous) and +0.41 (Euler),
+leaning on the right feature and never reaching it. The 3-D failures were evidence about the *learner*, not about
+Navier-Stokes. What survives: the searcher is a good refuter (every candidate it broke was broken), and no candidate
+has passed - but "no candidate exists in this class" was never established. The learner needs a positive control it
+can pass before its 3-D silence means anything. This is feedback,
 not imitation, applied to the proof itself: the machine cannot produce a theorem, but it produces the counterexamples
 a human would need to see before trying to.
 
