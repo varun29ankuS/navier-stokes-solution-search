@@ -139,6 +139,15 @@ Why it matters: Constantin-Fefferman covers coherent direction, Grujic's cancell
 fast growth lives only in the twisted regime, the seam is the only place left. Test: `DMIN=0.30 TWISTW=10 N=32 T=1.0
 ITERS=60 NVER=128 python adversarial_ic.py`.
 
+**C20 (registered 2026-09-07, before the run). The seam reaches its viscous thickness and the twist turns over.**
+GPU spectral run (`kaggle/seam/seam_gpu.py`), 256^3, clock 2dx = 0.049, the searcher's sheet field and a Kerr-type
+antiparallel tube pair, T = 3. Race variable = sheet thickness |w|/|grad|w|| (median on the high set) over the viscous
+thickness sqrt(nu/s), s the mean compression across the sheet. At nu = 2e-3 the race variable reaches <= 1.5 inside
+the clock, the strong twist (enstrophy-weighted sharp reversal) peaks there and falls by >= 20% before the clock, and
+max|w| grows < 3x. At nu = 0 the twist rises to the clock. Refuted by: the twist still rising at the clock with the
+race variable < 1 (the roll-up outruns the cut at a resolved viscous scale) - which would be the first resolved
+evidence for phase 2 winning, and the most important number this repository could produce.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
