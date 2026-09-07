@@ -182,8 +182,8 @@ jobs:
       - name: help_fades
         if: ${{ github.event.inputs.which == 'help_fades' }}
         run: |
-          ONLY=found N=96 T=2.0 EVERY=0.1 python -u pressure_share.py 2>/dev/null | tee results/help_fades_found_96.txt
-          ONLY=found N=128 T=1.6 EVERY=0.1 python -u pressure_share.py 2>/dev/null | tee results/help_fades_found_128.txt
+          ONLY=leashed N=96 T=2.0 EVERY=0.1 python -u pressure_share.py 2>/dev/null | tee results/help_fades_found_96.txt
+          ONLY=leashed N=128 T=1.6 EVERY=0.1 python -u pressure_share.py 2>/dev/null | tee results/help_fades_found_128.txt
           ONLY=kida N=96 T=1.5 EVERY=0.1 python -u pressure_share.py 2>/dev/null | tee results/help_fades_kp_96.txt
       - name: kp_ladder
         if: ${{ github.event.inputs.which == 'kp_ladder' }}
