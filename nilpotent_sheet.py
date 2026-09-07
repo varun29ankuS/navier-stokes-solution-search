@@ -51,7 +51,16 @@ def diag(U):
     Q = -0.5 * np.einsum("...ij,...ji->...", Ah, Ah)
     xiHxi = np.einsum("...i,...ij,...j->...", xi, Hdh, xi)
     Z = 0.5 * np.mean(wm**2)
-    return Z, nA2.mean() / (nA**2).mean(), nH.mean() / nA2.mean(), (Q / nA**2).mean(), (xiHxi < 0).mean(), xiHxi.mean() / (nA**2).mean()
+    # the corrected picture's prediction: the sheet thins at the external compressive strain rate, across the sheet.
+    S = 0.5 * (Ah + np.swapaxes(Ah, 1, 2)); lam, vec = np.linalg.eigh(S)                       # ascending: lam[:,0] most compressive
+    gw = np.stack([ifft(1j * K[i] * fft(wm)).real for i in range(3)], -1)[high]                  # grad|w|: the sheet normal
+    nrm = gw / (np.linalg.norm(gw, axis=-1, keepdims=True) + 1e-30)
+    cos_n = np.abs(np.einsum("...i,...i->...", vec[..., 0], nrm))                               # |cos| between the compressive direction and the normal
+    Snn = np.einsum("...i,...ij,...j->...", nrm, S, nrm)                                        # strain ACROSS the sheet: zero for the sheet's own shear, so this is the external compression that thins it
+    alpha = np.einsum("...i,...ij,...j->...", xi, S, xi)                                        # exact growth rate of |w|: D|w|/Dt = |w| xi.S.xi
+    tt = np.cross(xi, nrm); tt /= (np.linalg.norm(tt, axis=-1, keepdims=True) + 1e-30)          # in-plane transverse direction
+    Stt = np.einsum("...i,...ij,...j->...", tt, S, tt)                                          # compression ALONG the sheet (narrowing); alpha + Snn + Stt = 0 exactly
+    return Z, nA2.mean() / (nA**2).mean(), nH.mean() / nA2.mean(), (Q / nA**2).mean(), (xiHxi < 0).mean(), xiHxi.mean() / (nA**2).mean(), wm.max(), lam[:, 0].mean(), cos_n.mean(), Snn.mean(), alpha.mean(), Stt.mean()
 
 
 flows = {}
@@ -67,18 +76,20 @@ for c in range(3):
 flows["sheet (searcher's field)"] = project(U)
 flows["kida-pelz"] = [fft(np.sin(X) * (np.cos(3 * Y) * np.cos(Z_) - np.cos(Y) * np.cos(3 * Z_))), fft(np.sin(Y) * (np.cos(3 * Z_) * np.cos(X) - np.cos(Z_) * np.cos(3 * X))), fft(np.sin(Z_) * (np.cos(3 * X) * np.cos(Y) - np.cos(X) * np.cos(3 * Y)))]
 flows["taylor-green"] = [fft(np.sin(X) * np.cos(Y) * np.cos(Z_)), fft(-np.cos(X) * np.sin(Y) * np.cos(Z_)), fft(np.zeros_like(X))]
-flows["pure shear (control: A^2 = 0)"] = [fft(np.sin(Y)), fft(np.zeros_like(X)), fft(np.zeros_like(X))]
 print("N=%d^3, nu=0, Z0=0.375, high set |w| > 0.5 max.  nil = <|A^2|>/<|A|^2>, dom = <|H_dev|>/<|A^2|>" % N)
-print("%-30s %5s   %7s   %7s   %7s   %9s   %12s   %s" % ("flow", "t", "Z/Z0", "nil", "dom", "<Q>/|A|2", "frac xiHxi<0", "<xiHxi>/|A|2"))
+print("%-30s %5s   %7s   %7s   %7s   %9s   %8s   %10s   %10s   %s" % ("flow", "t", "Z/Z0", "nil", "dom", "<Q>/|A|2", "max|w|", "growth rate", "<lam_min>", "|cos(comp,normal)|"))
+print("prediction (corrected): the sheet's OWN shear gives lam_min ~ -|w|/4 at 45 deg (|cos| ~ 0.7) and does not thin it; the EXTERNAL compression across the sheet, n.S.n, sets the growth rate: -<n.S.n> ~ d log max|w|/dt")
 for name, U in flows.items():
     Zi = 0.5 * np.mean(sum(vi**2 for vi in [ifft(1j * K[a] * U[b] - 1j * K[b] * U[a]).real for a, b in ((1, 2), (2, 0), (0, 1))]))
     U = [Ui * np.sqrt(0.375 / Zi) for Ui in U]; Z0 = 0.375
-    t, mark, t0 = 0.0, 0.0, time.time()
+    t, mark, t0 = 0.0, 0.0, time.time(); prev = None
     while t <= T + 1e-9:
         if t >= mark - 1e-9:
-            Z, nil, dom, q, fneg, hh = diag(U)
-            print("%-30s %5.2f   %7.3f   %7.3f   %7.2f   %+9.3f   %12.3f   %+.3f   (%.0fs)" % (name, t, Z / Z0, nil, dom, q, fneg, hh, time.time() - t0), flush=True)
-            mark += 0.5
+            Z, nil, dom, q, fneg, hh, wmax, lmin, cosn, snn, al, stt = diag(U)
+            rate = (np.log(wmax / prev[0]) / (t - prev[1])) if prev else float("nan")
+            print("%-24s t=%.2f  Z/Z0 %.3f  nil %.3f  max|w| %6.2f  growth %6s | stretch xi.S.xi %+.3f = thinning(-n.S.n) %+.3f + narrowing(-t.S.t) %+.3f   (%.0fs)" % (name[:24], t, Z / Z0, nil, wmax, ("%.3f" % rate) if prev else "-", al, -snn, -stt, time.time() - t0), flush=True)
+            prev = (wmax, t)
+            mark += 0.25
             if t >= T - 1e-9 or "shear" in name: break
         umax = max(np.abs(ifft(Ui).real).max() for Ui in U)
         dt = min(2.0 / N, 0.5 * (2 * np.pi / N) / max(umax, 1e-9), mark - t + 1e-12)

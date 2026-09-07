@@ -1,0 +1,18 @@
+N=48^3, nu=0, Z0=0.375, high set |w| > 0.5 max.  nil = <|A^2|>/<|A|^2>, dom = <|H_dev|>/<|A^2|>
+flow                               t      Z/Z0       nil       dom    <Q>/|A|2     max|w|   growth rate    <lam_min>   |cos(comp,normal)|
+prediction (corrected): the sheet's OWN shear gives lam_min ~ -|w|/4 at 45 deg (|cos| ~ 0.7) and does not thin it; the EXTERNAL compression across the sheet, n.S.n, sets the growth rate: -<n.S.n> ~ d log max|w|/dt
+sheet (searcher's field) t=0.00  Z/Z0 1.000  nil 0.440  max|w|   7.13  growth      - | stretch xi.S.xi +0.288 = thinning(-n.S.n) +0.035 + narrowing(-t.S.t) +0.140   (0s)
+sheet (searcher's field) t=0.25  Z/Z0 1.200  nil 0.292  max|w|  10.53  growth  1.559 | stretch xi.S.xi +1.072 = thinning(-n.S.n) +0.568 + narrowing(-t.S.t) +0.327   (7s)
+sheet (searcher's field) t=0.50  Z/Z0 1.632  nil 0.198  max|w|  14.35  growth  1.240 | stretch xi.S.xi +1.047 = thinning(-n.S.n) +0.830 + narrowing(-t.S.t) +0.047   (13s)
+sheet (searcher's field) t=0.75  Z/Z0 2.266  nil 0.170  max|w|  19.51  growth  1.227 | stretch xi.S.xi +0.810 = thinning(-n.S.n) +0.304 + narrowing(-t.S.t) +0.442   (19s)
+sheet (searcher's field) t=1.00  Z/Z0 3.040  nil 0.174  max|w|  23.61  growth  0.763 | stretch xi.S.xi +0.598 = thinning(-n.S.n) +0.163 + narrowing(-t.S.t) +0.381   (27s)
+kida-pelz                t=0.00  Z/Z0 1.000  nil 0.615  max|w|   2.41  growth      - | stretch xi.S.xi +0.000 = thinning(-n.S.n) -0.000 + narrowing(-t.S.t) +0.000   (0s)
+kida-pelz                t=0.25  Z/Z0 1.006  nil 0.599  max|w|   2.36  growth -0.082 | stretch xi.S.xi -0.019 = thinning(-n.S.n) -0.005 + narrowing(-t.S.t) -0.019   (6s)
+kida-pelz                t=0.50  Z/Z0 1.025  nil 0.569  max|w|   2.22  growth -0.242 | stretch xi.S.xi -0.014 = thinning(-n.S.n) -0.000 + narrowing(-t.S.t) -0.036   (11s)
+kida-pelz                t=0.75  Z/Z0 1.057  nil 0.502  max|w|   2.02  growth -0.386 | stretch xi.S.xi +0.052 = thinning(-n.S.n) +0.015 + narrowing(-t.S.t) -0.013   (16s)
+kida-pelz                t=1.00  Z/Z0 1.104  nil 0.461  max|w|   1.78  growth -0.503 | stretch xi.S.xi +0.119 = thinning(-n.S.n) +0.054 + narrowing(-t.S.t) +0.029   (22s)
+taylor-green             t=0.00  Z/Z0 1.000  nil 0.613  max|w|   2.00  growth      - | stretch xi.S.xi +0.000 = thinning(-n.S.n) -0.000 + narrowing(-t.S.t) +0.000   (0s)
+taylor-green             t=0.25  Z/Z0 1.007  nil 0.601  max|w|   1.97  growth -0.062 | stretch xi.S.xi -0.005 = thinning(-n.S.n) +0.000 + narrowing(-t.S.t) -0.012   (5s)
+taylor-green             t=0.50  Z/Z0 1.027  nil 0.539  max|w|   1.88  growth -0.184 | stretch xi.S.xi +0.029 = thinning(-n.S.n) +0.013 + narrowing(-t.S.t) -0.019   (10s)
+taylor-green             t=0.75  Z/Z0 1.061  nil 0.485  max|w|   1.74  growth -0.300 | stretch xi.S.xi +0.098 = thinning(-n.S.n) +0.068 + narrowing(-t.S.t) -0.009   (15s)
+taylor-green             t=1.00  Z/Z0 1.112  nil 0.467  max|w|   1.58  growth -0.404 | stretch xi.S.xi +0.145 = thinning(-n.S.n) +0.095 + narrowing(-t.S.t) +0.018   (21s)

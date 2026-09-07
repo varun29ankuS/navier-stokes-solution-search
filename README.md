@@ -751,6 +751,26 @@ exponentially rather than collapsing. Caveat added to the "help" sign above: on 
 forced by the trace subtraction (lap p = 2Q > 0 at a pressure minimum), so the negative sign on the classical flows
 is partly local; on the sheet, where Q ~ 0, the sign is genuinely nonlocal and small (-0.04).
 
+**The strain budget on the sheet, closed** (`results/nilpotent_sheet_48b.txt`). |w| grows at exactly the rate of
+stretching along the vortex lines, xi.S.xi, and incompressibility splits that into compression across the sheet
+(thinning, -n.S.n) plus compression along it (narrowing, -t.S.t):
+
+```
+sheet, t     stretch xi.S.xi     thinning (-n.S.n)     narrowing (-t.S.t)
+0.25         1.07                0.57                  0.33
+0.50         1.05                0.83                  0.05
+0.75         0.81                0.30                  0.44
+1.00         0.60                0.16                  0.38
+```
+
+Two phases. To t = 0.5 the sheet is squeezed thinner by the surrounding strain; from t = 0.75 the across-sheet
+compression fades and in-plane compression takes over - the sheet folds toward a tube, which is where the
+antiparallel fraction jumped from 0 to 0.9. The pressure's role is the second phase: the curvature pressure that
+rolls a shear layer. Neither phase is the local map (nilpotency 0.17 throughout). The object a proof would have to
+bound is the second phase - the roll-up of a thinning sheet under its own curvature pressure against viscosity:
+Birkhoff-Rott with thickness, in three dimensions. (The triad xi, n, t is not exactly orthonormal, so the budget
+closes to ~85%.)
+
 ## The constant that is really a function
 
 Navier-Stokes assumes friction -nu Laplacian u with nu a constant. Make it a function and regularity is a theorem:
