@@ -1,0 +1,26 @@
+search grid 32^3, T = 1.00, low-k initial data |k| <= 4, common Z0 = 0.3750, objective enstrophy
+  taylor-green   E0 0.1250   H/Hmax -0.000   Z(T)/Z0 = 1.112
+  kida-pelz      E0 0.0341   H/Hmax -0.000   Z(T)/Z0 = 1.104
+  abc+10%        E0 0.3578   H/Hmax +0.968   Z(T)/Z0 = 1.012
+  iter   0   objective = 1.126   E0 = 0.0183   H/Hmax = -0.090   delta(T) on search grid = 0.430   (2s)   twist soft = 0.1016   anti fraction on the high set = 0.456
+  iter   5   objective = 1.187   E0 = 0.0243   H/Hmax = -0.085   delta(T) on search grid = 0.455   (10s)   twist soft = 0.0239   anti fraction on the high set = 0.238
+  iter  10   objective = 1.252   E0 = 0.0281   H/Hmax = -0.047   delta(T) on search grid = 0.448   (18s)   twist soft = 0.0175   anti fraction on the high set = 0.250
+  iter  15   objective = 1.314   E0 = 0.0313   H/Hmax = -0.024   delta(T) on search grid = 0.436   (26s)   twist soft = 0.0150   anti fraction on the high set = 0.329
+  iter  20   objective = 1.383   E0 = 0.0342   H/Hmax = -0.013   delta(T) on search grid = 0.421   (34s)   twist soft = 0.0143   anti fraction on the high set = 0.293
+  iter  25   objective = 1.469   E0 = 0.0368   H/Hmax = -0.006   delta(T) on search grid = 0.407   (41s)   twist soft = 0.0152   anti fraction on the high set = 0.415
+  iter  30   objective = 1.588   E0 = 0.0394   H/Hmax = -0.005   delta(T) on search grid = 0.388   (49s)   twist soft = 0.0169   anti fraction on the high set = 0.443
+  iter  35   objective = 1.767   E0 = 0.0418   H/Hmax = -0.002   delta(T) on search grid = 0.371   (57s)   twist soft = 0.0212   anti fraction on the high set = 0.456
+  iter  40   objective = 2.010   E0 = 0.0441   H/Hmax = +0.008   delta(T) on search grid = 0.370   (65s)   twist soft = 0.0265   anti fraction on the high set = 0.559
+  iter  45   objective = 2.323   E0 = 0.0467   H/Hmax = +0.018   delta(T) on search grid = 0.374   (74s)   twist soft = 0.0316   anti fraction on the high set = 0.667
+  iter  50   objective = 2.643   E0 = 0.0495   H/Hmax = +0.025   delta(T) on search grid = 0.364   (83s)   twist soft = 0.0355   anti fraction on the high set = 0.708
+  iter  55   objective = 2.907   E0 = 0.0526   H/Hmax = +0.029   delta(T) on search grid = 0.356   (93s)   twist soft = 0.0396   anti fraction on the high set = 0.622
+  iter  59   objective = 3.150   E0 = 0.0553   H/Hmax = +0.032   delta(T) on search grid = 0.350   (102s)   twist soft = 0.0436   anti fraction on the high set = 0.676
+best on the search grid: amplification = 3.1496
+
+verification at 128^3 with the numpy instrument (fields upsampled spectrally, same Z0):
+  taylor-green   at 128^3:  Z(T)/Z0 = 1.112   E(T)/E0 = 1.000000   delta(T) = 0.5290  (2dx = 0.0982)   alpha_s = 2.61   anti = 0.000
+  kida-pelz      at 128^3:  Z(T)/Z0 = 1.104   E(T)/E0 = 1.000000   delta(T) = 0.3305  (2dx = 0.0982)   alpha_s = 2.45   anti = 0.000
+  abc+10%        at 128^3:  Z(T)/Z0 = 1.012   E(T)/E0 = 1.000000   delta(T) = 0.6371  (2dx = 0.0982)   alpha_s = 2.70   anti = 0.000
+  FOUND          at 128^3:  Z(T)/Z0 = 4.320   E(T)/E0 = 1.000000   delta(T) = 0.0557  (2dx = 0.0982)   alpha_s = 1.72   anti = 0.322   <-- unreliable
+
+REGISTERED  found Z(T)/Z0 = 4.320 (delta < 2dx) vs best RELIABLE classical 1.112 at 128^3 -> FAIL: outside the reliable window

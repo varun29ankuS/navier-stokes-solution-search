@@ -1,0 +1,23 @@
+search grid 64^3, T = 1.00, low-k initial data |k| <= 4, common Z0 = 0.3750, objective enstrophy
+  taylor-green   E0 0.1250   H/Hmax -0.000   Z(T)/Z0 = 1.112
+  kida-pelz      E0 0.0341   H/Hmax +0.000   Z(T)/Z0 = 1.104
+  abc+10%        E0 0.3590   H/Hmax +0.971   Z(T)/Z0 = 1.014
+  iter   0   objective = 1.118   E0 = 0.0186   H/Hmax = +0.022   delta(T) on search grid = 0.314   (20s)   twist soft = 0.0045   anti fraction on the high set = 0.019
+  iter   5   objective = 1.286   E0 = 0.0216   H/Hmax = +0.005   delta(T) on search grid = 0.294   (110s)   twist soft = 0.0018   anti fraction on the high set = 0.003
+  iter  10   objective = 1.377   E0 = 0.0250   H/Hmax = -0.001   delta(T) on search grid = 0.291   (198s)   twist soft = 0.0015   anti fraction on the high set = 0.017
+  iter  15   objective = 1.472   E0 = 0.0273   H/Hmax = -0.007   delta(T) on search grid = 0.291   (286s)   twist soft = 0.0014   anti fraction on the high set = 0.030
+  iter  20   objective = 1.597   E0 = 0.0291   H/Hmax = -0.007   delta(T) on search grid = 0.288   (374s)   twist soft = 0.0016   anti fraction on the high set = 0.038
+  iter  25   objective = 1.743   E0 = 0.0308   H/Hmax = -0.009   delta(T) on search grid = 0.287   (463s)   twist soft = 0.0019   anti fraction on the high set = 0.059
+  iter  30   objective = 1.901   E0 = 0.0326   H/Hmax = -0.006   delta(T) on search grid = 0.286   (552s)   twist soft = 0.0019   anti fraction on the high set = 0.063
+  iter  35   objective = 2.040   E0 = 0.0343   H/Hmax = +0.002   delta(T) on search grid = 0.285   (641s)   twist soft = 0.0020   anti fraction on the high set = 0.066
+  iter  40   objective = 2.136   E0 = 0.0361   H/Hmax = +0.010   delta(T) on search grid = 0.284   (730s)   twist soft = 0.0020   anti fraction on the high set = 0.074
+  iter  44   objective = 2.218   E0 = 0.0377   H/Hmax = +0.020   delta(T) on search grid = 0.283   (802s)   twist soft = 0.0022   anti fraction on the high set = 0.086
+best on the search grid: amplification = 2.2180
+
+verification at 128^3 with the numpy instrument (fields upsampled spectrally, same Z0):
+  taylor-green   at 128^3:  Z(T)/Z0 = 1.112   E(T)/E0 = 1.000000   delta(T) = 0.5290  (2dx = 0.0982)   alpha_s = 2.89   anti = 0.000
+  kida-pelz      at 128^3:  Z(T)/Z0 = 1.104   E(T)/E0 = 1.000000   delta(T) = 0.3305  (2dx = 0.0982)   alpha_s = 2.66   anti = 0.000
+  abc+10%        at 128^3:  Z(T)/Z0 = 1.014   E(T)/E0 = 1.000000   delta(T) = 0.6445  (2dx = 0.0982)   alpha_s = 2.88   anti = 0.000
+  FOUND          at 128^3:  Z(T)/Z0 = 2.243   E(T)/E0 = 1.000000   delta(T) = 0.1127  (2dx = 0.0982)   alpha_s = 2.24   anti = 0.000
+
+REGISTERED  found Z(T)/Z0 = 2.243 (delta > 2dx) vs best RELIABLE classical 1.112 at 128^3 -> PASS
