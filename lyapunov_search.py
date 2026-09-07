@@ -179,7 +179,7 @@ def features(U):
         shell = torch.stack([spec_e[(KMAG_T >= n - 0.5) & (KMAG_T < n + 0.5)].sum() for n in ks])
         y = torch.log(shell + 1e-30)
         slope = ((ks - ks.mean()) * (y - y.mean())).sum() / ((ks - ks.mean()) ** 2).sum()
-        glob = [torch.log(Z), H / (2 * torch.sqrt(E * Z) + 1e-30), 0.5 * torch.log(Z / (E + 1e-30)), torch.log(pal / Z**2 + 1e-30), wmag.max() / sZ, -slope / 2]
+        glob = [torch.log(Z), H / (2 * torch.sqrt(E * Z) + 1e-30), 0.5 * torch.log(Z / (E + 1e-30)), torch.log(pal / Z**2 + 1e-30), torch.clamp(wmag.max() / sZ, max=20.0), torch.clamp(-slope / 2, -1.0, 2.0)]   # clipped: the strip fit is garbage on a floor spectrum (t=0 low-k data)
         feats += [gq.expand_as(wmag) for gq in glob]
     f = torch.stack(feats, 0)
     return f, wmag**2 / (wmag**2).sum(), Z
