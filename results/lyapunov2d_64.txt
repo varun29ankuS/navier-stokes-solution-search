@@ -1,0 +1,39 @@
+2-D Lyapunov search (positive control): N=64^2 nu=0.001 T=1.0 rounds=6 train=300 adversary iters=20; M = P exp(Phi), P = palinstrophy (grows), global scalars available
+== round 0
+  training states      worst relative dM/dt = +1.1171e-03  (random-1 at t=0.00)
+  held-out flows       worst relative dM/dt = +1.6568e-02  (random-9 at t=0.38)
+  adversary best violation +3.6232e-01   (37s)
+== round 1
+  training states      worst relative dM/dt = -9.4809e-04  (random-4 at t=0.00)
+  held-out flows       worst relative dM/dt = -1.5552e-02  (random-9 at t=0.00)
+  adversary best violation +1.0608e-01   (74s)
+== round 2
+  training states      worst relative dM/dt = -2.7782e-05  (random-1 at t=1.00)
+  held-out flows       worst relative dM/dt = +6.7170e-03  (random-9 at t=1.00)
+  adversary best violation +2.3056e-01   (110s)
+== round 3
+  training states      worst relative dM/dt = -2.0093e-04  (random-4 at t=0.38)
+  held-out flows       worst relative dM/dt = -1.4028e-02  (random-11 at t=0.00)
+  adversary best violation +9.2742e-01   (147s)
+== round 4
+  training states      worst relative dM/dt = +2.4530e-03  (random-3 at t=0.00)
+  held-out flows       worst relative dM/dt = +1.5381e-02  (random-11 at t=0.00)
+  adversary best violation +5.3322e-01   (184s)
+== round 5
+  training states      worst relative dM/dt = +1.5682e-03  (adversary-2 at t=1.00)
+  held-out flows       worst relative dM/dt = -1.3216e-03  (random-11 at t=0.38)
+  adversary best violation +3.8780e-01   (221s)
+
+== ATTACK: 5 restarts x 60 iterations against the final candidate
+feature sensitivity of the learned Phi (held-out):
+   G: log(Z/P)                          1.854e+00
+   |w|^2 / 2Z                           7.395e-01
+   G: log(E/Z)                          6.091e-01
+   w / sqrt(2Z) (signed)                5.596e-01
+   |S|^2 / Z                            4.811e-01
+   (w^2 - 2|S|^2)/Z                     3.782e-01
+   |u|^2 / 2E                           3.439e-01
+   |grad w|.u / (P E)^1/2               2.146e-01
+   |grad w|^2 / 2P                      1.488e-01
+
+REGISTERED  attack worst violation +4.512e-01 (tol 1e-03); leading feature: G: log(Z/P) -> FAIL: the machine does not find enstrophy where it exists - the 3-D verdict is retracted
