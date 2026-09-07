@@ -130,6 +130,15 @@ about Navier-Stokes. **Result (2026-09-07, 64^3 and 96^3 agree):** t_r = 15.8 / 
 t = 36; no re-approach. Failed as written: E_ki rises 3% across t_r +/- 3 and falls only over the release window
 after it. Stands on the parts that matter; the "E_ki falls at the cut" clause was wrong and is retracted.
 
+**C19 (registered 2026-09-07, before the run). Growth needs the twist.** The searcher's fastest fields are ~90%
+antiparallel on their high-vorticity set (the seam). Forbid the twist - penalise the enstrophy-weighted antiparallel
+measure at T (`TWISTW`) - and the attainable amplification at matched leash (DMIN 0.30) and iterations falls below
+HALF of the twisted baseline (32^3: 8.28 -> < 4.1; 64^3: 3.18 -> < 1.6) for every weight at which the final anti
+fraction on the high set is below 0.2. Refuted by: a field with anti fraction < 0.1 reaching >= 0.8 of the baseline.
+Why it matters: Constantin-Fefferman covers coherent direction, Grujic's cancellation covers incoherent direction; if
+fast growth lives only in the twisted regime, the seam is the only place left. Test: `DMIN=0.30 TWISTW=10 N=32 T=1.0
+ITERS=60 NVER=128 python adversarial_ic.py`.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 

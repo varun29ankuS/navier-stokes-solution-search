@@ -33,7 +33,9 @@ CKPT = int(os.environ.get("CKPT", 1))
 TAILF = float(os.environ.get("TAILF", 1e-4))     # OBJ=minimal: require energy fraction in the top sixth of retained modes >= TAILF at T (floor-proof cascade criterion)
 MINW = float(os.environ.get("MINW", 50.0))
 SMAX = float(os.environ.get("SMAX", 0.4))         # OBJ=quiet: cap on the global (traceless) share of the pressure Hessian on the high-vorticity set at T
-SW = float(os.environ.get("SW", 200.0))            # gradient checkpointing per step (memory ~ N^3 x steps instead of x stages x steps)
+SW = float(os.environ.get("SW", 200.0))
+TWISTW = float(os.environ.get("TWISTW", 0.0))     # if > 0: forbid the twist - penalise antiparallel vorticity (beta = 1 - xi.xi' > 1 at 1 and 2 cells) on the high-vorticity set at T
+TWMAX = float(os.environ.get("TWMAX", 0.0))       # allowed soft twist measure before the penalty starts            # gradient checkpointing per step (memory ~ N^3 x steps instead of x stages x steps)
 dev = "cpu"
 
 # ------------------------------------------ torch solver (differentiable) ------------------------------------------
@@ -78,6 +80,21 @@ def vort(U):
 
 def enstrophy(U):
     return 0.5 * sum((w**2).mean() for w in vort(U))
+
+
+def twist(U):
+    """soft, differentiable antiparallel measure: enstrophy-weighted mean over 1- and 2-cell neighbours of relu(beta - 1)^2,
+    beta = 1 - xi.xi' (0 aligned, 1 orthogonal, 2 antiparallel); and the hard fraction of the high set (|w| > 0.5 max)
+    with an antiparallel neighbour two cells away (the seam_race 'anti' column)"""
+    w = vort(U); wm = torch.sqrt(sum(wi**2 for wi in w) + 1e-30); xi = [wi / wm for wi in w]
+    w2 = wm**2; soft = 0.0; anti = torch.zeros_like(wm, dtype=torch.bool)
+    for ax in range(3):
+        for sh in (1, 2):
+            beta = 1 - sum(xi[c] * torch.roll(xi[c], sh, dims=ax) for c in range(3))
+            soft = soft + (w2 * torch.roll(w2, sh, dims=ax) * torch.relu(beta - 1) ** 2).mean()
+            if sh == 2: anti = anti | (beta.detach() > 1)
+    high = wm.detach() > 0.5 * wm.detach().max()
+    return soft / (w2**2).mean(), anti[high].float().mean()
 
 
 def energy(U):
@@ -311,6 +328,9 @@ for it in range(ITERS):
         if DMIN > 0:
             d = delta_torch(UT)
             loss = loss + DW * torch.relu(DMIN - d) ** 2
+        if TWISTW > 0:
+            tw_soft, tw_anti = twist(UT)
+            loss = loss + TWISTW * torch.relu(tw_soft - TWMAX)
         if OBJ == "helicity":
             H = helicity(U0)
             Hmax = 2 * torch.sqrt(energy(U0) * Z0)      # |H| <= |u| |w| = 2 sqrt(E Z) (Cauchy-Schwarz), equality for a single-shell Beltrami field (ABC: exactly 1)
@@ -328,7 +348,7 @@ for it in range(ITERS):
     if score > best[0] and (OBJ != "helicity" or HELMODE != "project" or abs(hel_of(P) - HEL) < 1e-3):
         best = (score, [p.detach().clone() for p in P])
     if it % 5 == 0 or it == ITERS - 1:
-        print("  iter %3d   objective = %.3f   E0 = %.4f   H/Hmax = %+.3f   delta(T) on search grid = %.3f%s   (%.0fs)" % (it, g, energy(U0).item(), (helicity(U0) / (2 * torch.sqrt(energy(U0) * Z0))).item(), delta_torch(UT).item() if OBJ != "jacobi" else float("nan"), ("   pressure global share = %.3f   sign <xi.Pdev.xi>/<xi.S2.xi> = %+.3f" % (pressure_share(UT).item(), pressure_sign([u.detach() for u in UT]))) if OBJ == "quiet" else "", time.time() - t0), flush=True)
+        print("  iter %3d   objective = %.3f   E0 = %.4f   H/Hmax = %+.3f   delta(T) on search grid = %.3f%s   (%.0fs)" % (it, g, energy(U0).item(), (helicity(U0) / (2 * torch.sqrt(energy(U0) * Z0))).item(), delta_torch(UT).item() if OBJ != "jacobi" else float("nan"), ("   pressure global share = %.3f   sign <xi.Pdev.xi>/<xi.S2.xi> = %+.3f" % (pressure_share(UT).item(), pressure_sign([u.detach() for u in UT]))) if OBJ == "quiet" else "", time.time() - t0) + (("   twist soft = %.4f   anti fraction on the high set = %.3f" % (tw_soft.item(), tw_anti.item())) if TWISTW > 0 else ("   anti fraction on the high set = %.3f" % twist([u.detach() for u in UT])[1].item() if OBJ == "enstrophy" else "")), flush=True)
 if best[1] is None:
     best = (growth.item(), [p.detach().clone() for p in P])
 print("best on the search grid: %s = %.4f" % ("critical norm |u0|_{H^1/2} (constraint met)" if OBJ == "minimal" else "amplification", (-best[0] if OBJ == "minimal" else best[0])))
@@ -410,7 +430,13 @@ def verify(u_phys_list, N2, T, label):
     rr = [r * N2 / N for r in CKN_RADII]
     DD = _np.array([gg[dd2 <= r * r].sum() for r in rr]) + 1e-30
     alpha_s = _np.polyfit(_np.log(rr), _np.log(DD), 1)[0]
-    print("  %-14s at %d^3:  Z(T)/Z0 = %.3f   E(T)/E0 = %.6f   delta(T) = %.4f  (2dx = %.4f)   alpha_s = %.2f%s" % (label, N2, Zf(U) / Z0v, Ef(U) / E0v, delta, 2 * 2 * _np.pi / N2, alpha_s, "" if delta > 2 * 2 * _np.pi / N2 else "   <-- unreliable"), flush=True)
+    wv = [_np.fft.ifftn(1j * KK[a] * Ud2[b] - 1j * KK[b] * Ud2[a]).real for a, b in ((1, 2), (2, 0), (0, 1))]
+    wmv = _np.sqrt(ww) + 1e-30; xiv = [wi / wmv for wi in wv]; highv = wmv > 0.5 * wmv.max(); antiv = _np.zeros_like(highv)
+    for ax in range(3):
+        for sg in (1, -1):
+            antiv |= (1 - sum(xiv[c] * _np.roll(xiv[c], 2 * sg, axis=ax) for c in range(3))) > 1.0
+    anti_frac = antiv[highv].mean()
+    print("  %-14s at %d^3:  Z(T)/Z0 = %.3f   E(T)/E0 = %.6f   delta(T) = %.4f  (2dx = %.4f)   alpha_s = %.2f   anti = %.3f%s" % (label, N2, Zf(U) / Z0v, Ef(U) / E0v, delta, 2 * 2 * _np.pi / N2, alpha_s, anti_frac, "" if delta > 2 * 2 * _np.pi / N2 else "   <-- unreliable"), flush=True)
     if OBJ == "minimal":
         h12v = _np.sqrt(sum((kmag * _np.abs(Ui) ** 2).sum() for Ui in U0_) / N2**6)
         eT = sum(_np.abs(Ui) ** 2 for Ui in U)

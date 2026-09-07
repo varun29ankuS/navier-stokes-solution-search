@@ -925,6 +925,19 @@ comfortably past the line; real viscosity sits at alpha = 1, a quarter of a Lapl
 repository has measured on the sheet - phase 1 external squeeze stopped at sqrt(nu/s), phase 2 self-generated
 roll-up that the budget cannot price - is what that quarter-power looks like from inside one flow.
 
+## Growth needs the twist? The Möbius conjecture, adversarially
+
+The literature has two theorems about the direction of vorticity and no theorem about the gap between them:
+Constantin-Fefferman (1993) - if the direction is Lipschitz-coherent where vorticity is intense, no blow-up; and
+Grujic (2025, on Moffatt-Kimura antiparallel tubes) - where the direction *oscillates*, a cancellation in the
+stretching term. Partial coherence is covered by neither. The searcher's fastest fields sit at 90% antiparallel on
+the high-vorticity set (`seam_race.py`), while every classical flow sits near 0. So: is the twist *necessary* for
+fast growth? `adversarial_ic.py` now takes `TWISTW`, a differentiable enstrophy-weighted antiparallel penalty at T
+(1- and 2-cell neighbours), with the hard anti fraction printed in the search and in the verification. Registered as
+C19 before the run: at matched leash and iterations, forbidding the twist halves the attainable growth at both 32^3
+and 64^3. Refuted by a fast, coherent amplifier - which would bypass both theorems and would be new.
+Results in `results/twist*.txt` when the CI job lands.
+
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
 Theorem 4 (Tao 2016) says that the exact structure this repository verifies - energy conservation, the scaling, the
