@@ -502,7 +502,17 @@ and found M ~ Z^4.4 / E^3.4, which is a genuine monotone quantity under 2-D Navi
 author had not thought of; the registered wording "led by log(Z/P)" was too narrow and it prints "between", but in
 substance it passes. Inviscid 2-D: fails (a = 1.114 where only a = 1 exactly is monotone; attack +0.34): the learner
 finds monotone quantities where dissipation gives slack and cannot land on an exact conservation law. The 3-D problem
-is the viscous one, so the 3-D run with this learner (`lyapunov3d_v2`) is the first whose verdict counts. This is feedback,
+is the viscous one, so the 3-D run with this learner is the first whose verdict counts.
+
+**3-D with the passed learner** (`results/lyapunov3d_v2_g1*`, `lyapunov3d_v3_*`). First run: the learner slipped into
+energy - a = [-0.60 log Z, -1.03 log k_rms, -0.94 helicity] is sqrt(E) e^{-0.94 h} Z^{-0.12}, monotone because energy
+is and useless because M < Z; attack +0.077. The energy loophole closed (a dominance term M >= Z, min Phi 2.2-3.2 on
+held-out states): the constrained candidate leans on local enstrophy density, strain and the stretching rate - the
+Constantin-Fefferman quantities - and its training adversary weakened to +0.03 and once came up empty; the strong
+attack breaks it at +0.6 to +1.3. The worst-case (soft-max) loss does worse: +4.1. So, with a control behind it: in
+the class of bounded local vorticity/strain functionals plus global scalars, over one turnover on low-k data, the
+monotone set and the dominating set do not intersect in 3-D. The learner rediscovered Tao's wall from the inside -
+handed everything, it found energy - and then found nothing beyond it. This is feedback,
 not imitation, applied to the proof itself: the machine cannot produce a theorem, but it produces the counterexamples
 a human would need to see before trying to.
 
