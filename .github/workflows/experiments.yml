@@ -188,8 +188,8 @@ jobs:
       - name: lyapunov2d
         if: ${{ github.event.inputs.which == 'lyapunov2d' }}
         run: |
-          N=64 NU=1e-3 T=1.0 ROUNDS=6 TRAIN=300 ADV_ITERS=20 python -u lyapunov2d.py 2>/dev/null | tee results/lyapunov2d_64.txt
-          N=64 NU=0 T=1.0 ROUNDS=6 TRAIN=300 ADV_ITERS=20 python -u lyapunov2d.py 2>/dev/null | tee results/lyapunov2d_64_euler.txt
+          LR=2e-2 N=64 NU=1e-3 T=1.0 ROUNDS=6 TRAIN=400 ADV_ITERS=20 python -u lyapunov2d.py 2>/dev/null | tee results/lyapunov2d_64_v2.txt
+          LR=2e-2 N=64 NU=0 T=1.0 ROUNDS=6 TRAIN=400 ADV_ITERS=20 python -u lyapunov2d.py 2>/dev/null | tee results/lyapunov2d_64_euler_v2.txt
       - name: kp_ladder
         if: ${{ github.event.inputs.which == 'kp_ladder' }}
         run: |

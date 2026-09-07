@@ -18,7 +18,7 @@ torch.set_default_dtype(torch.float64)
 torch.manual_seed(0)
 N = int(os.environ.get("N", 64)); NU = float(os.environ.get("NU", 1e-3)); T = float(os.environ.get("T", 1.0))
 ROUNDS = int(os.environ.get("ROUNDS", 6)); TRAIN = int(os.environ.get("TRAIN", 300)); ADV_ITERS = int(os.environ.get("ADV_ITERS", 20))
-B = float(os.environ.get("B", 4.0)); TOL = float(os.environ.get("TOL", 1e-3)); RESTARTS = int(os.environ.get("RESTARTS", 5)); ATTACK_ITERS = int(os.environ.get("ATTACK_ITERS", 60))
+B = float(os.environ.get("B", 4.0)); MARGIN = float(os.environ.get("MARGIN", 0.02)); TOL = float(os.environ.get("TOL", 1e-3)); RESTARTS = int(os.environ.get("RESTARTS", 5)); ATTACK_ITERS = int(os.environ.get("ATTACK_ITERS", 60))
 fft, ifft = torch.fft.fftn, torch.fft.ifftn
 k1 = torch.fft.fftfreq(N, d=1.0 / N) * 1.0
 KX, KY = torch.meshgrid(k1, k1, indexing="ij")
@@ -83,13 +83,19 @@ def features(wh):
 
 
 class G(torch.nn.Module):
+    """Phi(x) = a . globals + B tanh(net(local features)): the global part is linear (log(Z/P) exactly reachable), the
+    local part bounded. v2 of the control: the answer must be representable to machine precision, not approximately."""
     def __init__(self, nf=9, h=32):
         super().__init__()
-        self.net = torch.nn.Sequential(torch.nn.Linear(nf, h), torch.nn.Tanh(), torch.nn.Linear(h, h), torch.nn.Tanh(), torch.nn.Linear(h, 1))
-    def forward(self, f): return B * torch.tanh(self.net(f.permute(1, 2, 0)).squeeze(-1))      # Phi in [-B, B]: log(Z/P) is negative
+        self.net = torch.nn.Sequential(torch.nn.Linear(nf - 2, h), torch.nn.Tanh(), torch.nn.Linear(h, h), torch.nn.Tanh(), torch.nn.Linear(h, 1))
+        self.a = torch.nn.Parameter(torch.zeros(2))
+        self.c = torch.nn.Parameter(torch.zeros(1))
+    def forward(self, f):
+        loc = f[:7].permute(1, 2, 0); glob = f[7:]
+        return self.c + self.a[0] * glob[0] + self.a[1] * glob[1] + B * torch.tanh(self.net(loc).squeeze(-1))
 
 
-g = G(); opt = torch.optim.Adam(g.parameters(), lr=3e-3)
+g = G(); opt = torch.optim.Adam(g.parameters(), lr=float(os.environ.get("LR", 1e-2)))
 
 
 def M_of(wh):
@@ -166,7 +172,7 @@ def adversary(iters, seed, lr=0.05):
 for rnd in range(ROUNDS):
     for it in range(TRAIN):
         batch = [data[i] for i in torch.randperm(len(data))[:6].tolist()]
-        loss = sum(torch.relu(violation(S)[0]) ** 2 for _, _, S in batch) / len(batch)
+        loss = sum(torch.relu(violation(S)[0] + MARGIN) ** 2 for _, _, S in batch) / len(batch)
         opt.zero_grad(); loss.backward(); opt.step()
     print("== round %d" % rnd, flush=True)
     report(data, "training states"); report(trajectories(heldout), "held-out flows")
@@ -181,6 +187,7 @@ sens = torch.zeros(9); cnt = 0
 for name, t, S in trajectories(heldout):
     f, wgt, Z = features(S); f = f.detach().requires_grad_(True)
     gr = torch.autograd.grad((wgt * g(f)).sum(), f)[0]; sens += (gr * f.detach()).abs().sum(dim=(1, 2)); cnt += 1
+print("learned global coefficients a = %s (the known answer is a = [1, 0]: Phi = log(Z/P) gives M = Z)" % g.a.detach().numpy().round(3))
 print("feature sensitivity of the learned Phi (held-out):")
 order = sorted(zip(FEATURES, (sens / cnt).tolist()), key=lambda z: -z[1])
 for name, s_ in order: print("   %-36s %.3e" % (name, s_))
