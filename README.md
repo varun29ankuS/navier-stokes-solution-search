@@ -686,6 +686,15 @@ recruits the box. Stated as a conjecture with a stable curve behind it: amplific
 requires the traceless pressure Hessian to carry at least ~0.42 of the total on the high-vorticity set and to act with
 the stretching; cap it at 0.35 and no amplification is reachable in this class of data.
 
+Does the help fade as the sheet thins - the second half a proof along this line would need? (`help_fades`, the sheet
+field sampled every 0.1 at 96^3 and 128^3, `results/help_fades_*.txt`.) Inside the reliable window it does not: the
+global Hessian's push along the vorticity grows from -0.5 to -6.7 at t = 0.8 (the last resolved row at 128^3) while
+the global share stays 0.45-0.52. A fade appears only past the clock and is weaker at 128^3 than at 96^3 at equal
+time (-4.8 vs -3.7 at t = 1.6): a truncation signature, not physics. Kida-Pelz, the flow that does not grow, is the
+one whose help fades (-18 to -1.1 as its share rises to 0.6). So the necessary condition C17 is met and stays met for
+as long as the instrument can see; if a proof exists along this line, the bound on the box's help must come from the
+limit, where no grid reaches - the wall, seen from the pressure side.
+
 Forbid the pressure's global part from answering and the growth dies: half of it at 0.4, all of it at 0.3, where
 the searcher gave up growing rather than quiet the pressure and still could not reach the cap. The "flat 0.50" was
 not the pressure staying quiet; it was the pressure already carrying as much as fast growth requires. The local
