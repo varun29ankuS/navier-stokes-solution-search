@@ -1,0 +1,12 @@
+== found 48^3, HORIZON=10
+  t=0.00 Z/Z0=1.000  escapes local-only 0.622  full-H 0.575  RESCUED 0.185   Q/|A|2 +0.117  R/|A|3 +0.004  past-tail 0.965
+  t=0.25 Z/Z0=1.200  escapes local-only 0.359  full-H 0.480  RESCUED 0.118   Q/|A|2 +0.074  R/|A|3 -0.013  past-tail 0.971
+  t=0.50 Z/Z0=1.632  escapes local-only 0.361  full-H 0.394  RESCUED 0.247   Q/|A|2 +0.072  R/|A|3 -0.009  past-tail 0.932
+  t=0.75 Z/Z0=2.266  escapes local-only 0.497  full-H 0.405  RESCUED 0.274   Q/|A|2 +0.077  R/|A|3 -0.005  past-tail 0.866
+  t=1.00 Z/Z0=3.040  escapes local-only 0.461  full-H 0.379  RESCUED 0.239   Q/|A|2 +0.081  R/|A|3 -0.003  past-tail 0.907
+== kp 48^3, HORIZON=10
+  t=0.00 Z/Z0=1.000  escapes local-only 1.000  full-H 0.539  RESCUED 0.461   Q/|A|2 +0.409  R/|A|3 -0.000  past-tail 1.000
+  t=0.25 Z/Z0=1.006  escapes local-only 0.988  full-H 0.585  RESCUED 0.415   Q/|A|2 +0.394  R/|A|3 +0.006  past-tail 1.000
+  t=0.50 Z/Z0=1.025  escapes local-only 0.963  full-H 0.625  RESCUED 0.365   Q/|A|2 +0.363  R/|A|3 +0.003  past-tail 1.000
+  t=0.75 Z/Z0=1.057  escapes local-only 0.799  full-H 0.723  RESCUED 0.247   Q/|A|2 +0.273  R/|A|3 -0.010  past-tail 0.970
+  t=1.00 Z/Z0=1.104  escapes local-only 0.669  full-H 0.784  RESCUED 0.166   Q/|A|2 +0.198  R/|A|3 -0.019  past-tail 0.930

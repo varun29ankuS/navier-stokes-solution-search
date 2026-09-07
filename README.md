@@ -718,6 +718,27 @@ not the pressure staying quiet; it was the pressure already carrying as much as 
 cannot stretch without the global responding. A curve on a 32^3 search grid over one time unit: a conjecture with
 evidence, not a theorem - but it is about the pressure, which is the term Tao's theorem says a proof must use.
 
+## The quadratic map inside the equation
+
+Along a particle path the velocity gradient obeys dA/dt = -A^2 - H, H the pressure Hessian: z -> z^2 + c in matrix
+form. Restricted Euler keeps only the local part of H and escapes to a singularity (Vieillefosse 1982; Cantwell
+1992); the full equation has the nonlocal part, the global pressure, as the c that keeps the orbit bounded.
+`mandelbrot_fraction.py` iterates the local map on the high-vorticity set with H frozen at its local part and at
+the full Hessian, over ten local turnovers, and counts escapes (`results/mandelbrot_fraction_48.txt`):
+
+```
+                        <Q>/|A|^2      local map escapes    with the frozen global H    rescued by the box
+Kida-Pelz  (t=0..1)     +0.41 -> +0.20   100% -> 67%          54% -> 78%                  46% -> 17%
+searcher's sheet        +0.12 -> +0.08    62% -> 46%          58% -> 38%                  19% -> 24%
+```
+
+The classical flows are rotation-dominated, deep inside, where the local map spins and the global c holds nearly
+half of it. The sheet sits at Q ~ 0.08, on the edge where rotation and strain balance and c decides - and there,
+at t = 0.25, more points escape with the global Hessian than without it (48% vs 36%): the box's pressure pushes the
+sheet's orbits outward, the sign result of the quiet-pressure searches seen from inside the map. The adversary's
+strategy, in Mandelbrot's language: go to the boundary of the set and recruit c. A snapshot diagnostic (H frozen,
+horizon a choice), not a theorem.
+
 ## The constant that is really a function
 
 Navier-Stokes assumes friction -nu Laplacian u with nu a constant. Make it a function and regularity is a theorem:
