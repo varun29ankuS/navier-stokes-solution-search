@@ -1,0 +1,19 @@
+=== 1-D inviscid Burgers, u0 = sin x + 0.5 sin(2x+1), run to 0.92 t*  (exact shock time t* = -1/min u0')
+candidate           worst growth rate       M / max|grad|: first -> last  verdict
+int|u|                              +0.000        0.3635 -> 0.0379      MONOTONE / does not dominate
+max|u|                              +0.000        0.7751 -> 0.0807      MONOTONE / does not dominate
+total variation                     +0.000        0.4229 -> 0.0440      MONOTONE / does not dominate
+int u_x^2                           +9.800        0.5262 -> 0.1521      grows / does not dominate
+max|u_x|                           +18.126        1.0000 -> 1.0000      grows / DOMINATES
+max|u_x| went 1.9 -> 18.2 (exact 1/(1-t/t*): 23.8)
+1-D verdict: monotone set and dominating set DISJOINT (as registered: Burgers shocks)
+
+=== 2-D Navier-Stokes, decaying turbulence 128^2, nu = 2e-4, t = 0..3
+candidate                   worst growth rate       M / max|grad u|: first -> last  verdict
+energy int|u|^2                             -0.007        0.0958 -> 0.0738      MONOTONE / DOMINATES
+max|u|                                      +0.348        0.2275 -> 0.2027      grows / DOMINATES
+enstrophy int w^2                           -0.009        1.9610 -> 1.3716      MONOTONE / DOMINATES
+max|w|                                      +0.508        1.3981 -> 1.2656      grows / DOMINATES
+palinstrophy int|grad w|^2                  +1.508       45.4973 -> 297.2314    grows / DOMINATES
+max|grad u| went 10.43 -> 13.23
+2-D verdict: monotone set and dominating set INTERSECT (as registered: 2-D is regular)

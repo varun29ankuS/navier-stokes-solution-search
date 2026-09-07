@@ -844,6 +844,27 @@ searcher builds something sharper than a sheet - spatial exponent alpha_s = 1.25
 0.098), registered FAIL. So growth buys sheets and concentration buys tubes, and neither is resolved. The sheet
 conjecture stands for the enstrophy objective; the stronger claim, that nothing sharper can be built, is refuted.
 
+## The equation, and the two solved cases as controls
+
+Everything this page has tried to find reduces to one requirement: a quantity M[u] >= 0 that is non-increasing along
+the flow and dominates the gradient, M >= c |grad u|. Two sets of candidates - the MONOTONE ones and the DOMINATING
+ones - and regularity is the statement that they intersect. `monotone_vs_dominating.py` measures both properties for
+a family of norms along trajectories where the answer is a theorem (`results/monotone_vs_dominating.txt`):
+
+```
+1-D Burgers (shocks), gradient x12:   int|u|, max|u|, total variation: monotone, ratio to the gradient falls 10x
+                                      int u_x^2, max|u_x|: dominate, grow 10-18x        -> the sets are DISJOINT
+2-D Navier-Stokes (regular):          enstrophy: non-increasing (-0.009) AND ratio to the gradient within 30%
+                                                                                          -> the sets INTERSECT
+```
+
+(2-D caveat: the gradient grew only 27% in this window, so "dominates" is weakly tested there; enstrophy is the real
+member of both sets, energy passes only because little happened.) In 3-D the question is whether the sets intersect;
+this repository's searches - hand-picked norms, the learner, the learner with a passed 2-D control - have not found a
+member of both in any family tried. The searcher's antiparallel-sheet field is the counterexample to every
+topological candidate (helicity, linking, crossing number all vanish on it while it is pressed without bound), and
+the pressure's cubic flux is what breaks every energy-like candidate. If a 3-D member exists it is neither.
+
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
 Theorem 4 (Tao 2016) says that the exact structure this repository verifies - energy conservation, the scaling, the
