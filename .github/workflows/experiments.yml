@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       which:
-        description: "which experiments to run: all | burgers | taylor_green | budgets | kolmogorov | ns_d | exact | spectra | midpoint | criteria3d | adversarial | overnight | leashed | leashed64 | lyapunov | lyapunov_attack | lyapunov_long | lyapunov_global | lyapunov_beta | sheet_conjecture | strip_hi | jacobi_reverse | lyapunov_attack_beta | memory_paths | lyapunov_attack_r20 | blowup_type | frequency_matching | memory_paths3d | interference | minimal_datum | quiet_pressure | quiet_pressure2 | help_fades | lyapunov2d | lyapunov3d_v2 | jacobi | helicity_ladder | strip | kp_ladder | mechanism3d | budgets3d | highres | kolmogorov_v2 | kolmogorov_v3"
+        description: "which experiments to run: all | burgers | taylor_green | budgets | kolmogorov | ns_d | exact | spectra | midpoint | criteria3d | adversarial | overnight | leashed | leashed64 | lyapunov | lyapunov_attack | lyapunov_long | lyapunov_global | lyapunov_beta | sheet_conjecture | strip_hi | jacobi_reverse | lyapunov_attack_beta | memory_paths | lyapunov_attack_r20 | blowup_type | frequency_matching | memory_paths3d | interference | minimal_datum | quiet_pressure | quiet_pressure2 | help_fades | lyapunov2d | lyapunov3d_v2 | seam_race | jacobi | helicity_ladder | strip | kp_ladder | mechanism3d | budgets3d | highres | kolmogorov_v2 | kolmogorov_v3"
         default: "all"
       n3:
         description: "3-D grid for the spectra job"
@@ -194,6 +194,11 @@ jobs:
         if: ${{ github.event.inputs.which == 'lyapunov3d_v2' }}
         run: |
           for L in relu soft; do TAG=v3_$L LOSS=$L GLOBAL=1 V2=1 LR=1e-2 N=32 NU=1e-3 T=0.6 ROUNDS=8 TRAIN=300 ADV_ITERS=15 python -u lyapunov_search.py 2>/dev/null | tee results/lyapunov3d_v3_$L.txt; ATTACK=results/lyapunov_g_v3_$L.pt LOSS=$L GLOBAL=1 V2=1 N=32 NU=1e-3 T=0.6 ADV_ITERS=60 RESTARTS=5 TRAIN=0 python -u lyapunov_search.py 2>/dev/null | tee results/lyapunov3d_v3_${L}_attack.txt; done
+      - name: seam_race
+        if: ${{ github.event.inputs.which == 'seam_race' }}
+        run: |
+          for nu in 0 1e-3 2e-3; do NU=$nu N=64 T=2.0 EVERY=0.1 python -u seam_race.py 2>/dev/null | tee results/seam_race_64_nu$nu.txt; done
+          NU=2e-3 N=96 T=1.6 EVERY=0.1 python -u seam_race.py 2>/dev/null | tee results/seam_race_96_nu2e-3.txt
       - name: kp_ladder
         if: ${{ github.event.inputs.which == 'kp_ladder' }}
         run: |
