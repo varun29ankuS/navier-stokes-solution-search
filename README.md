@@ -74,8 +74,10 @@ ones (2e-3) until their clocks expire. `plot_seam.py` from the run logs.*
    the sign and viscosity-scaling of diffusion across the sheets (C34) - Kelvin's frame holds for circulation, and for
    vorticity only in the limit: the diffusive loss fraction falls 0.48, 0.33, 0.07, 0.00 at nu = 2e-3, 1e-3, 5e-4,
    2.5e-4 (C35) - at the lowest viscosity the material vorticity follows the inviscid strain budget to 3%. The sheets
-   are narrowed in their plane early and stretched along themselves after t ~ 1.1, the sign change coinciding with
-   the clock: the sheet beginning to roll. C25 (the wall,
+   are narrowed in their plane early and stretched along themselves after t ~ 1.1 - and they do **not** roll: the
+   tagged fluid winds 0.06-0.11 turn by the clock at one-twentieth of its own solid-body rate while |w| keeps
+   growing (C36 KILL). Two antiparallel sheets cancel each other's induction and are mutually stabilised against
+   Kelvin-Helmholtz; they thin, intensify and merge flat. The safe roll-up theorems do not cover this object. C25 (the wall,
    located) holds along two solutions. An Eulerian estimator, Re_seam, had suggested the jump grows as nu falls (C21's
    KILL); the direct measurement says it does not, and the interpretation is withdrawn.
 7. **The quantum control.** In Gross-Pitaevskii the same antiparallel pair reconnects at a fixed floor (the healing

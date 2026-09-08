@@ -98,6 +98,13 @@ rigorous cousin; the converse is open).
   clock; a stable singularity should show a finite-T* descent in the coherent regime.
 - **Generality with more seeds.** Everything above is one adversarial field, one second field, one pair, Kida-Pelz.
 
+**The edge of the map (2026-09-08, C36).** The seam does not roll. The tagged fluid winds a tenth of a turn by the
+clock at one-twentieth of its own solid-body rate while its vorticity grows: two antiparallel sheets cancel each
+other's induction between them and are stabilised against Kelvin-Helmholtz - Kerr's configuration, the one that
+suppresses the roll that regularises a single sheet. Every safe result about sheets (Baker-Shelley, Krasny, Pullin,
+Lundgren's spiral) assumes the roll. A flat, non-rolling antiparallel pair whose thickness goes to zero is the open
+question of 3-D Euler, reached and not crossed.
+
 ## Open, and not reachable here
 
 Whether the wave arrives at zero in Euler (the clock expires at t ~ 0.9 even at 256^3; the strip collapses

@@ -425,6 +425,19 @@ twisted set's centroid, normal to the vorticity. On the sheet field at nu = 5e-4
 the fluid completes >= 0.5 turn inside the clock after the flip, at a winding rate within x2 of |w|_m/(4 pi) (solid-body
 rotation at the material vorticity). Refuted by: winding below 0.25 turn at the clock with |w|_m still growing - a
 sheet intensifying without rolling, which is the non-spiral case the 2-D theorems do not cover.
+**Result (2026-09-08, v17, 320^3): KILL at 5e-4, between at 2e-3 - the seam does not roll.** Winding of the
+tagged fluid 0.063 turn at the clock (nu = 5e-4, t = 1.2) and 0.106 turn (2e-3, t = 2.2); winding rate 0.06-0.12
+turns per unit against a solid-body rate |w|_m/(4 pi) of 0.9-1.25: the fluid circles at one-twentieth of the rate its
+own vorticity would spin it, and at 5e-4 the material vorticity keeps growing (11 -> 16) through the flip while the
+winding slows. Not Lundgren's spiral, not a Kelvin-Helmholtz roll: the sheets thin, intensify and merge flat. The
+reading "the in-plane strain's sign change is the sheet beginning to roll" (C35's correction) is withdrawn. The
+reason is visible in the geometry: K-H needs one sheet with a jump across it; two antiparallel sheets pressing
+together have induced fields that cancel between them - the same cancellation that killed the dipole-gradient closure -
+and are mutually stabilised against rolling. This is Kerr's configuration, and it says why it was the candidate for
+forty years: it is the one that suppresses the roll that would otherwise regularise the sheet. Consequence: the safe
+theorems (Baker-Shelley, Krasny, Pullin, Lundgren) all assume the roll and do not cover this object. A flat,
+non-rolling antiparallel pair whose thickness goes to zero is the open question of 3-D Euler; the instrument has
+reached it and stopped at the clock.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
