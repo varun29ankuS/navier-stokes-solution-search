@@ -109,7 +109,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=5e-4 T=1.3 N=320 LAGR=1 TSEED=0.6;IC=found NU=2e-3 T=2.2 N=320 LAGR=1 TSEED=0.6"   # v17: the roll - winding from an early seed through the flip
+    SCHEDULE = "IC=found NU=2e-3 T=2.4 N=320 LAGR=1 TSEED=1.0;IC=found NU=5e-4 T=1.3 N=320 LAGR=1 TSEED=0.7"   # v18: the toroidal closure
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -242,6 +242,12 @@ def lagr_diag(U, P, sgn):
     wind = (LAG["wind"].abs().median() / (2 * math.pi)).item()
     rad = torch.sqrt(((rel * e1).sum(1)) ** 2 + ((rel * e2).sum(1)) ** 2)
     LAG["last_rad"] = rad; LAG["last_wmp"] = wmp
+    # C37: poloidal circulation of the tagged fluid about the pair's axis (xi_ref through the centroid), and the cloud's anisotropy
+    upP = torch.stack([interp3(ui, P) for ui in u], 1)
+    r_perp = rel - (rel @ xr)[:, None] * xr[None]; r2 = (r_perp**2).sum(1) + 1e-12
+    c_around = (torch.cross(r_perp, upP, dim=1) @ xr / r2).mean().item()
+    ev = torch.linalg.eigvalsh(torch.cov(rel.T)); ev = torch.sqrt(torch.clamp(ev, min=1e-12))
+    LAG["c_around"] = c_around / max(wmp.median().item(), 1e-9); LAG["axes"] = (ev[0].item(), ev[1].item(), ev[2].item()); LAG["ratio"] = (ev[0] / ev[1]).item()
     wsign = torch.sign(sum(interp3(w[c], P) * LAG["xi_ref"][c] for c in range(3)))                # the sign of omega . xi_ref carried by each particle now
     flipped = wsign != sgn; flip = flipped.float().mean().item()
     # who closes the gap: closing rate from the full velocity and from the pair's own induced velocity, along the separation
@@ -365,7 +371,7 @@ with torch.no_grad():
         print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
             FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
 print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g (%s)" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE, FMODE), flush=True)
-print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(pair) dgap/dt(sheets) flipped@  kappa  C_LIA   delta_m  s_m    n_m    wind" if LAGR else ""))
+print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(pair) dgap/dt(sheets) flipped@  kappa  C_LIA   delta_m  s_m    n_m    wind   C_around/|w|  axes" if LAGR else ""))
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
@@ -382,7 +388,8 @@ while t <= T + 1e-9:
             with torch.no_grad(): mw, gap, jump, flip, rf, rs, where, rsh, kappa, dmat, smat, nmat, wind = lagr_diag(U, LAG["P"], LAG["sgn"])
             clia = rs / (jump * kappa * gap) if (np.isfinite(kappa) and kappa > 0 and gap > 0) else float("nan")
             LAG.setdefault("rows", []).append((t, mw, gap, jump, flip, rf, rs, where, rsh, kappa, clia, dmat, smat, nmat, wind))
-            lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %+.4f   %s   %6.2f  %+.3f   %.4f  %+.3f  %+.3f  %.3f" % (mw, gap, jump, flip, rf, rs, rsh, ("%.2f" % where) if np.isfinite(where) else " -  ", kappa, clia, dmat, smat, nmat, wind)
+            LAG.setdefault("tor", []).append((t, LAG.get("c_around", float("nan")), LAG.get("ratio", float("nan"))))
+            lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %+.4f   %s   %6.2f  %+.3f   %.4f  %+.3f  %+.3f  %.3f   %+.3f  %.2f" % (mw, gap, jump, flip, rf, rs, rsh, ("%.2f" % where) if np.isfinite(where) else " -  ", kappa, clia, dmat, smat, nmat, wind, LAG.get("c_around", float("nan")), LAG.get("ratio", float("nan")))
         hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d if np.isfinite(d) else 0.0, re_seam, float(valid)) + tuple(softs[v] for v in SEPS) + (Er,))
         print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s%s   (%.0fs)" % (
             t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ("%.4f" % ell_nu) if valid else "   -  ", ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam,
@@ -432,6 +439,18 @@ if LAGR and LAG.get("rows"):
     if kk_m.sum() >= 3:
         kk = -rf[kk_m] / (gp[kk_m] - dl[kk_m])
         print("C32 closing law: k = -dgap/dt / (gap - delta) on the descent: median %.2f, spread %.2f..%.2f over %d rows (t %.2f-%.2f)" % (float(np.median(kk)), kk.min(), kk.max(), kk_m.sum(), tl[kk_m][0], tl[kk_m][-1]))
+    # C37: the toroidal closure - poloidal circulation about the pair's axis as the induction dies; the cloud's anisotropy
+    try:
+        Tr = np.array(LAG.get("tor", []));
+        if len(Tr) >= 3:
+            tt_ = Tr[:, 0]; ca_ = Tr[:, 1]; rt_ = Tr[:, 2]; okc = tt_ <= tl[last]
+            ind = rs; i_die = np.where(okc & (np.abs(ind) < 0.2 * np.abs(ind[0])))[0]
+            print("C37 toroidal closure: pair induction %+.4f at seed -> %+.4f at the clock (below 20%% at t = %s); C_around/|w|_m %+.3f at seed, max |.| inside the clock %.3f (at t = %.2f); cloud axis ratio small/mid %.2f -> %.2f" % (
+                ind[0], ind[okc][-1], ("%.2f" % tt_[i_die[0]]) if len(i_die) else "never", ca_[0], np.abs(ca_[okc]).max(), tt_[okc][int(np.argmax(np.abs(ca_[okc])))], rt_[0], rt_[okc][-1]))
+            tor = np.abs(ca_[okc]).max() >= 0.3 and rt_[okc][-1] > 0.5; flat = np.abs(ca_[okc]).max() < 0.1 and rt_[okc][-1] < 0.3
+            print("REGISTERED C37: %s" % ("KILL: a toroidal pair forms" if tor else ("PASS: the pair merges flat, no toroidal closure" if flat else "between (C_around max %.3f, ratio %.2f)" % (np.abs(ca_[okc]).max(), rt_[okc][-1]))))
+    except Exception as e:
+        print("C37: analysis failed (%s)" % e)
     # C36: the roll - winding of the tagged fluid inside the clock, and its rate against |w|_m / (4 pi)
     try:
         inw = m & np.isfinite(wd)
