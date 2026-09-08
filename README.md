@@ -69,7 +69,11 @@ ones (2e-3) until their clocks expire. `plot_seam.py` from the run logs.*
 6. **Kelvin's frame: the gap closes linearly and the velocity jump is bounded.** Fluid tagged on both sheets at
    t = 1.0 and followed: the material gap closes with lambda = 0.99 at both nu = 2e-3 and 1e-3, its minimum coinciding
    with the Eulerian V to 0.04; the velocity jump across the pair rises by at most 9% before the merge and is the same
-   at both viscosities (~0.95 at the merge); the material vorticity turns over and falls as the cut acts. C25 (the wall,
+   at both viscosities (~0.95 at the merge) - Kelvin fixes the circulation. The material *vorticity* does not follow
+   the inviscid budget: the strains overshoot its growth from the first row by about half the compression rate,
+   the sign and viscosity-scaling of diffusion across the sheets (C34) - Kelvin's frame holds for circulation, not
+   for vorticity. The sheets are stretched along themselves (t.S.t < 0), not narrowed; thinning = compression +
+   in-plane stretching closes to 7-15%. C25 (the wall,
    located) holds along two solutions. An Eulerian estimator, Re_seam, had suggested the jump grows as nu falls (C21's
    KILL); the direct measurement says it does not, and the interpretation is withdrawn.
 7. **The quantum control.** In Gross-Pitaevskii the same antiparallel pair reconnects at a fixed floor (the healing

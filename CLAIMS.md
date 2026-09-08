@@ -235,6 +235,9 @@ median velocity jump across the nearest pairs stays within 2x of its value at se
 |w| grows while the gap closes and turns over at the merge. Refuted by: a jump that grows more than 2x while the gap
 closes (C25 fails on this field along one solution), or lambda < 0.7. Context: the Eulerian rungs (C21) already show
 the jump at the merge rising x1.5 per halving of nu across solutions.
+**Reading corrected 2026-09-08 (v15):** the jump clause stands (Kelvin fixes the circulation); the phrase "the cut acting
+on the tagged sheets" understated it - diffusion removes vorticity from the material sheets from the first row at
+about half the strain rate (C34). Kelvin's frame holds for circulation, not for material vorticity.
 **Result (2026-09-08, v8): PASS at both viscosities.** Lagrangian gap 0.27 -> 0.15 with lambda = 0.99 at nu = 2e-3
 (256^3) and 0.99 at 1e-3 (320^3); the gap minimum (t = 1.65 / 1.70) coincides with the Eulerian V (1.69 / 1.72); the
 velocity jump across the pair is 1.01 -> max 1.10 (x1.09) and 1.08 -> max 1.17 (x1.08), ~0.95 at the merge at both nu
@@ -379,6 +382,19 @@ sheet; (ii) the strains OVERSHOOT the growth, by an amount that doubles when nu 
 diffusion, Kelvin's frame is incomplete in a known way ("Kelvin holds up to a viscous drift"); (iii) the strains fall
 SHORT of the growth with no viscous scaling - a term outside both the strain budget and diffusion: new. The "cut"
 column, -nu w.lap w on the twisted set, is the independent estimate of (ii).
+**Result (2026-09-08, v15, 320^3): the KILL fired at both viscosities - outcome (ii), Kelvin's frame is incomplete
+in the known way, plus a sign error of mine.** The strains OVERSHOOT the material growth from the first row:
+residual (strains - growth) +0.30 at nu = 2e-3 and +0.24 -> +0.12 at 1e-3 before the cut, rising to +0.7 through it -
+the sign of vorticity removed from the tagged fluid, scaling roughly with nu: viscous diffusion of vorticity across
+the material sheets, present from the moment the sheets form at about HALF the strain rate. "Kelvin holds until the
+merge" (C26's reading) is withdrawn: Kelvin fixes the circulation (the jump, 9%), but the material vorticity never
+followed the inviscid budget - the stretching ran at a 50% loss to diffusion throughout and the merge is where the
+loss reaches 100%. Second: the in-plane strain t.S.t is NEGATIVE (-0.25 to -0.5): the sheets are stretched along
+themselves, not narrowed, which is why they thin faster than |w| grows - the thickness budget thinning = compression
++ |in-plane stretching| (0.64 + 0.25 = 0.89 vs measured 0.83; 0.80 + 0.31 = 1.11 vs 0.94) closes to 7-15%; the
+vorticity budget leaks to diffusion. No new term: two known terms, one with the wrong sign in my model and one
+omitted by the frame. The one-variable seam stands with three measured rates: compression 0.7, in-plane stretching
+0.3, diffusion ~0.3-0.5 x compression.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
