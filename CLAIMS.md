@@ -138,6 +138,11 @@ fraction on the high set is below 0.2. Refuted by: a field with anti fraction < 
 Why it matters: Constantin-Fefferman covers coherent direction, Grujic's cancellation covers incoherent direction; if
 fast growth lives only in the twisted regime, the seam is the only place left. Test: `DMIN=0.30 TWISTW=10 N=32 T=1.0
 ITERS=60 NVER=128 python adversarial_ic.py`.
+**Result (2026-09-08):** 32^3 clauses met (1.19-1.49 vs 8.28) but the 32^3 baseline is unresolved growth; the 64^3
+clause is **refuted** - coherent 2.24x resolved at 128^3 vs twisted 3.18x, a 30% cut. Re-scoped: the twist adds ~40%
+at 64^3 and is not necessary. The measure carries the grid scale (1-2 cells) and must be redefined at a fixed physical
+separation before any cross-resolution comparison. Kept: the monotone trade-off at each resolution, the helicity
+plateau, and three resolved found fields (1.19, 1.52, 2.24).
 
 **C20 (registered 2026-09-07, before the run). The seam reaches its viscous thickness and the twist turns over.**
 GPU spectral run (`kaggle/seam/seam_gpu.py`), 256^3, clock 2dx = 0.049, the searcher's sheet field and a Kerr-type
@@ -147,6 +152,10 @@ the clock, the strong twist (enstrophy-weighted sharp reversal) peaks there and 
 max|w| grows < 3x. At nu = 0 the twist rises to the clock. Refuted by: the twist still rising at the clock with the
 race variable < 1 (the roll-up outruns the cut at a resolved viscous scale) - which would be the first resolved
 evidence for phase 2 winning, and the most important number this repository could produce.
+**Result (2026-09-08):** nu = 2e-3, 256^3, resolved to T = 3: twist peaks at t = 1.7 and falls 74% (met); race
+variable 1.49 at the end (met, barely); max|w| growth 4.55x at the clock, peak 5.7x (**not** met, registered < 3x);
+the seam is cut from the moment it forms (50-80%); Z and max|w| peak and decay inside the clock. Formally between,
+physically the cut wins at Re ~ 500. nu = 0: the clock expires at t = 0.9. Tube-pair control: setup failed, void.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.

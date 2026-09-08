@@ -962,6 +962,67 @@ pressed together by the external strain, which viscosity does not touch at these
 monotone quantity within the window; it sits in the dominating set, like every candidate before it. What would turn
 it over is reconnection at the viscous seam thickness, which this window does not reach - the seam race again.
 
+**The 64^3 run refutes C19 as registered (2026-09-08).** With the twist forbidden at 64^3 (weight 10, 45 iterations,
+leash 0.30) the searcher reached 2.22x on the search grid and **2.24x at 128^3, resolved** (delta 0.113 > 0.098,
+anti 0.000, alpha_s 2.24 - a coherent sheet), against the twisted baseline's 3.18x (which is *not* resolved at 128^3,
+though its value is stable to 192^3). That is a 30% cut, not the registered 50%. At the same measurement scale the
+baseline's high set is 91% antiparallel at t = 1 and the coherent field's is 9%. So at 64^3 the twist buys about
+40% more growth; it is not necessary for growth. The 32^3 numbers (8.28 vs 1.2-1.5) overstated the effect because
+the 32^3 baseline's 8.28 is unresolved growth. Full table, all at 128^3 verification:
+
+```
+                         search   growth   at 128^3   resolved   anti at 128^3
+baseline (twisted)       32^3     8.28     (8.28)     no         -
+w = 3                    32^3     3.15     4.32       no         0.32
+w = 10                   32^3     1.49     1.52       YES        0.00
+w = 30                   32^3     1.19     1.19       YES        0.00
+baseline (twisted)       64^3     3.18     3.18       no (stable to 192^3)
+w = 10                   64^3     2.22     2.24       YES        0.00
+classical                -        -        1.01-1.11  YES        0.00
+```
+
+Two things survive. The trade-off is real and monotone at every resolution tried - forbidding the twist always
+costs growth, and denied it the searcher walks to the helicity plateau (H/Hmax = -0.50 at w = 30, the ladder's
+edge). And the twist penalty is the first objective that produced *resolved* found fields: 1.19, 1.52, 2.24 - the
+coherent regime's growth is now measured rather than extrapolated. A defect in the instrument, recorded: the twist
+is measured at one and two grid cells, so it carries the grid scale (0.39 at 32^3, 0.20 at 64^3, 0.05 at 256^3);
+the 256^3 seam run below reads the same 64^3 field as twist 0.000 at t = 0 for exactly this reason. It has to be
+defined at a fixed physical separation before the curve is compared across resolutions.
+
+## The seam race at the viscous thickness: 256^3 on a GPU, resolved end to end
+
+`kaggle/seam/seam_gpu.py` (PyTorch, same scheme, T4). The searcher's 64^3 sheet field at 256^3, T = 3, clock
+2dx = 0.049. Race variable = sheet thickness |w|/|grad|w|| on the high set over the viscous thickness sqrt(nu/s).
+Registered as C20 before the run. `results/seam_gpu/`.
+
+```
+nu = 2e-3, resolved throughout (delta >= 0.0585 > 0.049 to t = 3):
+  t      Z/Z0    max|w|   twist(0.05)  anti    ell     ell_nu   race   cut(visc > +stretch on the seam)
+ 0.0    1.000     7.2     0.00000      0.000   0.636   0.261    2.4    0.00
+ 0.9    2.306    22.2     0.00001      0.000   0.296   0.092    3.2    0.00
+ 1.2    2.825    22.6     0.00051      0.013   0.260   0.065    4.0    0.82
+ 1.5    3.163    25.1     0.00762      0.081   0.205   0.051    4.0    0.63
+ 1.8    3.161    41.1     0.01329      0.083   0.223   0.086    2.6    0.81     <- Z peak, max|w| peak (5.7x)
+ 2.1    2.941    37.1     0.00558      0.049   0.188   0.062    3.1    0.53
+ 3.0    2.421    32.5     0.00376      0.016   0.156   0.104    1.5    0.65
+twist peaks 0.0147 at t = 1.7 and falls 74%; the seam is cut (viscous cancellation beats positive stretching on
+50-80% of it) from the moment it forms; enstrophy and max|w| peak and decay inside the clock.
+
+nu = 0:      the clock expires at t = 0.9 (delta 0.2255 -> 0.050, e-folding ~0.6) with max|w| 3.7x and no twist
+             at the 0.05 scale yet; everything after (Z "167x" at t = 3) is unresolved and is not a number.
+nu = 1e-2:   Z peaks at 1.31 and decays; viscous from the start.
+pair IC:     setup failed - the tubes (D 1.2, sigma 0.35) did not interact in T = 3 (max|w| 6.6 -> 7.5) and the
+             compression across them is ~0, so the race variable is undefined; the printed PASS is void.
+```
+
+Registered clauses at nu = 2e-3: twist falls >= 20% - yes (74%); race variable <= 1.5 inside the clock - 1.49 at
+the last row, barely; max|w| growth < 3x - **no**, 4.55x at the clock (peak 5.7x). Formally "between"; the physics
+is not ambiguous: at this Reynolds number (~500, low-k data) **the cut wins**, and for the first time the whole
+race is inside the reliable window. The Euler seam, by contrast, is out of reach of any spectral box: the
+analyticity strip collapses exponentially and 256^3 buys t = 0.9. Two honest limits: the Reynolds number is low
+and the data is the searcher's, not Kerr's; the tube-pair control has to be rebuilt (closer, longer) before it
+says anything.
+
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
 Theorem 4 (Tao 2016) says that the exact structure this repository verifies - energy conservation, the scaling, the

@@ -1,0 +1,158 @@
+[{"stream_name":"stdout","time":6.604637254,"data":"=== IC=found NU=2e-3 -\u003e /kaggle/working/seam_ICfound_NU2e-3.txt\n"}
+,{"stream_name":"stdout","time":9.769272677,"data":"seam race on GPU: IC=found  N=256^3  nu=0.002  T=3.0  Z0=0.375  clock 2dx=0.0491  device=cuda\n"}
+,{"stream_name":"stdout","time":10.776311516,"data":"   t     Z/Z0    max|w|    twist(strong)   anti    ell     ell_nu    race=ell/ell_nu   cut     delta\n"}
+,{"stream_name":"stdout","time":10.776341774,"data":" 0.00    1.000      7.16    0.00000        0.000   0.6364   0.2607       2.44          0.000   0.2255   (1s)\n"}
+,{"stream_name":"stdout","time":28.28648674,"data":" 0.10    1.045      8.16    0.00000        0.000   0.6315   0.0884       7.14          0.000   0.0224  \u003c-- past the clock   (19s)\n"}
+,{"stream_name":"stdout","time":46.951027964,"data":" 0.20    1.123      9.68    0.00000        0.000   0.5265   0.0652       8.08          0.000   0.0386  \u003c-- past the clock   (37s)\n"}
+,{"stream_name":"stdout","time":65.570400105,"data":" 0.30    1.234     11.06    0.00000        0.000   0.4333   0.0565       7.66          0.000   0.1448   (56s)\n"}
+,{"stream_name":"stdout","time":84.140711831,"data":" 0.40    1.373     13.17    0.00000        0.000   0.3718   0.0532       6.99          0.000   0.1930   (74s)\n"}
+,{"stream_name":"stdout","time":102.665362094,"data":" 0.50    1.536     15.45    0.00000        0.000   0.3282   0.0536       6.13          0.000   0.1590   (93s)\n"}
+,{"stream_name":"stdout","time":119.986956703,"data":" 0.60    1.718     17.57    0.00000        0.000   0.3026   0.0574       5.27          0.000   0.1321   (110s)\n"}
+,{"stream_name":"stdout","time":137.33998247,"data":" 0.70    1.911     19.48    0.00000        0.000   0.2933   0.0642       4.57          0.000   0.1136   (128s)\n"}
+,{"stream_name":"stdout","time":154.705006786,"data":" 0.80    2.109     21.05    0.00000        0.000   0.2933   0.0743       3.95          0.000   0.1001   (145s)\n"}
+,{"stream_name":"stdout","time":172.066807316,"data":" 0.90    2.306     22.20    0.00001        0.000   0.2963   0.0922       3.22          0.000   0.0897   (162s)\n"}
+,{"stream_name":"stdout","time":189.42006757,"data":" 1.00    2.494     22.79    0.00005        0.000   0.2917   0.0960       3.04          0.000   0.0831   (180s)\n"}
+,{"stream_name":"stdout","time":207.975934759,"data":" 1.10    2.668     22.85    0.00015        0.002   0.2779   0.0816       3.41          0.817   0.0780   (198s)\n"}
+,{"stream_name":"stdout","time":227.742493267,"data":" 1.20    2.825     22.63    0.00051        0.013   0.2603   0.0653       3.99          0.821   0.0746   (218s)\n"}
+,{"stream_name":"stdout","time":249.930583927,"data":" 1.30    2.962     23.04    0.00170        0.035   0.2371   0.0568       4.17          0.771   0.0680   (240s)\n"}
+,{"stream_name":"stdout","time":272.119917532,"data":" 1.40    3.077     24.07    0.00417        0.056   0.2170   0.0505       4.29          0.685   0.0688   (262s)\n"}
+,{"stream_name":"stdout","time":294.308602449,"data":" 1.50    3.163     25.11    0.00762        0.081   0.2049   0.0511       4.01          0.626   0.0689   (285s)\n"}
+,{"stream_name":"stdout","time":314.078418906,"data":" 1.60    3.209     28.99    0.01216        0.100   0.2072   0.0535       3.87          0.657   0.0692   (304s)\n"}
+,{"stream_name":"stdout","time":332.641027674,"data":" 1.70    3.207     35.12    0.01473        0.133   0.2024   0.0524       3.86          0.807   0.0660   (323s)\n"}
+,{"stream_name":"stdout","time":351.248420602,"data":" 1.80    3.161     41.14    0.01329        0.083   0.2226   0.0858       2.59          0.810   0.0587   (341s)\n"}
+,{"stream_name":"stdout","time":369.809123412,"data":" 1.90    3.091     39.51    0.01124        0.080   0.2060   0.0827       2.49          0.609   0.0572   (360s)\n"}
+,{"stream_name":"stdout","time":388.3710509,"data":" 2.00    3.014     35.99    0.00791        0.075   0.1936   0.0611       3.17          0.611   0.0579   (379s)\n"}
+,{"stream_name":"stdout","time":406.930140085,"data":" 2.10    2.941     37.12    0.00558        0.049   0.1884   0.0615       3.07          0.532   0.0585   (397s)\n"}
+,{"stream_name":"stdout","time":425.489062102,"data":" 2.20    2.877     35.11    0.00442        0.040   0.1831   0.0789       2.32          0.457   0.0602   (416s)\n"}
+,{"stream_name":"stdout","time":444.049414286,"data":" 2.30    2.822     33.60    0.00436        0.038   0.1798   0.0804       2.23          0.371   0.0624   (434s)\n"}
+,{"stream_name":"stdout","time":461.399332952,"data":" 2.40    2.769     32.92    0.00516        0.042   0.1766   0.0780       2.26          0.511   0.0641   (452s)\n"}
+,{"stream_name":"stdout","time":477.541885464,"data":" 2.50    2.714     32.50    0.00607        0.041   0.1688   0.0747       2.26          0.631   0.0626   (468s)\n"}
+,{"stream_name":"stdout","time":494.893889297,"data":" 2.60    2.656     33.34    0.00642        0.038   0.1669   0.0734       2.27          0.716   0.0616   (485s)\n"}
+,{"stream_name":"stdout","time":512.243904606,"data":" 2.70    2.597     33.78    0.00586        0.033   0.1621   0.0691       2.34          0.679   0.0623   (502s)\n"}
+,{"stream_name":"stdout","time":529.594387706,"data":" 2.80    2.537     33.68    0.00489        0.024   0.1602   0.0690       2.32          0.641   0.0627   (520s)\n"}
+,{"stream_name":"stdout","time":545.735967122,"data":" 2.90    2.479     33.37    0.00410        0.018   0.1590   0.0852       1.87          0.606   0.0633   (536s)\n"}
+,{"stream_name":"stdout","time":561.878979328,"data":" 3.00    2.421     32.53    0.00376        0.016   0.1556   0.1043       1.49          0.649   0.0643   (552s)\n"}
+,{"stream_name":"stdout","time":561.88245237,"data":"\n"}
+,{"stream_name":"stdout","time":561.882473195,"data":"clock expires at t = 3.00 (delta 0.0643); strong twist peak 0.01473 at t = 1.70, at the clock 0.00376 (fall 74%); max|w| growth to the clock 4.55x\n"}
+,{"stream_name":"stdout","time":561.88247946,"data":"race variable ell/ell_nu min inside the clock = 1.49 (at t = 3.00); cut fraction at the clock 0.649\n"}
+,{"stream_name":"stdout","time":561.882485287,"data":"REGISTERED C20 at nu=0.002: between (see rows)\n"}
+,{"stream_name":"stdout","time":563.922162597,"data":"=== IC=found NU=0 -\u003e /kaggle/working/seam_ICfound_NU0.txt\n"}
+,{"stream_name":"stdout","time":566.386210488,"data":"seam race on GPU: IC=found  N=256^3  nu=0  T=3.0  Z0=0.375  clock 2dx=0.0491  device=cuda\n"}
+,{"stream_name":"stdout","time":566.90604715,"data":"   t     Z/Z0    max|w|    twist(strong)   anti    ell     ell_nu    race=ell/ell_nu   cut     delta\n"}
+,{"stream_name":"stdout","time":566.90608792,"data":" 0.00    1.000      7.16    0.00000        0.000   0.6364   nan        nan          0.000   0.2255   (1s)\n"}
+,{"stream_name":"stdout","time":585.469888195,"data":" 0.10    1.052      8.20    0.00000        0.000   0.6310   nan        nan          0.000   0.0130  \u003c-- past the clock   (19s)\n"}
+,{"stream_name":"stdout","time":604.006336121,"data":" 0.20    1.142      9.79    0.00000        0.000   0.5226   nan        nan          0.000   0.0239  \u003c-- past the clock   (38s)\n"}
+,{"stream_name":"stdout","time":622.554858669,"data":" 0.30    1.268     11.29    0.00000        0.000   0.4282   nan        nan          0.000   0.1263   (56s)\n"}
+,{"stream_name":"stdout","time":641.11724261,"data":" 0.40    1.433     13.71    0.00000        0.000   0.3631   nan        nan          0.000   0.1708   (75s)\n"}
+,{"stream_name":"stdout","time":659.6837218,"data":" 0.50    1.633     16.43    0.00000        0.000   0.3183   nan        nan          0.000   0.1326   (93s)\n"}
+,{"stream_name":"stdout","time":678.248330651,"data":" 0.60    1.870     19.15    0.00000        0.000   0.2894   nan        nan          0.000   0.1024   (112s)\n"}
+,{"stream_name":"stdout","time":695.602548305,"data":" 0.70    2.140     21.88    0.00000        0.000   0.2760   nan        nan          0.000   0.0801   (129s)\n"}
+,{"stream_name":"stdout","time":712.953630754,"data":" 0.80    2.447     24.34    0.00001        0.000   0.2534   nan        nan          0.000   0.0633   (147s)\n"}
+,{"stream_name":"stdout","time":730.304540724,"data":" 0.90    2.792     26.34    0.00003        0.000   0.2294   nan        nan          0.000   0.0505   (164s)\n"}
+,{"stream_name":"stdout","time":748.862565919,"data":" 1.00    3.184     28.31    0.00025        0.022   0.2022   nan        nan          0.000   0.0454  \u003c-- past the clock   (182s)\n"}
+,{"stream_name":"stdout","time":768.628862216,"data":" 1.10    3.638     30.85    0.00256        0.104   0.1596   nan        nan          0.000   0.0405  \u003c-- past the clock   (202s)\n"}
+,{"stream_name":"stdout","time":792.023104181,"data":" 1.20    4.174     34.20    0.01180        0.242   0.1212   nan        nan          0.000   0.0314  \u003c-- past the clock   (226s)\n"}
+,{"stream_name":"stdout","time":819.045126309,"data":" 1.30    4.821     42.55    0.02777        0.380   0.0939   nan        nan          0.000   0.0278  \u003c-- past the clock   (253s)\n"}
+,{"stream_name":"stdout","time":846.094219687,"data":" 1.40    5.608     62.43    0.05150        0.354   0.1057   nan        nan          0.000   0.0256  \u003c-- past the clock   (280s)\n"}
+,{"stream_name":"stdout","time":871.907639114,"data":" 1.50    6.593     88.94    0.08976        0.324   0.0962   nan        nan          0.000   0.0255  \u003c-- past the clock   (306s)\n"}
+,{"stream_name":"stdout","time":896.511693357,"data":" 1.60    7.882    101.96    0.13902        0.429   0.0655   nan        nan          0.000   0.0248  \u003c-- past the clock   (330s)\n"}
+,{"stream_name":"stdout","time":921.116426322,"data":" 1.70    9.600    121.93    0.18941        0.571   0.0554   nan        nan          0.000   0.0205  \u003c-- past the clock   (355s)\n"}
+,{"stream_name":"stdout","time":946.931063849,"data":" 1.80   11.816    157.70    0.21234        0.808   0.0412   nan        nan          0.000   0.0174  \u003c-- past the clock   (381s)\n"}
+,{"stream_name":"stdout","time":976.372635836,"data":" 1.90   14.761    224.56    0.28743        0.881   0.0339   nan        nan          0.000   0.0140  \u003c-- past the clock   (410s)\n"}
+,{"stream_name":"stdout","time":1005.815383579,"data":" 2.00   18.729    167.62    0.32024        0.884   0.0390   nan        nan          0.000   0.0111  \u003c-- past the clock   (439s)\n"}
+,{"stream_name":"stdout","time":1035.259029438,"data":" 2.10   24.212    180.09    0.38255        0.943   0.0382   nan        nan          0.000   0.0078  \u003c-- past the clock   (469s)\n"}
+,{"stream_name":"stdout","time":1065.912340797,"data":" 2.20   31.959    187.43    0.45594        0.976   0.0371   nan        nan          0.000   0.0046  \u003c-- past the clock   (500s)\n"}
+,{"stream_name":"stdout","time":1096.566333594,"data":" 2.30   42.323    186.07    0.54863        0.985   0.0369   nan        nan          0.000   0.0013  \u003c-- past the clock   (530s)\n"}
+,{"stream_name":"stdout","time":1126.009069547,"data":" 2.40   55.788    192.26    0.62933        0.992   0.0361   nan        nan          0.000   -0.0021  \u003c-- past the clock   (560s)\n"}
+,{"stream_name":"stdout","time":1157.869244876,"data":" 2.50   71.841    213.46    0.69425        0.997   0.0369   nan        nan          0.000   -0.0047  \u003c-- past the clock   (591s)\n"}
+,{"stream_name":"stdout","time":1189.729318104,"data":" 2.60   90.284    220.90    0.76228        0.999   0.0365   nan        nan          0.000   -0.0070  \u003c-- past the clock   (623s)\n"}
+,{"stream_name":"stdout","time":1222.798976208,"data":" 2.70   109.924    225.82    0.82111        1.000   0.0365   nan        nan          0.000   -0.0086  \u003c-- past the clock   (656s)\n"}
+,{"stream_name":"stdout","time":1253.45140677,"data":" 2.80   129.430    219.29    0.86190        1.000   0.0362   nan        nan          0.000   -0.0103  \u003c-- past the clock   (687s)\n"}
+,{"stream_name":"stdout","time":1285.308749842,"data":" 2.90   148.706    215.07    0.87647        1.000   0.0357   nan        nan          0.000   -0.0117  \u003c-- past the clock   (719s)\n"}
+,{"stream_name":"stdout","time":1313.541045911,"data":" 3.00   167.319    230.56    0.90345        1.000   0.0376   nan        nan          0.000   -0.0124  \u003c-- past the clock   (747s)\n"}
+,{"stream_name":"stdout","time":1313.541538635,"data":"\n"}
+,{"stream_name":"stdout","time":1313.541558244,"data":"clock expires at t = 0.90 (delta 0.0505); strong twist peak 0.00003 at t = 0.90, at the clock 0.00003 (fall 0%); max|w| growth to the clock 3.68x\n"}
+,{"stream_name":"stdout","time":1313.541563708,"data":"REGISTERED C20 at nu=0: twist RISES to the clock\n"}
+,{"stream_name":"stdout","time":1314.056411011,"data":"=== IC=pair NU=2e-3 -\u003e /kaggle/working/seam_ICpair_NU2e-3.txt\n"}
+,{"stream_name":"stdout","time":1316.356875547,"data":"seam race on GPU: IC=pair  N=256^3  nu=0.002  T=3.0  Z0=0.375  clock 2dx=0.0491  device=cuda\n"}
+,{"stream_name":"stdout","time":1316.855655956,"data":"   t     Z/Z0    max|w|    twist(strong)   anti    ell     ell_nu    race=ell/ell_nu   cut     delta\n"}
+,{"stream_name":"stdout","time":1316.855707547,"data":" 0.00    1.000      6.55    0.00000        0.000   0.4127   44721.3596       0.00          0.000   0.0153  \u003c-- past the clock   (0s)\n"}
+,{"stream_name":"stdout","time":1337.887668246,"data":" 0.10    0.996      6.53    0.00000        0.000   0.4142   0.3067       1.35          0.000   0.0223  \u003c-- past the clock   (22s)\n"}
+,{"stream_name":"stdout","time":1358.903978233,"data":" 0.20    0.992      6.49    0.00000        0.000   0.4144   0.2330       1.78          0.000   0.0196  \u003c-- past the clock   (43s)\n"}
+,{"stream_name":"stdout","time":1379.927559832,"data":" 0.30    0.988      6.45    0.00000        0.000   0.4152   0.2158       1.92          0.000   0.0182  \u003c-- past the clock   (64s)\n"}
+,{"stream_name":"stdout","time":1399.744120058,"data":" 0.40    0.984      6.40    0.00000        0.000   0.4166   0.2239       1.86          0.000   0.0356  \u003c-- past the clock   (83s)\n"}
+,{"stream_name":"stdout","time":1419.563851529,"data":" 0.50    0.981      6.34    0.00000        0.000   0.4186   0.2692       1.55          0.000   0.0831   (103s)\n"}
+,{"stream_name":"stdout","time":1439.384815361,"data":" 0.60    0.977      6.29    0.00000        0.000   0.4227   0.3938       1.07          0.000   0.1348   (123s)\n"}
+,{"stream_name":"stdout","time":1457.993626515,"data":" 0.70    0.973      6.38    0.00000        0.000   0.4355   44721.3596       0.00          0.000   0.1656   (142s)\n"}
+,{"stream_name":"stdout","time":1476.60036211,"data":" 0.80    0.970      6.47    0.00000        0.000   0.4497   44721.3596       0.00          0.000   0.1760   (160s)\n"}
+,{"stream_name":"stdout","time":1495.206033387,"data":" 0.90    0.968      6.58    0.00000        0.000   0.4651   44721.3596       0.00          0.000   0.1721   (179s)\n"}
+,{"stream_name":"stdout","time":1513.812713235,"data":" 1.00    0.966      6.68    0.00000        0.000   0.4774   44721.3596       0.00          0.000   0.1647   (197s)\n"}
+,{"stream_name":"stdout","time":1531.207315037,"data":" 1.10    0.965      6.80    0.00000        0.000   0.4890   44721.3596       0.00          0.000   0.1587   (215s)\n"}
+,{"stream_name":"stdout","time":1548.601080675,"data":" 1.20    0.965      6.91    0.00000        0.000   0.4973   44721.3596       0.00          0.000   0.1544   (232s)\n"}
+,{"stream_name":"stdout","time":1565.995326337,"data":" 1.30    0.965      7.02    0.00000        0.000   0.5019   44721.3596       0.00          0.000   0.1516   (250s)\n"}
+,{"stream_name":"stdout","time":1583.389099513,"data":" 1.40    0.966      7.13    0.00000        0.000   0.5008   44721.3596       0.00          0.000   0.1500   (267s)\n"}
+,{"stream_name":"stdout","time":1600.782988623,"data":" 1.50    0.967      7.22    0.00000        0.000   0.5007   44721.3596       0.00          0.000   0.1494   (284s)\n"}
+,{"stream_name":"stdout","time":1618.176807122,"data":" 1.60    0.969      7.31    0.00000        0.000   0.5010   44721.3596       0.00          0.000   0.1494   (302s)\n"}
+,{"stream_name":"stdout","time":1635.570170786,"data":" 1.70    0.971      7.38    0.00000        0.000   0.5032   44721.3596       0.00          0.000   0.1500   (319s)\n"}
+,{"stream_name":"stdout","time":1652.962327949,"data":" 1.80    0.973      7.43    0.00000        0.000   0.5065   44721.3596       0.00          0.000   0.1510   (337s)\n"}
+,{"stream_name":"stdout","time":1670.356016719,"data":" 1.90    0.976      7.47    0.00000        0.000   0.5113   44721.3596       0.00          0.000   0.1523   (354s)\n"}
+,{"stream_name":"stdout","time":1687.749093194,"data":" 2.00    0.978      7.49    0.00000        0.000   0.5174   44721.3596       0.00          0.000   0.1537   (371s)\n"}
+,{"stream_name":"stdout","time":1705.142472992,"data":" 2.10    0.981      7.50    0.00000        0.000   0.5248   44721.3596       0.00          0.000   0.1553   (389s)\n"}
+,{"stream_name":"stdout","time":1722.5357305,"data":" 2.20    0.984      7.50    0.00000        0.000   0.5329   44721.3596       0.00          0.000   0.1570   (406s)\n"}
+,{"stream_name":"stdout","time":1739.930568442,"data":" 2.30    0.987      7.47    0.00000        0.000   0.5380   44721.3596       0.00          0.000   0.1588   (424s)\n"}
+,{"stream_name":"stdout","time":1757.324446434,"data":" 2.40    0.990      7.44    0.00000        0.000   0.5442   1.3428       0.41          0.000   0.1605   (441s)\n"}
+,{"stream_name":"stdout","time":1774.719036196,"data":" 2.50    0.992      7.43    0.00000        0.000   0.5423   0.5333       1.02          0.000   0.1621   (458s)\n"}
+,{"stream_name":"stdout","time":1793.325372361,"data":" 2.60    0.995      7.42    0.00000        0.000   0.5405   0.6497       0.83          0.000   0.1637   (477s)\n"}
+,{"stream_name":"stdout","time":1811.931167953,"data":" 2.70    0.997      7.42    0.00000        0.000   0.5410   44721.3596       0.00          0.000   0.1644   (496s)\n"}
+,{"stream_name":"stdout","time":1830.537345041,"data":" 2.80    1.000      7.41    0.00000        0.000   0.5417   44721.3596       0.00          0.000   0.1644   (514s)\n"}
+,{"stream_name":"stdout","time":1849.142918678,"data":" 2.90    1.001      7.39    0.00000        0.000   0.5438   44721.3596       0.00          0.000   0.1639   (533s)\n"}
+,{"stream_name":"stdout","time":1867.74953085,"data":" 3.00    1.003      7.35    0.00000        0.000   0.5479   44721.3596       0.00          0.000   0.1614   (551s)\n"}
+,{"stream_name":"stdout","time":1867.750065724,"data":"\n"}
+,{"stream_name":"stdout","time":1867.750083078,"data":"clock expires at t = 3.00 (delta 0.1614); strong twist peak 0.00000 at t = 0.00, at the clock 0.00000 (fall 35%); max|w| growth to the clock 1.12x\n"}
+,{"stream_name":"stdout","time":1867.750089467,"data":"race variable ell/ell_nu min inside the clock = 0.00 (at t = 0.00); cut fraction at the clock 0.000\n"}
+,{"stream_name":"stdout","time":1867.750094315,"data":"REGISTERED C20 at nu=0.002: PASS: the seam reaches its viscous thickness and the twist turns over\n"}
+,{"stream_name":"stdout","time":1868.252956031,"data":"=== IC=found NU=1e-2 -\u003e /kaggle/working/seam_ICfound_NU1e-2.txt\n"}
+,{"stream_name":"stdout","time":1870.785387436,"data":"seam race on GPU: IC=found  N=256^3  nu=0.01  T=3.0  Z0=0.375  clock 2dx=0.0491  device=cuda\n"}
+,{"stream_name":"stdout","time":1871.312771333,"data":"   t     Z/Z0    max|w|    twist(strong)   anti    ell     ell_nu    race=ell/ell_nu   cut     delta\n"}
+,{"stream_name":"stdout","time":1871.31280536,"data":" 0.00    1.000      7.16    0.00000        0.000   0.6364   0.5829       1.09          0.000   0.2255   (1s)\n"}
+,{"stream_name":"stdout","time":1888.671571946,"data":" 0.10    1.015      8.00    0.00000        0.000   0.6334   0.2013       3.15          0.000   0.0318  \u003c-- past the clock   (18s)\n"}
+,{"stream_name":"stdout","time":1907.226515,"data":" 0.20    1.053      9.23    0.00000        0.000   0.5413   0.1508       3.59          0.000   0.0441  \u003c-- past the clock   (36s)\n"}
+,{"stream_name":"stdout","time":1925.788191431,"data":" 0.30    1.107     10.20    0.00000        0.000   0.4515   0.1327       3.40          0.000   0.1185   (55s)\n"}
+,{"stream_name":"stdout","time":1944.3526621,"data":" 0.40    1.167     11.44    0.00000        0.000   0.4027   0.1257       3.20          0.000   0.1925   (74s)\n"}
+,{"stream_name":"stdout","time":1961.70490636,"data":" 0.50    1.225     12.63    0.00000        0.000   0.3645   0.1250       2.92          0.000   0.2220   (91s)\n"}
+,{"stream_name":"stdout","time":1979.057299901,"data":" 0.60    1.271     13.50    0.00000        0.000   0.3405   0.1299       2.62          0.000   0.2231   (108s)\n"}
+,{"stream_name":"stdout","time":1995.198756553,"data":" 0.70    1.302     14.04    0.00000        0.000   0.3259   0.1381       2.36          0.000   0.2163   (124s)\n"}
+,{"stream_name":"stdout","time":2011.341515175,"data":" 0.80    1.314     14.34    0.00000        0.000   0.3248   0.1477       2.20          0.000   0.2108   (141s)\n"}
+,{"stream_name":"stdout","time":2027.483317102,"data":" 0.90    1.307     14.41    0.00001        0.000   0.3278   0.1580       2.07          0.000   0.2060   (157s)\n"}
+,{"stream_name":"stdout","time":2043.626228384,"data":" 1.00    1.282     14.28    0.00001        0.000   0.3309   0.1679       1.97          0.000   0.2024   (173s)\n"}
+,{"stream_name":"stdout","time":2059.768290107,"data":" 1.10    1.240     13.99    0.00002        0.000   0.3324   0.1759       1.89          0.000   0.2011   (189s)\n"}
+,{"stream_name":"stdout","time":2075.911042717,"data":" 1.20    1.184     13.54    0.00004        0.000   0.3332   0.1935       1.72          0.000   0.2020   (205s)\n"}
+,{"stream_name":"stdout","time":2092.053256098,"data":" 1.30    1.119     12.98    0.00007        0.000   0.3315   0.2133       1.55          0.000   0.2047   (221s)\n"}
+,{"stream_name":"stdout","time":2108.19582385,"data":" 1.40    1.047     12.51    0.00011        0.000   0.3236   0.2290       1.41          0.000   0.2080   (237s)\n"}
+,{"stream_name":"stdout","time":2124.340475877,"data":" 1.50    0.972     12.16    0.00013        0.000   0.3209   0.2333       1.38          0.000   0.2095   (254s)\n"}
+,{"stream_name":"stdout","time":2140.486696614,"data":" 1.60    0.898     11.78    0.00015        0.000   0.3227   0.2227       1.45          0.000   0.2092   (270s)\n"}
+,{"stream_name":"stdout","time":2156.633936292,"data":" 1.70    0.827     11.36    0.00013        0.000   0.3261   0.2156       1.51          0.000   0.2082   (286s)\n"}
+,{"stream_name":"stdout","time":2172.780748425,"data":" 1.80    0.761     10.93    0.00009        0.000   0.3321   0.2155       1.54          0.000   0.2067   (302s)\n"}
+,{"stream_name":"stdout","time":2188.929080887,"data":" 1.90    0.701     10.49    0.00005        0.000   0.3356   0.2289       1.47          0.000   0.2061   (318s)\n"}
+,{"stream_name":"stdout","time":2205.07711282,"data":" 2.00    0.648     10.06    0.00003        0.000   0.3438   0.2548       1.35          0.000   0.2072   (334s)\n"}
+,{"stream_name":"stdout","time":2221.226461181,"data":" 2.10    0.600      9.69    0.00002        0.000   0.3509   0.2966       1.18          0.000   0.2099   (350s)\n"}
+,{"stream_name":"stdout","time":2237.374916384,"data":" 2.20    0.558      9.35    0.00001        0.000   0.3544   0.3284       1.08          0.000   0.2135   (367s)\n"}
+,{"stream_name":"stdout","time":2253.52431914,"data":" 2.30    0.521      9.07    0.00001        0.000   0.3582   0.3568       1.00          0.000   0.2171   (383s)\n"}
+,{"stream_name":"stdout","time":2269.672635386,"data":" 2.40    0.487      8.82    0.00001        0.000   0.3610   0.3909       0.92          0.000   0.2193   (399s)\n"}
+,{"stream_name":"stdout","time":2285.821384087,"data":" 2.50    0.457      8.60    0.00001        0.000   0.3702   0.4125       0.90          0.000   0.2190   (415s)\n"}
+,{"stream_name":"stdout","time":2301.969230698,"data":" 2.60    0.430      8.41    0.00000        0.000   0.3782   0.4258       0.89          0.000   0.2176   (431s)\n"}
+,{"stream_name":"stdout","time":2318.117286925,"data":" 2.70    0.406      8.20    0.00000        0.000   0.3860   0.4156       0.93          0.000   0.2170   (447s)\n"}
+,{"stream_name":"stdout","time":2334.265813233,"data":" 2.80    0.385      7.96    0.00000        0.000   0.3893   0.4028       0.97          0.000   0.2177   (463s)\n"}
+,{"stream_name":"stdout","time":2350.415122762,"data":" 2.90    0.365      7.70    0.00000        0.000   0.3911   0.3898       1.00          0.000   0.2196   (480s)\n"}
+,{"stream_name":"stdout","time":2366.564890026,"data":" 3.00    0.347      7.41    0.00000        0.000   0.3939   0.3843       1.02          0.000   0.2225   (496s)\n"}
+,{"stream_name":"stdout","time":2366.565393416,"data":"\n"}
+,{"stream_name":"stdout","time":2366.565410955,"data":"clock expires at t = 3.00 (delta 0.2225); strong twist peak 0.00015 at t = 1.60, at the clock 0.00000 (fall 98%); max|w| growth to the clock 1.04x\n"}
+,{"stream_name":"stdout","time":2366.565418043,"data":"race variable ell/ell_nu min inside the clock = 0.89 (at t = 2.60); cut fraction at the clock 0.000\n"}
+,{"stream_name":"stdout","time":2366.565424097,"data":"REGISTERED C20 at nu=0.01: PASS: the seam reaches its viscous thickness and the twist turns over\n"}
+,{"stream_name":"stderr","time":2370.09010474,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":2370.090161485,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":2370.425281589,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":2370.425313795,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":2371.248709232,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":2372.77742888,"data":"[NbConvertApp] Writing 347957 bytes to __results__.html\n"}
+]
