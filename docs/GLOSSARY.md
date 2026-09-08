@@ -93,6 +93,9 @@ Each was registered with the observation that would refute it before its run; st
 | C30 | the pair closes by its own curvature (Da Rios) | **refuted**: curvature rises x5 while the induced closing falls to zero - antiparallel induction cancels on approach |
 | C31 | the far field is part of what closes the gap | between on the sheet field: 0.16 at all three nu, rising to 0.29 at the merge; not C17's 0.42. KILL on the pair: the far field opposes (-0.21) |
 | C32 | the gap relaxes exponentially onto the thickness, k viscosity-independent | **passes**: k = 1.7 +- 0.1 at 2e-3, 1e-3, 5e-4; the pair k ~ 0.16 |
+| C33 | the compression across the sheet is a dipole gradient, s ~ g^-3; the seam is one slow variable | closure withdrawn (estimator); the model gives the merge scale from the measured strain, not yet its time |
+| C34 | the strain budget closes on the material sheets | **KILL** at 2e-3 and 1e-3, outcome (ii): viscous diffusion removes ~half the strain input; t.S.t has the opposite sign to the model |
+| C35 | the diffusive loss fraction falls with viscosity and does not vanish | **passes** on the fall: 0.48, 0.33, 0.07, 0.00 - it does vanish; the seam has an Euler limit |
 
 ## Theorems and propositions (`THEORY.md`)
 

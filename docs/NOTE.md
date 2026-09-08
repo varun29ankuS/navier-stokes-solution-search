@@ -45,8 +45,10 @@ u = 2	imes10^{-3}, 10^{-3},
    closes with $\lambda = 0.99$ at both viscosities, its minimum coinciding with the Eulerian merge to 0.04; the
    velocity jump across the pair rises by at most 9% before the merge, the same at both $\nu$; the material vorticity,
    however, never follows the inviscid budget: the strains overshoot its growth from the first row by about half the
-   compression rate, with the sign and viscosity-scaling of diffusion across the sheets (C34) - Kelvin's frame holds
-   for circulation, not for vorticity. (C26, passes. An Eulerian estimator had
+   compression rate, with the sign and viscosity-scaling of diffusion across the sheets (C34); the loss fraction falls
+   0.48, 0.33, 0.07, 0.00 across $
+u = 2	imes10^{-3}$ to $2.5	imes10^{-4}$ (C35) - Kelvin's frame holds for
+   circulation at every viscosity, and for vorticity in the inviscid limit, which the seam reaches. (C26, passes. An Eulerian estimator had
    suggested the jump grows as $\nu$ falls; the direct measurement says it does not, and that reading is withdrawn.)
 5. **A steady smooth force does not carry the seam through the floor.** With $f = \varepsilon\times$(the large scales)
    held on - the smooth force Fefferman's breakdown statements (C)/(D) admit - the twist turns over and the seam is

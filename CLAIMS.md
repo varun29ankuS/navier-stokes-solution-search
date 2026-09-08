@@ -403,6 +403,18 @@ at 0.8 / 0.7 so the rows fall inside the clocks at ~1.2 / ~1.0): L continues to 
 0.05-0.20 at 2.5e-4, i.e. roughly like sqrt(nu) or faster, consistent with an inviscid limit in which the sheets keep
 their vorticity. Refuted by: L plateauing above 0.3 at both lower viscosities (a loss that does not go away as
 nu -> 0 - a leak the inviscid limit keeps, which would be a new fact about the seam), or L rising.
+**Result (2026-09-08, v16, 320^3): PASS.** L = 0.48 (2e-3), 0.33 (1e-3), ~0.07 (5e-4; the budget closes to 10% over
+t = 0.8-1.15), ~0.00 (2.5e-4; closes to 3% over t = 0.7-1.0). The leak vanishes roughly like nu, faster than sqrt(nu):
+at 2.5e-4 the material vorticity follows the inviscid strain budget - Kelvin's frame is complete there. The seam has
+an Euler limit in which the sheets keep their vorticity; the diffusion that dominated at 2e-3 was that Reynolds
+number's, not the structure's. Two corrections from the same rows: (1) the in-plane strain t.S.t is POSITIVE early
+(narrowing, +0.1 to +0.4) and flips to negative (stretching along the sheet, -0.5) at t ~ 1.15 / 1.05, coinciding with
+the clock at both nu - the sheet beginning to roll; "stretched, not narrowed" (v15, seeded after the flip) was half
+the story: narrowed first, then stretched. Past the flip a rolling sheet has no single normal and the identity itself
+fails, not the physics. (2) The compression across the sheet is not nu-independent: 0.68, 0.75, 0.48, 0.32 - it falls
+at lower viscosity, and the growth (0.5-0.6) is shared more evenly between the two strain components. "Constant strain
+s = 0.7" (C33's corrected reading) was two viscosities' coincidence; the one-variable model keeps its form with a
+coefficient that depends on the Reynolds number, for a reason not yet known.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.

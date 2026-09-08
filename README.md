@@ -71,9 +71,11 @@ ones (2e-3) until their clocks expire. `plot_seam.py` from the run logs.*
    with the Eulerian V to 0.04; the velocity jump across the pair rises by at most 9% before the merge and is the same
    at both viscosities (~0.95 at the merge) - Kelvin fixes the circulation. The material *vorticity* does not follow
    the inviscid budget: the strains overshoot its growth from the first row by about half the compression rate,
-   the sign and viscosity-scaling of diffusion across the sheets (C34) - Kelvin's frame holds for circulation, not
-   for vorticity. The sheets are stretched along themselves (t.S.t < 0), not narrowed; thinning = compression +
-   in-plane stretching closes to 7-15%. C25 (the wall,
+   the sign and viscosity-scaling of diffusion across the sheets (C34) - Kelvin's frame holds for circulation, and for
+   vorticity only in the limit: the diffusive loss fraction falls 0.48, 0.33, 0.07, 0.00 at nu = 2e-3, 1e-3, 5e-4,
+   2.5e-4 (C35) - at the lowest viscosity the material vorticity follows the inviscid strain budget to 3%. The sheets
+   are narrowed in their plane early and stretched along themselves after t ~ 1.1, the sign change coinciding with
+   the clock: the sheet beginning to roll. C25 (the wall,
    located) holds along two solutions. An Eulerian estimator, Re_seam, had suggested the jump grows as nu falls (C21's
    KILL); the direct measurement says it does not, and the interpretation is withdrawn.
 7. **The quantum control.** In Gross-Pitaevskii the same antiparallel pair reconnects at a fixed floor (the healing
