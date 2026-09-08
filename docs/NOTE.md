@@ -75,3 +75,8 @@ a tube pair, Kida-Pelz), $\mathrm{Re} \approx 500$-$1500$, $\lambda$ measured on
 the handover from the inviscid nineteenth-century laws (Cauchy 1815, Biot-Savart, Helmholtz 1858, Kelvin 1869, the
 sheet instability of 1868-71) to the viscous term of 1822/1845, put under a ruler for the first time on the structure
 that every singularity candidate is built from.
+
+For a century and a half the field asked how *big* a solution could get, when the answer was in what *shape* it took.
+The norm era was not wrong; it was aimed at the wrong variable for this one problem, and productive enough elsewhere
+that nobody noticed the exception. A singularity, if it exists, is a shape. The proof, if it comes, will be about a
+shape. The tools for shapes predate the detour.
