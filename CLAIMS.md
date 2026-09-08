@@ -166,6 +166,12 @@ peak arrives later and higher as nu falls. Refuted by: Re_seam at the peak risin
 (the seam needing ever more Reynolds number to be cut - the velocity jump growing with the collapse, the direction
 of a singularity). Also re-tests C20's max|w| clause at lower nu and rebuilds the tube-pair control (D 0.7, sigma
 0.22, T 6). Test: `kaggle/seam/seam_gpu.py` (schedule inside).
+**Result (2026-09-08): inconclusive.** Only nu = 2e-3 resolves the twist peak (Re_seam 224, t = 1.6); at 1e-3 and
+5e-4 the 256^3 clock expires (t = 1.6, 1.1) before the peak, so the ladder cannot be compared. The prediction
+"order 10" was wrong by 20x. New, resolved at 2e-3: the twist is a wave in scale (peaks at 0.4, 0.2, 0.1, 0.05 in
+sequence) arrested at the viscous thickness. The pair control's KILL clause fired (twist rising, race 0.56) with Z
+flat and Re_seam falling; judged post hoc to be a defect of the clause (core thickness vs seam gap) - recorded as
+fired, clause corrected for the next run, judgement flagged as post hoc.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.

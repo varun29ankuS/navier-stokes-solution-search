@@ -1023,6 +1023,39 @@ analyticity strip collapses exponentially and 256^3 buys t = 0.9. Two honest lim
 and the data is the searcher's, not Kerr's; the tube-pair control has to be rebuilt (closer, longer) before it
 says anything.
 
+### The twist is a wave in scale, and the Re ladder ran out of clock (2026-09-08, `results/seam_gpu/v2/`)
+
+Twist re-measured at fixed physical separations (0.05, 0.1, 0.2, 0.4) on the same 256^3 runs, plus nu = 1e-3 and
+5e-4, plus a rebuilt tube pair. The new instrument shows something the grid-scale one could not:
+
+```
+nu = 2e-3 (resolved to t = 3):   twist@0.4 peaks 0.48 at t = 0.9
+                                 twist@0.2 peaks 0.30 at t = 1.5
+                                 twist@0.1 peaks 0.11 at t = 1.6   (falls 62% by t = 3)
+                                 twist@0.05 peaks 0.013 at t = 1.8  (falls 72%)
+```
+
+The reversal migrates down in scale as the sheets are pressed together - a wave in scale, each separation's twist
+rising and falling as the seam passes through it - and at nu = 2e-3 the wave is arrested at ~0.05-0.09, the viscous
+thickness sqrt(nu/s), where the cut takes over (cut fraction 0.35-0.47). That is the seam race seen whole.
+
+C21 (Re_seam at the twist peak the same across nu) is **inconclusive**: the resolved peak exists only at nu = 2e-3
+(Re_seam = 224 at t = 1.6; my "order 10" was wrong by 20x). At nu = 1e-3 the clock expires at t = 1.6 and at
+nu = 5e-4 at t = 1.1, both *before* the twist@0.1 turns over - the numbers there (497, 446) are values at the clock,
+not peaks. Halving nu needs 1.68x the grid; 256^3 resolves the peak at 2e-3 only. Everything past the clock in
+those runs (Z 11x, max|w| 115 at 5e-4) is unresolved and not a number. C20's max|w| clause at the clock: 4.55x,
+6.3x, 3.8x - all above the registered 3x.
+
+**A registered KILL fired, on the pair control**, and I think it is the criterion, not the physics - stated so it can
+be checked: the rebuilt pair (D 0.7, sigma 0.22, T = 6, resolved throughout) has twist@0.1 still rising at t = 6
+(0.014) with the race variable at 0.56, which is the KILL clause as written. But Z is flat (1.06), max|w| grew
+2.1x over six time units, Re_seam is *falling* (83 -> 53), and the race variable is small because it is measuring
+the diffusing Gaussian *core* (ell ~ sqrt(nu t)), not the gap between the tubes; twist@0.4 is falling while @0.1
+rises - the pair is slowly approaching, not collapsing. The clause conflated core thickness with seam gap. Recorded
+as a KILL that fired; the corrected clause for the next run: twist rising AND max|w| accelerating AND Re_seam
+rising. Re_seam's definition also switches sets when the twisted set is tiny (the 47 at nu = 1e-3, t = 0.6);
+it needs a minimum count.
+
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
 Theorem 4 (Tao 2016) says that the exact structure this repository verifies - energy conservation, the scaling, the
