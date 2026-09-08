@@ -439,6 +439,15 @@ theorems (Baker-Shelley, Krasny, Pullin, Lundgren) all assume the roll and do no
 non-rolling antiparallel pair whose thickness goes to zero is the open question of 3-D Euler; the instrument has
 reached it and stopped at the clock.
 
+**C37 (registered 2026-09-08, before the run). The merging pair does not close into a toroidal (non-radiating)
+structure.** Hypothesis under test: a flat antiparallel pair, stabilised against roll-up, seals itself into a
+self-screened toroidal vorticity distribution (an anapole / Hill-vortex-like object) as its induction dies. The
+Eulerian rows already show the self-screening (the pair's induced closing rate -> 0 at the merge) and a radiation
+BURST at the cut rather than a sealing. `toroidal_seam.py` (96^3, CPU) measures the poloidal circulation of the
+tagged fluid about the pair's axis, C_around / |w|_m, and the anisotropy of the tagged cloud. Registered: C_around
+stays below 0.1 |w|_m through the merge and the cloud stays sheet-like (axis ratio < 0.3) - the pair merges flat.
+Refuted by: C_around >= 0.3 |w|_m as the induction dies, with the cloud rounding (ratio > 0.5) - a toroidal pair.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
