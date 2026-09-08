@@ -10,6 +10,8 @@ believing a number, and a GPU port certified against the numpy original. Every c
 before its run and is scored against that registration in `CLAIMS.md` - twenty-four so far, about half retracted in
 public. Nothing here claims anything about the regularity of 3-D Navier-Stokes.
 
+**Ten-minute version:** [`docs/NOTE.md`](docs/NOTE.md) - one structure, five numbers, one theorem, one lemma, one open bound.
+
 **Read in this order:** this page - [`docs/GLOSSARY.md`](docs/GLOSSARY.md) (every symbol, measure and claim number,
 one line each) - [`docs/MAP.md`](docs/MAP.md) (the view from above) - [`CLAIMS.md`](CLAIMS.md) (what was predicted, what
 happened) - [`docs/LOG.md`](docs/LOG.md) (the full chronological log, 1200 lines, with every table) - [`THEORY.md`](THEORY.md)
