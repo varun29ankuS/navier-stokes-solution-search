@@ -36,8 +36,9 @@ enstrophy $Z_0 = 0.375$.
 | **gap arm** | the line through the peak times: $g(t) = a\,(T^\ast - t)$ on the sheet field; inviscid (same at all $\nu$). |
 | **thickness arm** | $\delta(t)$, the sheets' own thickness; exponential, viscous. |
 | **the V** | where the gap arm meets the thickness arm: the pair merges into one doubled structure before the gap reaches zero. |
-| $\lambda$ | the collapse exponent: gap $\propto (T^\ast - t)^\lambda$. Measured 1 on the sheet field. The critical class is $\lambda = \tfrac12$ (Theorem 7). |
-| $T^\ast$ | the arrival time of the gap arm's straight line; 1.78 for the sheet field. Not a blow-up time - the merge happens first. |
+| $\lambda$ | the collapse exponent: gap $\propto (T^\ast - t)^\lambda$. The sheet field's closing is exponential relaxation onto the thickness (C32), for which $\lambda = 1$ was a short-window tangent. The critical class is $\lambda = \tfrac12$ (Theorem 7). |
+| $T^\ast$ | the zero of the straight line fitted to the peak times (1.78 for the sheet field). Not an arrival time: the true law is exponential and never reaches zero. |
+| $k$ | the relaxation rate of the gap onto the thickness, $dg/dt = -k(g - \delta)$; 1.7 on the sheet field at both viscosities (C32). |
 | **time per octave** | time for the wave to descend one halving of separation. Shrinking in proportion to the separation = constant closing speed (lambda = 1) seen on a log axis; equal octaves = exponential thinning. |
 | **phase 1 / phase 2** | the budget argument: an external squeeze at fixed rate thins exponentially and stops at $\sqrt{\nu/s}$; a collapse whose speed does not fall is unpriced by the budget. The sheet field's descent is constant-speed closing driven by the sheets' own (cancelling) induction - not self-accelerating; that earlier reading is withdrawn (C30). |
 | **the floor** | the length below which a fluid cannot be squeezed: the healing length (quantum), $\sqrt{\nu/s}$ (Navier-Stokes, moving), none (Euler). |

@@ -32,8 +32,9 @@ pair's mild late speed-up (3.7, 2.7, 2.4 then 0.6-0.7 per octave).
 **Thickness arm.** The analyticity strip delta(t): the sharpest scale in the flow, the sheets' own thickness. It decays
 exponentially and never reaches zero on its own. It is viscous (its e-folding changes with nu) where the gap arm is not.
 
-**The V.** Gap arm (inviscid, linear, gap = 0.51 (1.78 - t) on the sheet field) meets thickness arm (viscous,
-exponential) at t = 1.65-1.74: the pair merges into one doubled structure before the gap reaches zero. At nu = 2e-3 the
+**The V.** Gap arm (inviscid; in Kelvin's frame an exponential relaxation onto the thickness, dg/dt = -k (g - delta),
+k = 1.7, of which gap = 0.51 (1.78 - t) was the short-window tangent) meets thickness arm (viscous, exponential) at
+t = 1.65-1.74: the pair merges into one doubled structure; the gap never reaches zero. At nu = 2e-3 the
 merge is at sqrt(nu/s) and merging is cutting - enstrophy and max|w| peak and decay, resolved to T = 3. At 1e-3 the
 merge is above sqrt(nu/s): the Euler seam race starts there, and the clock cannot see it.
 

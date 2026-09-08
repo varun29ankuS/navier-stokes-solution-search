@@ -25,9 +25,10 @@ $\nu = 2\times10^{-3}, 10^{-3}, 5\times10^{-4}$.
 1. **The reversal descends through the scales as a wave.** The twist at each separation rises and falls in turn,
    largest separation first; the peak times agree across the three viscosities to one sampling step (0.05) at every
    separation resolved. The descent is inviscid above the viscous thickness. (C22, passes.)
-2. **The sheets close at constant speed, driven by their own induction, which cancels as they meet.** The gap closes
-   linearly, $g = 0.51\,(1.78 - t)$, exponent $\lambda = 1$; the shrinking time per octave ($\approx 0.55$ to
-   $\approx 0.25$) is constant speed on a log axis. In Kelvin's frame the sheets' own Biot-Savart field supplies 84%
+2. **The gap relaxes exponentially onto the sheets' thickness, driven by their own induction, which cancels as they
+   meet.** In Kelvin's frame $dg/dt = -k\,(g - \delta)$ with $k = 1.7$ at both viscosities within 10%, constant to 3%
+   within a run (C32); the gap never reaches zero. The straight line $g = 0.51\,(1.78 - t)$ was its tangent over a
+   short window, and the shrinking time per octave ($\approx 0.55$ to $\approx 0.25$) is the relaxation on a log axis. In Kelvin's frame the sheets' own Biot-Savart field supplies 84%
    of the closing early and goes to zero at the merge - antiparallel sheets' fields cancel as they approach - with
    the far field (16%, rising to 29%) carrying the end. The curvature law (Da Rios) is refuted: $\kappa$ rises
    $0.75 \to 3.6$ while the induced closing falls. A hand-built tube pair shows a mild late speed-up (3.7, 2.7, 2.4
@@ -58,8 +59,8 @@ floor, the healing length) reconnects on contact with the literature's gap law a
 **Theorem 7 (the race).** Under Type I strain, $\sup|\nabla u| \le A/(T - t)$, a length $\ell \le L(T - t)^\lambda$
 satisfies $\ell/\sqrt{\nu/\sup|\nabla u|} \le L\sqrt{A/\nu}\,(T - t)^{\lambda - 1/2}$: for $\lambda > \tfrac12$ the
 structure is inside its viscous scale before $T$; at $\lambda = \tfrac12$ the ratio is a Reynolds number of the
-structure; below $\tfrac12$ nothing follows. *The measured $\lambda = 1$ cannot outrun viscosity, whatever the
-constants - and did not. The dangerous class is $\lambda = \tfrac12$ exactly, which is where the Ganeshram-Duruisseaux-
+structure; below $\tfrac12$ nothing follows. *The measured closing is exponential - inside its viscous scale faster than any power law - and did not outrun
+viscosity. The dangerous class is $\lambda = \tfrac12$ exactly, which is where the Ganeshram-Duruisseaux-
 Anandkumar travelling profile sits by construction.*
 
 **Lemma 8 (Kelvin).** The jump across a vortex sheet is circulation per unit length; circulation on a material loop

@@ -350,8 +350,15 @@ structural proof would have to do. Refutation of C25 (numerical): a resolved run
 grows without bound while the gap closes - $\lambda < 1$ with `Re_seam` rising through the turnover. The Re ladder
 (384^3 at $\nu = 10^{-3}$) is that test.
 
+**Remark (2026-09-08, after C32).** In Kelvin's frame the seam's gap obeys $dg/dt = -k(g - \delta)$ with $k \approx 1.7$
+independent of $\nu$: exponential relaxation onto the sheets' thickness, not a power law. An exponential is inside its
+viscous scale faster than any $(T-t)^\lambda$, so Theorem 7 applies to the seam with room to spare, and the measured
+$\lambda = 1$ was the tangent of this exponential over a short window. The seam class therefore has no finite-time
+descent at the gap; a seam singularity would have to come from the thickness arm $\delta(t)$ itself, which on this
+field also decays exponentially (e-folding 1-2). Two exponentials reach zero at $t = \infty$.
+
 Status: **[Theorem 7 proved (elementary); C25 stated; the hand-off from "inside the viscous scale" to regularity not
-carried out]**.
+carried out; the seam's closing law is exponential (C32)]**.
 
 ## 10. Kelvin's frame: the jump's evolution, and C25 as a statement about one geometric rate (2026-09-08)
 

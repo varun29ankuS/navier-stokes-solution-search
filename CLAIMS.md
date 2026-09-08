@@ -319,6 +319,18 @@ zero as they meet, the far field carrying the last stretch. Theorem 7 and Lemma 
 The "phase 2 = self-induced roll-up" mechanism attached to the sheet field's descent is withdrawn; the tube pair's
 late speed-up (0.09 -> 0.17) stands as a mild, real acceleration on a different structure.
 
+**C32 (found 2026-09-08 on existing data; registered for the next run). The gap relaxes exponentially onto the
+thickness.** On the Lagrangian rows of v11 and v12 the closing rate on the descent is proportional to the distance
+between the gap and the sheets' thickness: dg/dt = -k (g - delta), with k = 1.75 / 1.84 (nu = 2e-3) and 1.64 (1e-3),
+constant to 3% within a run from t = 1.0 to 1.3 (R^2 0.92 over the descent) and the same at both viscosities within
+10%. The earlier "lambda = 1, T* = 1.78" was the tangent to this exponential over a short window and is superseded:
+the gap never reaches zero, it approaches the thickness and the cut follows. Registered for the next run (a fresh
+viscosity, 5e-4 at 320^3 to its clock, and the tube pair): k is nu-independent within 10% on the sheet field, and the
+pair has its own k, different from 1.7. Refuted by: k moving by more than 25% between viscosities on the same field.
+Consequence (Theorem 7): exponential relaxation is inside the viscous scale faster than any power law - on this
+structure there is no finite-time descent at the seam, inviscidly or otherwise; the only route to a seam singularity
+is the thickness arm itself, which also decays exponentially (e-fold 1-2). Two exponentials reach zero at t = infinity.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
