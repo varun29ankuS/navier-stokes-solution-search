@@ -371,6 +371,14 @@ the tagged fluid at nu = 2e-3 and 1e-3 (320^3): the identity closes within 15% a
 is ~0-0.1 at 2e-3 and ~0.2-0.3 at 1e-3, accounting for the sheets thinning faster than the compression alone at the
 lower viscosity (0.93-0.98 vs 0.75). Refuted by: a residual above 30% of the growth at 1e-3 - a thinning mechanism
 outside the strain budget, which would be a new term.
+**Sign convention, registered before the run.** Kelvin's frame is an Euler frame; under Navier-Stokes the exact
+material vorticity equation carries a further term, nu (lap w).xi / |w|, the diffusion of vorticity across material
+surfaces, which at a sheet's centre is negative (removes vorticity). Three outcomes, distinguishable by the residual's
+sign and viscosity scaling: (i) residual ~ 0 - the narrowing closes the budget, Kelvin's frame is complete for the
+sheet; (ii) the strains OVERSHOOT the growth, by an amount that doubles when nu doubles - the missing piece is viscous
+diffusion, Kelvin's frame is incomplete in a known way ("Kelvin holds up to a viscous drift"); (iii) the strains fall
+SHORT of the growth with no viscous scaling - a term outside both the strain budget and diffusion: new. The "cut"
+column, -nu w.lap w on the twisted set, is the independent estimate of (ii).
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
