@@ -157,6 +157,16 @@ variable 1.49 at the end (met, barely); max|w| growth 4.55x at the clock, peak 5
 the seam is cut from the moment it forms (50-80%); Z and max|w| peak and decay inside the clock. Formally between,
 physically the cut wins at Re ~ 500. nu = 0: the clock expires at t = 0.9. Tube-pair control: setup failed, void.
 
+**C21 (registered 2026-09-08, before the run). The twist is a feedback variable, and its turning point is a fixed
+seam Reynolds number.** With tau the strong twist (now at a fixed physical separation, 0.1), ell the sheet thickness
+and s the compression across it, the run data are consistent with dtau/dt ~ (s - nu/ell^2) tau: pressing (inviscid,
+partly self-induced) against reconnection. The gain changes sign at a fixed value of Re_seam = |w| ell^2 / nu, so the
+twist peaks at the SAME Re_seam (within x2) at nu = 2e-3, 1e-3, 5e-4 on the searcher's sheet field at 256^3, while the
+peak arrives later and higher as nu falls. Refuted by: Re_seam at the peak rising by more than x2 per halving of nu
+(the seam needing ever more Reynolds number to be cut - the velocity jump growing with the collapse, the direction
+of a singularity). Also re-tests C20's max|w| clause at lower nu and rebuilds the tube-pair control (D 0.7, sigma
+0.22, T 6). Test: `kaggle/seam/seam_gpu.py` (schedule inside).
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
