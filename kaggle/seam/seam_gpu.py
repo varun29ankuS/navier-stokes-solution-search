@@ -48,14 +48,23 @@ nearest pairs). C25 says the jump stays bounded by the data; lambda is the gap's
 sheet field at nu = 2e-3 the Lagrangian gap closes linearly (lambda = 1 +- 0.2 on the resolved window) and the jump
 stays within 2x of its value at TSEED until the merge; the material |w| grows while the gap closes and turns over at
 the merge. Refuted by: a jump that grows by more than 2x while the gap closes (C25 fails on this field), or lambda < 0.7.
-usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4] [LAGR=1 TSEED=1.0 NP=4000] python seam_gpu.py"""
+TRACKING FORCE (2026-09-08): FMODE=track makes the force follow the collapse. Every output step the force is set to
+eps x P[u_H], where u_H is the velocity induced (Biot-Savart) by the vorticity of the high set alone, |w| > 0.5 max,
+smoothly masked: the pair's own self-induction, amplified - phase 2 fed directly - and nothing else. Smooth in x,
+piecewise-steady in t; a legitimate f(x, t) for Fefferman (C)/(D) once recorded along the trajectory. REGISTERED (C27):
+with FMODE=track and eps >= 1 at nu = 2e-3 the seam passes the floor inside the clock - twist@0.05 keeps rising past the
+unforced turnover (t ~ 1.7), max|w| accelerates over the last quarter of the window, and the race variable drops below
+1 with the twist still rising; the steady force (C24) did none of these. Refuted by: the twist turning over as
+unforced under the tracking force too - which would say a force that merely amplifies the pair's self-induction is
+still not the force the proofs need.
+usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4 FMODE=steady|track] [LAGR=1 TSEED=1.0 NP=4000] python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
 # On Kaggle (one code file per kernel) this file schedules itself: each configuration runs as a subprocess of this
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=2e-3 T=3 FORCE=0.5;IC=found NU=2e-3 T=3 FORCE=1.5;IC=found NU=1e-3 T=2.4 FORCE=0.5;IC=found NU=1e-3 T=2.4 FORCE=1.5"   # v6: the forced seam race
+    SCHEDULE = "IC=found NU=2e-3 T=3 FORCE=1.0 FMODE=track;IC=found NU=2e-3 T=3 FORCE=3.0 FMODE=track;IC=found NU=1e-3 T=2.2 FORCE=1.0 FMODE=track"   # v9: the tracking force
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -71,7 +80,7 @@ IC = os.environ.get("IC", "found"); N = int(os.environ.get("N", 256)); NU = floa
 EVERY = float(os.environ.get("EVERY", 0.05)); DEV = "cuda" if torch.cuda.is_available() else "cpu"
 SEPS = [float(v) for v in os.environ.get("SEPS", "0.05,0.07,0.1,0.14,0.2,0.28,0.4,0.56").split(",")]; VSEP = float(os.environ.get("VSEP", 0.1))
 FOUND = os.environ.get("FOUND", "/kaggle/input/zef-found/leashed64_dmin030.npz")
-FORCE = float(os.environ.get("FORCE", 0.0)); FKMAX = float(os.environ.get("FKMAX", 4.0))
+FORCE = float(os.environ.get("FORCE", 0.0)); FKMAX = float(os.environ.get("FKMAX", 4.0)); FMODE = os.environ.get("FMODE", "steady")
 SNAP = int(os.environ.get("SNAP", 0)); SNAPS = []
 LAGR = int(os.environ.get("LAGR", 0)); TSEED = float(os.environ.get("TSEED", 1.0)); NP = int(os.environ.get("NP", 4000)); LAG = {}                                   # SNAP=1: save a slice of |w| and of the signed twist through the |w| maximum at every output
 CD = torch.complex64; RD = torch.float32
@@ -166,6 +175,16 @@ def lagr_diag(U, P, sgn):
     return wmp.median().item(), gap.median().item(), jump.median().item()
 
 
+def tracking_force(U):
+    """eps x P[u_H]: the velocity induced by the smoothly-masked high-vorticity set alone"""
+    Ud = [Ui * deal for Ui in U]
+    w = [ifft(1j * K[(i + 1) % 3] * Ud[(i + 2) % 3] - 1j * K[(i + 2) % 3] * Ud[(i + 1) % 3]).real for i in range(3)]
+    wm = torch.sqrt(sum(wi**2 for wi in w)); mask = torch.sigmoid((wm / wm.max() - 0.5) / 0.1)
+    W = project([fft(wi * mask) for wi in w])
+    uH = project([(1j * (K[(i + 1) % 3] * W[(i + 2) % 3] - K[(i + 2) % 3] * W[(i + 1) % 3]) / K2S) * deal for i in range(3)])
+    return [FORCE * Ui for Ui in uH]
+
+
 def diag(U):
     Ud = [Ui * deal for Ui in U]
     G = [[ifft(1j * K[i] * Ud[j]).real for j in range(3)] for i in range(3)]          # G[i][j] = d_i u_j
@@ -243,16 +262,20 @@ else:
 with torch.no_grad():
     Z0 = 0.5 * sum((ifft(1j * K[a] * U[b] - 1j * K[b] * U[a]).real ** 2).mean() for a, b in ((1, 2), (2, 0), (0, 1))).item()
     U = [Ui * math.sqrt(0.375 / Z0) for Ui in U]; Z0 = 0.375; E0 = energy(U)
-    if FORCE > 0:
+    if FORCE > 0 and FMODE == "steady":
         lowk = (KMAG <= FKMAX).to(RD); FHAT = [FORCE * Ui * lowk for Ui in U]              # f = eps * u0 restricted to |k| <= FKMAX: smooth, periodic, divergence-free, steady
         fpow = math.sqrt(sum((ifft(Fi).real ** 2).mean().item() for Fi in FHAT))
         print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
             FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
-print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE), flush=True)
+print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g (%s)" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE, FMODE), flush=True)
 print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump" if LAGR else ""))
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
+        if FORCE > 0 and FMODE == "track":
+            with torch.no_grad():
+                FHAT = tracking_force(U); inj = sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U))
+            if abs(t - round(t / 0.5) * 0.5) < 1e-6: print("   tracking force refreshed: injection rate %.4f (2 nu Z = %.4f)" % (inj, 2 * NU * 0.5 * sum((ifft(1j * K[a] * U[b] - 1j * K[b] * U[a]).real ** 2).mean().item() for a, b in ((1, 2), (2, 0), (0, 1)))), flush=True)
         Z, wmax, soft, anti, ell, ell_nu, cut, d, softs, re_seam, valid = diag(U); Er = energy(U) / E0
         lag = ""
         if LAGR and t >= TSEED - 1e-9:
