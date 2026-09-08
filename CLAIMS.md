@@ -244,6 +244,15 @@ twisted set), whose growth across nu comes from thinner sheets at the same jump 
 jump; the interpretation "the velocity jump grows with the collapse" is refuted by the direct measurement. C25 holds
 on this field along two solutions.
 
+**C27 (registered 2026-09-08, before the run). The tracking force carries the seam through the floor.** `FMODE=track`:
+every output step the force is set to eps x P[u_H], u_H the velocity induced by the smoothly-masked high-vorticity set
+alone - the pair's own self-induction amplified, phase 2 fed directly, nothing else; smooth in x, piecewise-steady in
+t. At nu = 2e-3, 256^3, eps = 1 and 3: inside the clock the twist@0.05 keeps rising past the unforced turnover
+(t ~ 1.7), max|w| accelerates over the last quarter of the window, and the race variable drops below 1 with the twist
+still rising - the seam passes sqrt(nu/s), which the steady force (C24) never achieved. Refuted by: the twist turning
+over as unforced under the tracking force too, which would say amplifying the pair's self-induction is still not the
+force the forced proofs use.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
