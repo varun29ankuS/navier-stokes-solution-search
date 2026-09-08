@@ -283,6 +283,14 @@ the pair's own Biot-Savart field u_H (the velocity induced by the smoothly-maske
 gap law g = 0.51 (T* - t) is Helmholtz - the pair pressing itself - not a fit and not external strain. Refuted by: a
 self-induced share below 40%. Also reported: where the flipped fluid sits after the merge (distance to the other sheet
 over the gap: ~0 bridges, ~1 threads).
+**Result (2026-09-08, v11, 320^3): between at both viscosities, with the same number.** Self-induced share 0.54
+(nu = 2e-3) and 0.52 (1e-3), the closing rate from the velocity field matching the finite-difference of the gap
+(-0.198 vs -0.205; -0.196 vs -0.193). The pair's own induced rate goes to zero at the merge and the gap re-opens under
+the surrounding field alone. The share is a lower bound: the mask counts only |w| > 0.5 max, and the sheets' wings
+below it are scored as "external". Flipped fluid sits at 1.06-1.4 gap-widths from the other sheet: threads beside the
+sheets, not bridges. C26 passes a fourth time (lambda 0.99, jump x1.05 / x1.07). The three-mask run (C30/C31) brackets
+the share. C28 at 1e-3: the KILL clause fired (flip 0.007) because the clock expires 0.1 after the merge, before the
+flip has time to develop (at 2e-3 it needed 0.3-0.5); the clause should have required a window >= 0.5 past the merge.
 
 **C30 (registered 2026-09-08, before the run). The pair closes by its own curvature.** Flat antiparallel sheets do
 not approach - they translate as a dipole; self-induced closing needs curvature (Crow; Da Rios 1906). With the
