@@ -396,6 +396,14 @@ vorticity budget leaks to diffusion. No new term: two known terms, one with the 
 omitted by the frame. The one-variable seam stands with three measured rates: compression 0.7, in-plane stretching
 0.3, diffusion ~0.3-0.5 x compression.
 
+**C35 (registered 2026-09-08, before the run). The loss fraction falls with viscosity and does not vanish.** The
+fraction of the strain budget removed by diffusion from the material sheets before the cut, L = (strains - growth) /
+strains on the first three Lagrangian rows, is 0.48 at nu = 2e-3 and 0.33 at 1e-3. At 5e-4 and 2.5e-4 (320^3, seeded
+at 0.8 / 0.7 so the rows fall inside the clocks at ~1.2 / ~1.0): L continues to fall, to 0.15-0.30 at 5e-4 and
+0.05-0.20 at 2.5e-4, i.e. roughly like sqrt(nu) or faster, consistent with an inviscid limit in which the sheets keep
+their vorticity. Refuted by: L plateauing above 0.3 at both lower viscosities (a loss that does not go away as
+nu -> 0 - a leak the inviscid limit keeps, which would be a new fact about the seam), or L rising.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 

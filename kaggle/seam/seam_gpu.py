@@ -101,7 +101,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=2e-3 T=2.0 N=320 LAGR=1 TSEED=1.0;IC=found NU=1e-3 T=1.8 N=320 LAGR=1 TSEED=1.0"   # v14: the one-variable seam
+    SCHEDULE = "IC=found NU=5e-4 T=1.3 N=320 LAGR=1 TSEED=0.8;IC=found NU=2.5e-4 T=1.1 N=320 LAGR=1 TSEED=0.7"   # v16: the loss fraction at lower viscosity (seeded earlier: the clocks expire at 1.2 / ~1.0)
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
