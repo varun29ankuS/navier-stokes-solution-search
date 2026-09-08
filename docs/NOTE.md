@@ -26,8 +26,11 @@ $\nu = 2\times10^{-3}, 10^{-3}, 5\times10^{-4}$.
    largest separation first; the peak times agree across the three viscosities to one sampling step (0.05) at every
    separation resolved. The descent is inviscid above the viscous thickness. (C22, passes.)
 2. **The gap relaxes exponentially onto the sheets' thickness, driven by their own induction, which cancels as they
-   meet.** In Kelvin's frame $dg/dt = -k\,(g - \delta)$ with $k = 1.7$ at both viscosities within 10%, constant to 3%
-   within a run (C32); the gap never reaches zero. The straight line $g = 0.51\,(1.78 - t)$ was its tangent over a
+   meet.** In Kelvin's frame $dg/dt = -k\,(g - \delta)$ with $k = 1.7 \pm 0.1$ at $
+u = 2	imes10^{-3}, 10^{-3},
+   5	imes10^{-4}$, constant to 3% within a run (C32); the sheets supply 84% of the closing and the far field 16% at
+   all three viscosities; the gap never reaches zero. A tube pair has its own $k pprox 0.16$ and closes against the
+   far field. The straight line $g = 0.51\,(1.78 - t)$ was its tangent over a
    short window, and the shrinking time per octave ($\approx 0.55$ to $\approx 0.25$) is the relaxation on a log axis. In Kelvin's frame the sheets' own Biot-Savart field supplies 84%
    of the closing early and goes to zero at the merge - antiparallel sheets' fields cancel as they approach - with
    the far field (16%, rising to 29%) carrying the end. The curvature law (Da Rios) is refuted: $\kappa$ rises

@@ -53,7 +53,8 @@ ones (2e-3) until their clocks expire. `plot_seam.py` from the run logs.*
 4. **The seam descends through the scales as a wave, and the descent is a measurable inviscid law.** Twist measured at
    fixed separations peaks in sequence 0.56, 0.40, ..., 0.05; the peak times agree across nu = 2e-3, 1e-3, 5e-4 within
    one sampling step; and the closing law, read in Kelvin's frame, is exponential relaxation of the gap onto the sheets'
-   thickness: dg/dt = -k (g - delta), k = 1.7 at both viscosities within 10%, constant to 3% within a run (C32). The
+   thickness: dg/dt = -k (g - delta), k = 1.7 +- 0.1 at nu = 2e-3, 1e-3 and 5e-4 - a factor of four - constant to 3%
+   within a run (C32); the sheets supply 84% of the closing and the far field 16% at all three viscosities. The
    earlier straight-line form gap = 0.51 (1.78 - t) was its tangent over a short window; the gap never reaches zero.
    The shrinking time per octave (~0.55 to ~0.25) is this relaxation seen on a log axis. In Kelvin's frame the closing is 84% the sheets'
    own induction, which *cancels* as they approach (the pair's induced rate goes to zero at the merge), the far field
@@ -120,9 +121,9 @@ twist wave        the reversal descending through the   inviscid (peak times agr
 who closes it     the sheets' own induction, which      sheets 84% (pair 58%), far field 16%       whether the far field's share
                   cancels as they approach; the far     rising to 29% at the merge; curvature       keeps rising at higher Re
                   field carries the last stretch        (Da Rios) law refuted
-the closing law   exponential relaxation of the gap     dg/dt = -k (g - delta), k = 1.7 at both nu   k for the pair; k at 5e-4;
-                  onto the thickness; no finite-time    within 10%, constant to 3% within a run;    what sets 1.7
-                  arrival at the seam                    lambda = 1 / T* superseded (C32)
+the closing law   exponential relaxation of the gap     dg/dt = -k (g - delta), k = 1.7 +- 0.1 at    what sets 1.7 (a Biot-Savart
+                  onto the thickness; no finite-time    2e-3, 1e-3, 5e-4; sheets 84% / far 16% at   number of the sheets?)
+                  arrival at the seam                    all three; the tube pair: k ~ 0.16, a drift
 thickness arm     the analyticity strip; the sheets'    exponential, viscous (e-fold shifts        its law in Euler
                   own thickness                          with nu), never zero on its own
 the V             gap arm meets thickness arm; the      t = 1.69-1.72; meeting scale on sqrt(nu/s)   the 5e-4 rung (~450^3)

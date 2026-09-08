@@ -38,7 +38,8 @@ enstrophy $Z_0 = 0.375$.
 | **the V** | where the gap arm meets the thickness arm: the pair merges into one doubled structure before the gap reaches zero. |
 | $\lambda$ | the collapse exponent: gap $\propto (T^\ast - t)^\lambda$. The sheet field's closing is exponential relaxation onto the thickness (C32), for which $\lambda = 1$ was a short-window tangent. The critical class is $\lambda = \tfrac12$ (Theorem 7). |
 | $T^\ast$ | the zero of the straight line fitted to the peak times (1.78 for the sheet field). Not an arrival time: the true law is exponential and never reaches zero. |
-| $k$ | the relaxation rate of the gap onto the thickness, $dg/dt = -k(g - \delta)$; 1.7 on the sheet field at both viscosities (C32). |
+| $k$ | the relaxation rate of the gap onto the thickness, $dg/dt = -k(g - \delta)$; $1.7 \pm 0.1$ on the sheet field at $
+u = 2	imes10^{-3}, 10^{-3}, 5	imes10^{-4}$; $pprox 0.16$ and not clean on the tube pair (C32). |
 | **time per octave** | time for the wave to descend one halving of separation. Shrinking in proportion to the separation = constant closing speed (lambda = 1) seen on a log axis; equal octaves = exponential thinning. |
 | **phase 1 / phase 2** | the budget argument: an external squeeze at fixed rate thins exponentially and stops at $\sqrt{\nu/s}$; a collapse whose speed does not fall is unpriced by the budget. The sheet field's descent is constant-speed closing driven by the sheets' own (cancelling) induction - not self-accelerating; that earlier reading is withdrawn (C30). |
 | **the floor** | the length below which a fluid cannot be squeezed: the healing length (quantum), $\sqrt{\nu/s}$ (Navier-Stokes, moving), none (Euler). |
@@ -90,7 +91,8 @@ Each was registered with the observation that would refute it before its run; st
 | C28 | the seam flips again below the cut | between: the cut is a sign reversal on material fluid (0.13 by the clock, threads beside the sheets); no second seam inside the clock |
 | C29 | the sheets close under their own induction | between at both nu: 0.54 / 0.52 from the top half of the sheets; 0.84 from the whole sheets |
 | C30 | the pair closes by its own curvature (Da Rios) | **refuted**: curvature rises x5 while the induced closing falls to zero - antiparallel induction cancels on approach |
-| C31 | the far field is part of what closes the gap | between: 0.16, rising to 0.29 at the merge; not C17's 0.42 |
+| C31 | the far field is part of what closes the gap | between on the sheet field: 0.16 at all three nu, rising to 0.29 at the merge; not C17's 0.42. KILL on the pair: the far field opposes (-0.21) |
+| C32 | the gap relaxes exponentially onto the thickness, k viscosity-independent | **passes**: k = 1.7 +- 0.1 at 2e-3, 1e-3, 5e-4; the pair k ~ 0.16 |
 
 ## Theorems and propositions (`THEORY.md`)
 

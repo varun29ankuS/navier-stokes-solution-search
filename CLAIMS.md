@@ -330,6 +330,15 @@ pair has its own k, different from 1.7. Refuted by: k moving by more than 25% be
 Consequence (Theorem 7): exponential relaxation is inside the viscous scale faster than any power law - on this
 structure there is no finite-time descent at the seam, inviscidly or otherwise; the only route to a seam singularity
 is the thickness arm itself, which also decays exponentially (e-fold 1-2). Two exponentials reach zero at t = infinity.
+**Result (2026-09-08, v13): PASS.** k = 1.74 at nu = 5e-4 (320^3, t = 1.0-1.15, the resolved descent), against 1.75 /
+1.84 at 2e-3 and 1.64 at 1e-3: k = 1.7 +- 0.1 across a factor of four in viscosity. The tube pair in Kelvin's frame
+(v13, nu = 1e-3, seeded at t = 3): k = 0.16 with spread 0.00-0.35 - its own value, ten times smaller, and not a clean
+exponential (a slow oscillating drift). The three-mask shares are viscosity-independent too: sheets 0.84 and far field
+0.16 at all three rungs (5e-4: 0.86, 0.84, 0.82). For the pair: self-induced share 1.20 (C29 PASS on the pair) and far
+field -0.21 - the rest of the box pushes the tubes apart (C31 KILL on the pair, in the informative direction). C30
+refuted on the pair as well (C_LIA -0.4 -> 0). C26 passes on the pair (lambda 1.02, jump x1.00). The closing law -
+its form, its rate, its division between self and surroundings - is an inviscid property of the structure; viscosity
+enters only through where delta sits.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
