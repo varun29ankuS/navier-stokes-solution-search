@@ -197,6 +197,15 @@ octave early (mutual induction at fixed circulation: exponential approach) and a
 Each run reports its V (gap arm, thickness arm, crossing, sqrt(nu/s) there). Refuted by: a wave on Kida-Pelz; peak
 times that move with nu on (b) or (c); or a pair whose octave time never shrinks (no self-induced phase at all).
 
+**C24 (registered 2026-09-08, before the run). The forced route, watched.** Fefferman's (C)/(D) allow a smooth force.
+`FORCE=eps` adds f = eps x (the initial field restricted to |k| <= 4): smooth, periodic, divergence-free, steady - the
+external squeeze held on forever, the budget replenished from outside. With eps = 0.5 and 1.5 at nu = 2e-3 and 1e-3,
+256^3: the V bottom is no longer the end of the descent - twist@0.05 keeps rising past the unforced turnover
+(t ~ 1.7), max|w| accelerates instead of peaking, and the wave passes the viscous thickness (race variable < 1 with
+the twist still rising) inside the clock. Refuted by: a forced run whose twist still turns over and whose max|w|
+still peaks inside the clock - which would mean a steady large-scale force does not by itself defeat the cut, and
+the forced blow-ups in the literature need a force that tracks the collapse.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 

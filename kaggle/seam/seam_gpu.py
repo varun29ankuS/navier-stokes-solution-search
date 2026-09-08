@@ -31,14 +31,22 @@ own T*; (c) the tube pair: a descending wave, nu-independent, with CONSTANT octa
 fixed circulation: exponential approach) and acceleration only in the last octaves.
 The V: gap arm fitted to the resolved peaks (gap = a (T* - t)), thickness arm to delta(t) (exponential), crossing
 reported with sqrt(nu/s) there.
-usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 python seam_gpu.py"""
+FORCED MODE (2026-09-08, the day the field moved): Fefferman's breakdown statements (C)/(D) allow a smooth force
+f(x, t). FORCE=eps adds f = eps * (low-k part of the initial field, |k| <= FKMAX), divergence-free, smooth, periodic,
+time-independent: the external squeeze held on forever. Energy is no longer fixed - the budget that makes the unforced
+collapse "free but unpaid for" is replenished from outside. REGISTERED (C24): with FORCE > 0 the V bottom is no
+longer the end of the descent - twist@0.05 keeps rising past the unforced turnover time, max|w| accelerates
+instead of peaking, and the wave passes the viscous thickness (race < 1 with the twist still rising); at FORCE = 0
+(the runs above) it turns over. Refuted by: a forced run whose twist still turns over and whose max|w| still peaks
+inside the clock.
+usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4] python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
 # On Kaggle (one code file per kernel) this file schedules itself: each configuration runs as a subprocess of this
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=pair NU=2e-3 T=8;IC=pair NU=1e-3 T=8;IC=found NU=0 T=1.0"      # v5: the approaching pair, and the nu = 0 energy certificate
+    SCHEDULE = "IC=found NU=2e-3 T=3 FORCE=0.5;IC=found NU=2e-3 T=3 FORCE=1.5;IC=found NU=1e-3 T=2.4 FORCE=0.5;IC=found NU=1e-3 T=2.4 FORCE=1.5"   # v6: the forced seam race
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -54,6 +62,7 @@ IC = os.environ.get("IC", "found"); N = int(os.environ.get("N", 256)); NU = floa
 EVERY = float(os.environ.get("EVERY", 0.05)); DEV = "cuda" if torch.cuda.is_available() else "cpu"
 SEPS = [float(v) for v in os.environ.get("SEPS", "0.05,0.07,0.1,0.14,0.2,0.28,0.4,0.56").split(",")]; VSEP = float(os.environ.get("VSEP", 0.1))
 FOUND = os.environ.get("FOUND", "/kaggle/input/zef-found/leashed64_dmin030.npz")
+FORCE = float(os.environ.get("FORCE", 0.0)); FKMAX = float(os.environ.get("FKMAX", 4.0))
 CD = torch.complex64; RD = torch.float32
 k1 = torch.fft.fftfreq(N, d=1.0 / N).to(DEV).to(RD)
 KX, KY, KZ = torch.meshgrid(k1, k1, k1, indexing="ij"); K = [KX, KY, KZ]
@@ -69,12 +78,15 @@ def project(F):
     return [F[i] - K[i] * kd for i in range(3)]
 
 
+FHAT = None                                                                         # the smooth force, set after the initial field is built
+
+
 def transport(U):
     Ud = [Ui * deal for Ui in U]; u = [ifft(Ui).real for Ui in Ud]; out = []
     for i in range(3):
         adv = sum(u[j] * ifft(1j * K[j] * Ud[i]).real for j in range(3))
         div = sum(ifft(1j * K[j] * fft(u[j] * u[i])).real for j in range(3))
-        out.append(-0.5 * fft(adv + div) * deal)
+        out.append(-0.5 * fft(adv + div) * deal + (FHAT[i] if FHAT is not None else 0.0))
         del adv, div
     return project(out)
 
@@ -166,7 +178,12 @@ else:
 with torch.no_grad():
     Z0 = 0.5 * sum((ifft(1j * K[a] * U[b] - 1j * K[b] * U[a]).real ** 2).mean() for a, b in ((1, 2), (2, 0), (0, 1))).item()
     U = [Ui * math.sqrt(0.375 / Z0) for Ui in U]; Z0 = 0.375; E0 = energy(U)
-print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s" % (IC, N, NU, T, Z0, 2 * dx, DEV), flush=True)
+    if FORCE > 0:
+        lowk = (KMAG <= FKMAX).to(RD); FHAT = [FORCE * Ui * lowk for Ui in U]              # f = eps * u0 restricted to |k| <= FKMAX: smooth, periodic, divergence-free, steady
+        fpow = math.sqrt(sum((ifft(Fi).real ** 2).mean().item() for Fi in FHAT))
+        print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
+            FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
+print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE), flush=True)
 print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0")
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
