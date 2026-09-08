@@ -276,6 +276,14 @@ does not close again inside the clock: no second seam among the tagged fluid at 
 fails). C26 passes a third time (lambda 0.99, jump x1.04). The staircase's first step exists; its exponent lambda_stair
 = log(r_s)/log(r_t) needs a second step, beyond ~400^3.
 
+**C29 (registered 2026-09-08, before the run). The sheets close under their own induction.** In the Lagrangian mode,
+for every nearest A-B pair, the closing rate along the separation from the full velocity, (u_A - u_B) . d_hat, and from
+the pair's own Biot-Savart field u_H (the velocity induced by the smoothly-masked high set alone). On the descent
+(t = 1.0 to the merge) at nu = 2e-3 and 1e-3, 320^3, the self-induced rate is >= 70% of the measured closing rate: the
+gap law g = 0.51 (T* - t) is Helmholtz - the pair pressing itself - not a fit and not external strain. Refuted by: a
+self-induced share below 40%. Also reported: where the flipped fluid sits after the merge (distance to the other sheet
+over the gap: ~0 bridges, ~1 threads).
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
