@@ -94,6 +94,14 @@ material |w| growth rate from the rows, the compression across (s_m) and along (
 closes there is no new term and the excess thinning at lower viscosity is the narrowing component; if the two strains
 fall short of the growth, something outside the strain budget thins the sheets. REGISTERED: closes within 15% at both
 nu; narrowing ~0-0.1 at 2e-3 and ~0.2-0.3 at 1e-3. Refuted by: a residual above 30% of the growth at 1e-3.
+THE ROLL (2026-09-08, C36): does the rolling seam form Lundgren's spiral? Cheap test on the tagged fluid: WIND =
+median accumulated winding angle (in turns) of the tagged particles about the centroid of the twisted set, in the
+plane normal to xi_ref, integrated from the seeding row (angle increments unwrapped per particle). A spiral roll is
+a monotone winding at a rate ~ |w|/2 with turns spaced geometrically; a non-spiral collapse winds less than a
+quarter turn while |w| grows. Also reported once WIND > 0.5: the ratio of successive maxima of |w| against radius
+from the centroid (the turn-spacing ratio; Lundgren/Kaden: a constant). REGISTERED: on the sheet field at nu = 5e-4
+the tagged fluid completes >= 0.5 turn inside the clock after the in-plane strain flips sign, at a winding rate
+within x2 of |w|_m/(4 pi); the seam rolls. Refuted by: winding < 0.25 turn by the clock with |w|_m still growing.
 usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4 FMODE=steady|track] [LAGR=1 TSEED=1.0 NP=4000] python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
@@ -101,7 +109,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=5e-4 T=1.3 N=320 LAGR=1 TSEED=0.8;IC=found NU=2.5e-4 T=1.1 N=320 LAGR=1 TSEED=0.7"   # v16: the loss fraction at lower viscosity (seeded earlier: the clocks expire at 1.2 / ~1.0)
+    SCHEDULE = "IC=found NU=5e-4 T=1.3 N=320 LAGR=1 TSEED=0.6;IC=found NU=2e-3 T=2.2 N=320 LAGR=1 TSEED=0.6"   # v17: the roll - winding from an early seed through the flip
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -205,7 +213,7 @@ def lagr_diag(U, P, sgn):
     w = [ifft(1j * K[(i + 1) % 3] * Ud[(i + 2) % 3] - 1j * K[(i + 2) % 3] * Ud[(i + 1) % 3]).real for i in range(3)]
     wm = torch.sqrt(sum(wi**2 for wi in w))
     wmp = interp3(wm, P); A = P[sgn > 0]; B = P[sgn < 0]
-    if len(A) < 10 or len(B) < 10: return (wmp.median().item(),) + (float("nan"),) * 11
+    if len(A) < 10 or len(B) < 10: return (wmp.median().item(),) + (float("nan"),) * 12
     dvec = A[:, None, :] - B[None, :, :]; dvec = (dvec + math.pi) % (2 * math.pi) - math.pi
     dist = torch.sqrt((dvec**2).sum(-1)); j = torch.argmin(dist, 1); gap = dist[torch.arange(len(A), device=DEV), j]
     uA = torch.stack([interp3(ui, A) for ui in u], 1); uB = torch.stack([interp3(ui, B[j]) for ui in u], 1)
@@ -223,6 +231,17 @@ def lagr_diag(U, P, sgn):
     stt_ = -sum(tt_[i] * 0.5 * (G_[i][j] + G_[j][i]) * tt_[j] for i in range(3) for j in range(3))            # compression ALONG the sheet: the narrowing
     nmat = interp3(stt_, P).median().item()
     del wh_, gw_, gwm_, G_, nrm_, snn_, xi_, tt_, ttn_, stt_
+    # the roll: winding of the tagged fluid about the twisted set's centroid, in the plane normal to xi_ref
+    xr = LAG["xi_ref"]; e1 = torch.cross(xr, torch.tensor([1.0, 0.0, 0.0], device=DEV) if abs(xr[0]) < 0.9 else torch.tensor([0.0, 1.0, 0.0], device=DEV), dim=0); e1 = e1 / e1.norm(); e2 = torch.cross(xr, e1, dim=0)
+    twp = P[(sgn > 0) | (sgn < 0)]
+    cen = torch.stack([torch.atan2(torch.sin(twp[:, c]).mean(), torch.cos(twp[:, c]).mean()) % (2 * math.pi) for c in range(3)])   # periodic centroid
+    rel = (P - cen + math.pi) % (2 * math.pi) - math.pi
+    ang = torch.atan2((rel * e2).sum(1), (rel * e1).sum(1))
+    if "ang0" not in LAG: LAG["ang0"] = ang.clone(); LAG["wind"] = torch.zeros_like(ang)
+    dang = (ang - LAG["ang0"] + math.pi) % (2 * math.pi) - math.pi; LAG["wind"] += dang; LAG["ang0"] = ang
+    wind = (LAG["wind"].abs().median() / (2 * math.pi)).item()
+    rad = torch.sqrt(((rel * e1).sum(1)) ** 2 + ((rel * e2).sum(1)) ** 2)
+    LAG["last_rad"] = rad; LAG["last_wmp"] = wmp
     wsign = torch.sign(sum(interp3(w[c], P) * LAG["xi_ref"][c] for c in range(3)))                # the sign of omega . xi_ref carried by each particle now
     flipped = wsign != sgn; flip = flipped.float().mean().item()
     # who closes the gap: closing rate from the full velocity and from the pair's own induced velocity, along the separation
@@ -240,7 +259,7 @@ def lagr_diag(U, P, sgn):
     # where the flipped fluid sits: distance to the other sheet over the gap (0 = between the sheets, ~1 = beside them)
     fA = flipped[sgn > 0]
     where = (gap[fA] / gap.median()).median().item() if fA.sum() >= 5 else float("nan")
-    return wmp.median().item(), gap.median().item(), jump.median().item(), flip, rate_full, rate_self, where, rate_sheet, kappa, dmat, smat, nmat
+    return wmp.median().item(), gap.median().item(), jump.median().item(), flip, rate_full, rate_self, where, rate_sheet, kappa, dmat, smat, nmat, wind
 
 
 def induced_velocity(U, thresh=0.5):
@@ -346,7 +365,7 @@ with torch.no_grad():
         print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
             FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
 print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g (%s)" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE, FMODE), flush=True)
-print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(pair) dgap/dt(sheets) flipped@  kappa  C_LIA   delta_m  s_m    n_m" if LAGR else ""))
+print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(pair) dgap/dt(sheets) flipped@  kappa  C_LIA   delta_m  s_m    n_m    wind" if LAGR else ""))
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
@@ -360,10 +379,10 @@ while t <= T + 1e-9:
             if "P" not in LAG:
                 with torch.no_grad(): LAG["P"], LAG["sgn"] = lagr_seed(U)
                 print("lagrangian: %d particles seeded on the high set at t = %.2f; sheets A/B = %d/%d" % (len(LAG["P"]), t, int((LAG["sgn"] > 0).sum()), int((LAG["sgn"] < 0).sum())), flush=True)
-            with torch.no_grad(): mw, gap, jump, flip, rf, rs, where, rsh, kappa, dmat, smat, nmat = lagr_diag(U, LAG["P"], LAG["sgn"])
+            with torch.no_grad(): mw, gap, jump, flip, rf, rs, where, rsh, kappa, dmat, smat, nmat, wind = lagr_diag(U, LAG["P"], LAG["sgn"])
             clia = rs / (jump * kappa * gap) if (np.isfinite(kappa) and kappa > 0 and gap > 0) else float("nan")
-            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip, rf, rs, where, rsh, kappa, clia, dmat, smat, nmat))
-            lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %+.4f   %s   %6.2f  %+.3f   %.4f  %+.3f  %+.3f" % (mw, gap, jump, flip, rf, rs, rsh, ("%.2f" % where) if np.isfinite(where) else " -  ", kappa, clia, dmat, smat, nmat)
+            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip, rf, rs, where, rsh, kappa, clia, dmat, smat, nmat, wind))
+            lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %+.4f   %s   %6.2f  %+.3f   %.4f  %+.3f  %+.3f  %.3f" % (mw, gap, jump, flip, rf, rs, rsh, ("%.2f" % where) if np.isfinite(where) else " -  ", kappa, clia, dmat, smat, nmat, wind)
         hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d if np.isfinite(d) else 0.0, re_seam, float(valid)) + tuple(softs[v] for v in SEPS) + (Er,))
         print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s%s   (%.0fs)" % (
             t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ("%.4f" % ell_nu) if valid else "   -  ", ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam,
@@ -376,7 +395,7 @@ while t <= T + 1e-9:
         if LAGR and "P" in LAG: LAG["P"] = lagr_advect(U, LAG["P"], dt)
         U = step(U, dt); t += dt
 if LAGR and LAG.get("rows"):
-    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl, rf, rs, wh, rsh, kp, cl, dm, sm, nm = [Lr[:, i] for i in range(14)]
+    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl, rf, rs, wh, rsh, kp, cl, dm, sm, nm, wd = [Lr[:, i] for i in range(15)]
     dcl = np.array([h[8] for h in hist]); tcl = np.array([h[0] for h in hist]); tclock = tcl[dcl > 2 * dx][-1] if (dcl > 2 * dx).any() else tl[0]
     m = (tl <= tclock) & np.isfinite(gp) & (gp > 0)
     imin = int(np.argmin(gp[m])) if m.any() else 0; tmerge = tl[m][imin]
@@ -413,6 +432,18 @@ if LAGR and LAG.get("rows"):
     if kk_m.sum() >= 3:
         kk = -rf[kk_m] / (gp[kk_m] - dl[kk_m])
         print("C32 closing law: k = -dgap/dt / (gap - delta) on the descent: median %.2f, spread %.2f..%.2f over %d rows (t %.2f-%.2f)" % (float(np.median(kk)), kk.min(), kk.max(), kk_m.sum(), tl[kk_m][0], tl[kk_m][-1]))
+    # C36: the roll - winding of the tagged fluid inside the clock, and its rate against |w|_m / (4 pi)
+    try:
+        inw = m & np.isfinite(wd)
+        if inw.sum() >= 3:
+            wclock = wd[inw][-1]; flipi = np.where(inw & (nm < 0))[0]; tflip = tl[flipi[0]] if len(flipi) else float("nan")
+            rate_w = np.gradient(wd[inw], tl[inw]); expect = mw[inw] / (4 * math.pi)
+            ratio = float(np.median(rate_w[-4:] / expect[-4:])) if inw.sum() >= 4 else float("nan")
+            print("C36 the roll: winding of the tagged fluid %.3f turns at the clock (t = %.2f); in-plane strain flips sign at t = %s; winding rate over the last rows %.3f turns/unit vs |w|_m/(4 pi) = %.3f (ratio %.2f)" % (
+                wclock, tl[inw][-1], ("%.2f" % tflip) if np.isfinite(tflip) else "-", float(np.mean(rate_w[-4:])), float(np.mean(expect[-4:])), ratio))
+            print("REGISTERED C36: %s" % ("PASS: the seam rolls" if (wclock >= 0.5 and np.isfinite(ratio) and 0.5 <= ratio <= 2.0) else ("KILL: no roll (%.2f turn) with |w| growing" % wclock if (wclock < 0.25 and mw[inw][-1] > mw[inw][0]) else "between (%.2f turn, ratio %s)" % (wclock, ("%.2f" % ratio) if np.isfinite(ratio) else "-"))))
+    except Exception as e:
+        print("C36: roll analysis failed (%s)" % e)
     # C34: the strain budget on the material sheets - growth = thinning + narrowing?
     try:
         bud = m & (tl < tmerge) & np.isfinite(sm) & np.isfinite(nm)
