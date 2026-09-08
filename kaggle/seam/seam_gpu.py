@@ -39,7 +39,16 @@ longer the end of the descent - twist@0.05 keeps rising past the unforced turnov
 instead of peaking, and the wave passes the viscous thickness (race < 1 with the twist still rising); at FORCE = 0
 (the runs above) it turns over. Refuted by: a forced run whose twist still turns over and whose max|w| still peaks
 inside the clock.
-usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4] python seam_gpu.py"""
+LAGRANGIAN MODE (2026-09-08, Kelvin's frame): LAGR=1 seeds NP particles on the high-vorticity set at t = TSEED (when the
+pair is visible), splits them into the two sheets by the sign of omega . xi_ref (xi_ref the principal vorticity
+direction of the high set), and advects them (RK2, trilinear on the GPU). Reported along the paths: the material
+|w| (median over particles; Helmholtz: it should follow the stretching), the GAP (median distance from a particle of
+one sheet to the nearest of the other, periodic) and the velocity JUMP across the pair (median |u_A - u_B| over those
+nearest pairs). C25 says the jump stays bounded by the data; lambda is the gap's exponent. REGISTERED (C26): on the
+sheet field at nu = 2e-3 the Lagrangian gap closes linearly (lambda = 1 +- 0.2 on the resolved window) and the jump
+stays within 2x of its value at TSEED until the merge; the material |w| grows while the gap closes and turns over at
+the merge. Refuted by: a jump that grows by more than 2x while the gap closes (C25 fails on this field), or lambda < 0.7.
+usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4] [LAGR=1 TSEED=1.0 NP=4000] python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
 # On Kaggle (one code file per kernel) this file schedules itself: each configuration runs as a subprocess of this
@@ -63,7 +72,8 @@ EVERY = float(os.environ.get("EVERY", 0.05)); DEV = "cuda" if torch.cuda.is_avai
 SEPS = [float(v) for v in os.environ.get("SEPS", "0.05,0.07,0.1,0.14,0.2,0.28,0.4,0.56").split(",")]; VSEP = float(os.environ.get("VSEP", 0.1))
 FOUND = os.environ.get("FOUND", "/kaggle/input/zef-found/leashed64_dmin030.npz")
 FORCE = float(os.environ.get("FORCE", 0.0)); FKMAX = float(os.environ.get("FKMAX", 4.0))
-SNAP = int(os.environ.get("SNAP", 0)); SNAPS = []                                   # SNAP=1: save a slice of |w| and of the signed twist through the |w| maximum at every output
+SNAP = int(os.environ.get("SNAP", 0)); SNAPS = []
+LAGR = int(os.environ.get("LAGR", 0)); TSEED = float(os.environ.get("TSEED", 1.0)); NP = int(os.environ.get("NP", 4000)); LAG = {}                                   # SNAP=1: save a slice of |w| and of the signed twist through the |w| maximum at every output
 CD = torch.complex64; RD = torch.float32
 k1 = torch.fft.fftfreq(N, d=1.0 / N).to(DEV).to(RD)
 KX, KY, KZ = torch.meshgrid(k1, k1, k1, indexing="ij"); K = [KX, KY, KZ]
@@ -113,6 +123,49 @@ def energy(U):
 
 
 @torch.no_grad()
+def interp3(F, P):
+    """trilinear interpolation of a real field F [N,N,N] at particle positions P [n,3] in [0, 2pi)^3 (periodic)"""
+    g = (P / dx) % N; i0 = torch.floor(g).long(); f = (g - i0.float()); i1 = (i0 + 1) % N; out = torch.zeros(P.shape[0], device=DEV, dtype=RD)
+    for a in (0, 1):
+        for b in (0, 1):
+            for c in (0, 1):
+                w = (f[:, 0] if a else 1 - f[:, 0]) * (f[:, 1] if b else 1 - f[:, 1]) * (f[:, 2] if c else 1 - f[:, 2])
+                out = out + w * F[(i1 if a else i0)[:, 0], (i1 if b else i0)[:, 1], (i1 if c else i0)[:, 2]]
+    return out
+
+
+def lagr_seed(U):
+    """particles on the high set, split into the two sheets by the sign of omega . xi_ref"""
+    Ud = [Ui * deal for Ui in U]
+    w = [ifft(1j * K[(i + 1) % 3] * Ud[(i + 2) % 3] - 1j * K[(i + 2) % 3] * Ud[(i + 1) % 3]).real for i in range(3)]
+    wm = torch.sqrt(sum(wi**2 for wi in w)) + 1e-30; high = wm > 0.5 * wm.max()
+    idx = torch.nonzero(high); sel = idx[torch.randperm(len(idx), device=DEV)[:NP]]
+    P = (sel.float() + 0.5) * dx
+    xi = torch.stack([wi[high] / wm[high] for wi in w], 1); M = xi.T @ xi; xi_ref = torch.linalg.eigh(M)[1][:, -1]
+    sgn = torch.sign(sum(w[c][sel[:, 0], sel[:, 1], sel[:, 2]] * xi_ref[c] for c in range(3)))
+    return P, sgn
+
+
+def lagr_advect(U, P, dt):
+    u = [ifft(Ui * deal).real for Ui in U]
+    v1 = torch.stack([interp3(ui, P) for ui in u], 1); Pm = (P + 0.5 * dt * v1) % (2 * math.pi)
+    v2 = torch.stack([interp3(ui, Pm) for ui in u], 1)
+    return (P + dt * v2) % (2 * math.pi)
+
+
+def lagr_diag(U, P, sgn):
+    Ud = [Ui * deal for Ui in U]; u = [ifft(Ui).real for Ui in Ud]
+    w = [ifft(1j * K[(i + 1) % 3] * Ud[(i + 2) % 3] - 1j * K[(i + 2) % 3] * Ud[(i + 1) % 3]).real for i in range(3)]
+    wm = torch.sqrt(sum(wi**2 for wi in w))
+    wmp = interp3(wm, P); A = P[sgn > 0]; B = P[sgn < 0]
+    if len(A) < 10 or len(B) < 10: return wmp.median().item(), float("nan"), float("nan")
+    dvec = A[:, None, :] - B[None, :, :]; dvec = (dvec + math.pi) % (2 * math.pi) - math.pi
+    dist = torch.sqrt((dvec**2).sum(-1)); j = torch.argmin(dist, 1); gap = dist[torch.arange(len(A), device=DEV), j]
+    uA = torch.stack([interp3(ui, A) for ui in u], 1); uB = torch.stack([interp3(ui, B[j]) for ui in u], 1)
+    jump = torch.sqrt(((uA - uB) ** 2).sum(1))
+    return wmp.median().item(), gap.median().item(), jump.median().item()
+
+
 def diag(U):
     Ud = [Ui * deal for Ui in U]
     G = [[ifft(1j * K[i] * Ud[j]).real for j in range(3)] for i in range(3)]          # G[i][j] = d_i u_j
@@ -196,21 +249,44 @@ with torch.no_grad():
         print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
             FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
 print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE), flush=True)
-print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0")
+print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump" if LAGR else ""))
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
         Z, wmax, soft, anti, ell, ell_nu, cut, d, softs, re_seam, valid = diag(U); Er = energy(U) / E0
+        lag = ""
+        if LAGR and t >= TSEED - 1e-9:
+            if "P" not in LAG:
+                with torch.no_grad(): LAG["P"], LAG["sgn"] = lagr_seed(U)
+                print("lagrangian: %d particles seeded on the high set at t = %.2f; sheets A/B = %d/%d" % (len(LAG["P"]), t, int((LAG["sgn"] > 0).sum()), int((LAG["sgn"] < 0).sum())), flush=True)
+            with torch.no_grad(): mw, gap, jump = lagr_diag(U, LAG["P"], LAG["sgn"])
+            LAG.setdefault("rows", []).append((t, mw, gap, jump)); lag = "   | %8.2f   %.4f   %.4f" % (mw, gap, jump)
         hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d if np.isfinite(d) else 0.0, re_seam, float(valid)) + tuple(softs[v] for v in SEPS) + (Er,))
-        print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s   (%.0fs)" % (
+        print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s%s   (%.0fs)" % (
             t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ("%.4f" % ell_nu) if valid else "   -  ", ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam,
-            ("%.4f" % d) if np.isfinite(d) else "(tail empty)", Er, "" if (np.isfinite(d) and d > 2 * dx) else ("" if not np.isfinite(d) else "  <-- past the clock"), time.time() - t0), flush=True)
+            ("%.4f" % d) if np.isfinite(d) else "(tail empty)", Er, "" if (np.isfinite(d) and d > 2 * dx) else ("" if not np.isfinite(d) else "  <-- past the clock"), lag, time.time() - t0), flush=True)
         mark += EVERY
         if t >= T - 1e-9: break
     with torch.no_grad():
         umax = max(ifft(Ui).real.abs().max().item() for Ui in U)
         dt = min(2.0 / N, 0.5 * dx / max(umax, 1e-9), mark - t + 1e-12)
+        if LAGR and "P" in LAG: LAG["P"] = lagr_advect(U, LAG["P"], dt)
         U = step(U, dt); t += dt
+if LAGR and LAG.get("rows"):
+    Lr = np.array(LAG["rows"]); tl, mw, gp, jp = Lr[:, 0], Lr[:, 1], Lr[:, 2], Lr[:, 3]
+    dcl = np.array([h[8] for h in hist]); tcl = np.array([h[0] for h in hist]); tclock = tcl[dcl > 2 * dx][-1] if (dcl > 2 * dx).any() else tl[0]
+    m = (tl <= tclock) & np.isfinite(gp) & (gp > 0)
+    imin = int(np.argmin(gp[m])) if m.any() else 0; tmerge = tl[m][imin]
+    mm = m & (tl < tmerge) & (gp > 1.2 * gp[m].min())
+    lam = np.nan
+    if mm.sum() >= 4:
+        a, b = np.polyfit(tl[mm], gp[mm], 1); Tst = -b / a if a < 0 else np.nan
+        if np.isfinite(Tst): lam = np.polyfit(np.log(Tst - tl[mm]), np.log(gp[mm]), 1)[0]
+    j0 = jp[m][0]; jmax = np.nanmax(jp[m & (tl <= tmerge)]) if (m & (tl <= tmerge)).any() else np.nan
+    print("\nC26 Lagrangian: gap %.4f -> %.4f (min at t = %.2f, inside the clock %.2f); linear fit T* = %s, lambda = %s; jump %.4f at seed -> max %.4f before the merge (x%.2f); material |w| %.1f -> %.1f" % (
+        gp[m][0], gp[m].min(), tmerge, tclock, ("%.2f" % Tst) if mm.sum() >= 4 and np.isfinite(Tst) else "-", ("%.2f" % lam) if np.isfinite(lam) else "-", j0, jmax, jmax / j0, mw[m][0], mw[m].max()))
+    ok = np.isfinite(lam) and abs(lam - 1) <= 0.2 and jmax / j0 <= 2.0
+    print("REGISTERED C26: %s" % ("PASS: linear closing, bounded jump" if ok else ("KILL: the jump grows more than 2x while the gap closes (C25 fails here)" if jmax / j0 > 2.0 else ("KILL: lambda = %.2f < 0.7" % lam if np.isfinite(lam) and lam < 0.7 else "between (see rows)"))))
 if SNAP:
     out = os.path.join("/kaggle/working" if os.path.isdir("/kaggle/working") else ".", "snaps_%s_nu%g.npz" % (IC, NU))
     np.savez_compressed(out, t=np.array([h[0] for h in hist]), wm=np.stack([s_[0] for s_ in SNAPS]), beta=np.stack([s_[1] for s_ in SNAPS]), iz=np.array([s_[2] for s_ in SNAPS]), maxw=np.array([h[2] for h in hist]), delta=np.array([h[8] for h in hist]))
