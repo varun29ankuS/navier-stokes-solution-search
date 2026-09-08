@@ -1158,6 +1158,26 @@ gives viscosity time to act on the cores. The V at 1e-3: gap = 0.099 (9.25 - t),
 field's wave, meeting the thickness arm at t ~ 8.8, scale 0.048, above sqrt(nu/s) = 0.029 - beyond the clock, not
 counted. The old C20 KILL clause fired at 2e-3 with max|w| falling 22%; under the corrected clause it does not.
 
+### The 320^3 rung (`results/seam_gpu/v7/`, 2026-09-08): C21 KILL, the V corrected
+
+```
+                        256^3 (biased thickness fit)        320^3 (pre-merge fit)
+nu = 2e-3   peaks       0.70 0.95 1.25 1.40 1.50 1.60      0.70 0.95 1.25 1.40 1.50 1.60 1.65 1.70   (identical)
+            V           t 1.65, scale 0.068, ell_nu 0.053  t 1.69, scale 0.052, ell_nu 0.051
+nu = 1e-3   peaks       0.70 0.95 1.25 1.35 1.50 (0.1 at   0.70 0.95 1.25 1.35 1.50 1.60 1.65 1.70   (0.1 resolved:
+                        the clock)                          clock 1.75; peak 0.182 at 1.60, falls 15%)  0.182 at 1.60)
+            V           t 1.70, scale 0.043, ell_nu 0.025  t 1.72, scale 0.031, ell_nu 0.028
+Re_seam at the peak     224 (2e-3)                          594 (1e-3):  x2.65 per halving of nu
+```
+
+Two corrections. (1) The V bottom sits **on** sqrt(nu/s) at both viscosities once the thickness arm is fitted before
+the merge (audit D) - the 256^3 reading "above the viscous scale at 1e-3" was the biased fit and is retracted; the
+merge is the cut at both rungs, and the merge scale tracks sqrt(nu/s). (2) C21's KILL clause fired: Re_seam at the
+turnover rises x2.65 per halving of nu, i.e. the velocity jump across the seam at the merge grows (Delta_u 2.2 -> 3.3)
+as viscosity falls. Recorded as the first registered number in the repository pointing toward a singularity - across
+viscosities, at the merge; whether the jump grows along one solution is C26 (the Lagrangian frame), running. The
+320^3 run at 2e-3 reproduces the 256^3 descent to the sampling step: the picture is resolution-converged.
+
 ### Instrument audit of `seam_gpu.py` (2026-09-08, before the generality run is read)
 
 Six findings, all fixed in the next version; none touches C22 (its peak times are read straight off the twist

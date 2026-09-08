@@ -53,9 +53,11 @@ ones (2e-3) until their clocks expire. `plot_seam.py` from the run logs.*
    one sampling step; the time per octave shrinks from ~0.55 to ~0.25 - rhythmic in the collapse's own clock,
    accelerating in ours; gap = 0.51 (1.78 - t). A hand-built tube pair shows the two phases in one run (3.7, 2.7, 2.4
    then 0.6-0.7 per octave). A second adversarial field descends in one abrupt step. Kida-Pelz shows no wave.
-5. **The V.** The gap arm (inviscid, linear) meets the thickness arm (viscous, exponential) at t = 1.65-1.74 - at the
-   viscous scale for nu = 2e-3 (the merge is the cut: enstrophy and max|w| peak and decay, resolved to T = 3), above it
-   for 1e-3. The Euler seam race starts there, located from data above the wall at a place the clock cannot reach.
+5. **The V.** The gap arm (inviscid, linear) meets the thickness arm (viscous, exponential) at t = 1.69-1.72, and the
+   meeting scale sits on sqrt(nu/s) at both viscosities (0.052 vs 0.051 at 2e-3; 0.031 vs 0.028 at 1e-3, 320^3): the
+   merge is the cut. An earlier reading that the merge sits above the viscous scale at 1e-3 came from a thickness fit
+   through the post-merge plateau and is retracted. The seam descends inviscidly and merges exactly where viscosity
+   can cut it; the merge scale itself tracks sqrt(nu/s) as nu falls.
 6. **The quantum control.** In Gross-Pitaevskii the same antiparallel pair reconnects at a fixed floor (the healing
    length) with the literature's gap law, and never returns; every regulator nature offers is a fixed length, and
    Navier-Stokes' only one, sqrt(nu/s), moves with the flow. The gap between them is a quarter of a Laplacian
@@ -107,9 +109,9 @@ two phases        external squeeze (equal octaves,      3.7/2.7/2.4 then 0.6-0.7
                   induced roll-up (shrinking octaves)
 thickness arm     the analyticity strip; the sheets'    exponential, viscous (e-fold shifts        its law in Euler
                   own thickness                          with nu), never zero on its own
-the V             gap arm meets thickness arm; the      t = 1.65-1.74 at all nu; at sqrt(nu/s)     the Re ladder (384^3 for 1e-3)
-                  pair merges before the gap closes     for 2e-3 (merge = cut, enstrophy peaks
-                                                         and decays); above it for 1e-3
+the V             gap arm meets thickness arm; the      t = 1.69-1.72; meeting scale on sqrt(nu/s)   the 5e-4 rung (~450^3);
+                  pair merges before the gap closes     at BOTH nu (320^3): merge = cut; the       Re_seam there rises x2.65
+                                                         'above the floor at 1e-3' reading retracted  per halving (C21 KILL)
 the floor         the one fixed length a fluid has      GPE: healing length, cut on contact;       -
                                                          NS: sqrt(nu/s), moves with the flow;
                                                          Euler: none; forced: replenished budget,
