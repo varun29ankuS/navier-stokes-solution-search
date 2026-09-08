@@ -172,6 +172,9 @@ at the merge carries a larger velocity jump at lower viscosity (Delta_u 2.2 -> 3
 number before it is cut. Two rungs, one field; the 5e-4 rung needs ~450^3. This is the first registered number in the
 repository pointing in the direction of a singularity, and it is recorded as such. The 320^3 run at 2e-3 reproduces
 the 256^3 descent to three digits.
+**Re-read after C26 (v8):** the direct Lagrangian velocity jump is the same at both viscosities (max x1.08-1.09 over
+seeding, ~0.95 at the merge). The x2.65 was the estimator: thinner sheets at the same jump raise peak |w| and the
+proxy ell does not shrink in step. The KILL stands as a fired criterion on Re_seam; its interpretation is withdrawn.
 **Result (2026-09-08): inconclusive.** Only nu = 2e-3 resolves the twist peak (Re_seam 224, t = 1.6); at 1e-3 and
 5e-4 the 256^3 clock expires (t = 1.6, 1.1) before the peak, so the ladder cannot be compared. The prediction
 "order 10" was wrong by 20x. New, resolved at 2e-3: the twist is a wave in scale (peaks at 0.4, 0.2, 0.1, 0.05 in
@@ -232,6 +235,14 @@ median velocity jump across the nearest pairs stays within 2x of its value at se
 |w| grows while the gap closes and turns over at the merge. Refuted by: a jump that grows more than 2x while the gap
 closes (C25 fails on this field along one solution), or lambda < 0.7. Context: the Eulerian rungs (C21) already show
 the jump at the merge rising x1.5 per halving of nu across solutions.
+**Result (2026-09-08, v8): PASS at both viscosities.** Lagrangian gap 0.27 -> 0.15 with lambda = 0.99 at nu = 2e-3
+(256^3) and 0.99 at 1e-3 (320^3); the gap minimum (t = 1.65 / 1.70) coincides with the Eulerian V (1.69 / 1.72); the
+velocity jump across the pair is 1.01 -> max 1.10 (x1.09) and 1.08 -> max 1.17 (x1.08), ~0.95 at the merge at both nu
+- bounded along each solution and viscosity-independent. The material |w| turns over (t ~ 1.25-1.3) and falls: the cut
+acting on the tagged sheets. Consequence for C21: its KILL fired on the Eulerian estimator (|w| ell^2 / nu on the
+twisted set), whose growth across nu comes from thinner sheets at the same jump (peak |w| 45 vs 29), not from a growing
+jump; the interpretation "the velocity jump grows with the collapse" is refuted by the direct measurement. C25 holds
+on this field along two solutions.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.

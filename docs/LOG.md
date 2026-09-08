@@ -1178,6 +1178,28 @@ as viscosity falls. Recorded as the first registered number in the repository po
 viscosities, at the merge; whether the jump grows along one solution is C26 (the Lagrangian frame), running. The
 320^3 run at 2e-3 reproduces the 256^3 descent to the sampling step: the picture is resolution-converged.
 
+### Kelvin's frame (C26), v8 (`results/seam_gpu/v8/`, 2026-09-08)
+
+4000 particles seeded on the high set at t = 1.0, split into the two sheets by the sign of omega . xi_ref (2840/1160 at
+2e-3, 2764/1236 at 1e-3), advected with the flow. Reported along the paths: the material |w|, the median distance from
+one sheet's particles to the nearest of the other (the Lagrangian gap), and the median velocity difference across
+those nearest pairs (the jump).
+
+```
+                          nu = 2e-3 (256^3)         nu = 1e-3 (320^3)
+gap                       0.270 -> 0.150            0.267 -> 0.150        lambda 0.99 / 0.99;  T* 2.00 / 1.95
+gap minimum (the merge)   t = 1.65                  t = 1.70              Eulerian V: 1.69 / 1.72
+jump at seed / max / merge 1.01 / 1.10 (x1.09) / 0.95   1.08 / 1.17 (x1.08) / 0.95
+material |w|              13.1 -> 13.8 (t 1.25) -> 8.2   14.2 -> 16.3 (t 1.3) -> 14.1 (clock 1.75)
+after the merge           the gap re-opens (0.150 -> 0.177): the cut releases the sheets
+```
+
+C26 passes at both viscosities. The direct jump is bounded along each solution and the same at both nu: C25 holds on
+this field. The material vorticity turning over on tagged fluid - which Helmholtz says can only be stretched under
+Euler - is the cut acting on the sheets themselves. And the reading of C21's KILL is withdrawn: Re_seam = |w| ell^2/nu
+on the twisted set grew x2.65 per halving because the sheets are thinner at the same jump (peak |w| 45 vs 29) while the
+proxy ell did not shrink in step; the quantity it was built to track does not grow.
+
 ### Instrument audit of `seam_gpu.py` (2026-09-08, before the generality run is read)
 
 Six findings, all fixed in the next version; none touches C22 (its peak times are read straight off the twist

@@ -58,7 +58,13 @@ ones (2e-3) until their clocks expire. `plot_seam.py` from the run logs.*
    merge is the cut. An earlier reading that the merge sits above the viscous scale at 1e-3 came from a thickness fit
    through the post-merge plateau and is retracted. The seam descends inviscidly and merges exactly where viscosity
    can cut it; the merge scale itself tracks sqrt(nu/s) as nu falls.
-6. **The quantum control.** In Gross-Pitaevskii the same antiparallel pair reconnects at a fixed floor (the healing
+6. **Kelvin's frame: the gap closes linearly and the velocity jump is bounded.** Fluid tagged on both sheets at
+   t = 1.0 and followed: the material gap closes with lambda = 0.99 at both nu = 2e-3 and 1e-3, its minimum coinciding
+   with the Eulerian V to 0.04; the velocity jump across the pair rises by at most 9% before the merge and is the same
+   at both viscosities (~0.95 at the merge); the material vorticity turns over and falls as the cut acts. C25 (the wall,
+   located) holds along two solutions. An Eulerian estimator, Re_seam, had suggested the jump grows as nu falls (C21's
+   KILL); the direct measurement says it does not, and the interpretation is withdrawn.
+7. **The quantum control.** In Gross-Pitaevskii the same antiparallel pair reconnects at a fixed floor (the healing
    length) with the literature's gap law, and never returns; every regulator nature offers is a fixed length, and
    Navier-Stokes' only one, sqrt(nu/s), moves with the flow. The gap between them is a quarter of a Laplacian
    (regularity is a theorem for (-Delta)^alpha, alpha >= 5/4).
@@ -73,7 +79,7 @@ then fast.*
 
 ## What it found, forced
 
-7. **A steady smooth force does not carry the seam through the floor.** Fefferman's (C)/(D) admit a smooth f; with
+8. **A steady smooth force does not carry the seam through the floor.** Fefferman's (C)/(D) admit a smooth f; with
    f = eps x (the initial field's large scales) held on, resolved to T = 3 at nu = 2e-3, the twist still peaks at t = 1.4
    and falls 59%, the seam is cut as unforced (cut fraction 0.3-0.5, race variable never below 1.2) - and growth
    continues anyway, by re-supply: the pumped large scales rebuild seams and max|w| climbs to 9.9x and rising (unforced:
@@ -109,9 +115,12 @@ two phases        external squeeze (equal octaves,      3.7/2.7/2.4 then 0.6-0.7
                   induced roll-up (shrinking octaves)
 thickness arm     the analyticity strip; the sheets'    exponential, viscous (e-fold shifts        its law in Euler
                   own thickness                          with nu), never zero on its own
-the V             gap arm meets thickness arm; the      t = 1.69-1.72; meeting scale on sqrt(nu/s)   the 5e-4 rung (~450^3);
-                  pair merges before the gap closes     at BOTH nu (320^3): merge = cut; the       Re_seam there rises x2.65
-                                                         'above the floor at 1e-3' reading retracted  per halving (C21 KILL)
+the V             gap arm meets thickness arm; the      t = 1.69-1.72; meeting scale on sqrt(nu/s)   the 5e-4 rung (~450^3)
+                  pair merges before the gap closes     at BOTH nu (320^3): merge = cut; Lagrangian
+                                                         gap minimum at 1.65 / 1.70 agrees
+the jump          velocity difference across the pair,  bounded along each solution (x1.09, x1.08)  more fields; the tracking
+(C25)             the quantity that would have to blow   and the same at both nu; Re_seam's x2.65     force
+                  up for the seam to be a singularity    was the estimator, withdrawn
 the floor         the one fixed length a fluid has      GPE: healing length, cut on contact;       -
                                                          NS: sqrt(nu/s), moves with the flow;
                                                          Euler: none; forced: replenished budget,
