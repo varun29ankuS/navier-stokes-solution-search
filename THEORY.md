@@ -352,3 +352,45 @@ grows without bound while the gap closes - $\lambda < 1$ with `Re_seam` rising t
 
 Status: **[Theorem 7 proved (elementary); C25 stated; the hand-off from "inside the viscous scale" to regularity not
 carried out]**.
+
+## 10. Kelvin's frame: the jump's evolution, and C25 as a statement about one geometric rate (2026-09-08)
+
+**Lemma 8 (the velocity jump across a vortex sheet is circulation per unit length, and it changes only by in-plane
+compression). [classical; Kelvin 1869 + the sheet's definition]** Let $\Sigma(t)$ be a material surface carrying a
+vortex sheet of strength $\gamma(x,t)$, so that the tangential velocity jump across it is $\Delta u = |\gamma|$. For a
+material segment of $\Sigma$ of length $l(t)$ in the direction $\hat t$ transverse to the vorticity within the sheet,
+the circulation $\Gamma$ of a material loop threading it is conserved under Euler, and $\Gamma = \gamma\, l$. Hence
+
+$$\frac{d}{dt}\log \Delta u \;=\; -\,\frac{d}{dt}\log l \;=\; -\,\hat t\cdot S\,\hat t \Big|_{\Sigma}\,,$$
+
+the negative of the rate of stretching of the sheet along itself. Compression *across* the sheet (the thinning,
+$-\hat n\cdot S\,\hat n$) does not change $\Delta u$ at all; only compression *along* the sheet transverse to the
+vorticity (the narrowing, $-\hat t\cdot S\,\hat t$) does.
+
+*Proof.* Kelvin's theorem gives $d\Gamma/dt = 0$ for a material loop; a loop crossing the sheet once in each direction
+along a material segment of length $l$ has $\Gamma = \int \gamma\, dl = \gamma\, l$ to leading order in the sheet
+thickness; $d\log l/dt = \hat t\cdot S\,\hat t$ for a material line element. $\square$
+
+**Corollary (C25 reformulated).** For the seam class, the velocity jump across the pair is bounded on $[0,T)$ if and
+only if the total in-plane compression of the sheets is finite:
+
+$$\sup_{t<T}\Delta u(t) < \infty \quad\Longleftrightarrow\quad \int_0^T \big(\hat t\cdot S\,\hat t\big)_-\,dt \;<\;\infty
+\quad\text{on }\Sigma\,.$$
+
+This replaces a global hypothesis (bounded velocity: the whole problem, Serrin) by a geometric one on one structure:
+*a sheet cannot be compressed along itself forever*. The strain budget on the adversary's field (`nilpotent_sheet.py`,
+"thinning vs narrowing") measured the two rates separately - the growth of $|\omega|$ was thinning-dominated early and
+narrowing-dominated after $t \approx 0.75$ - and Kelvin's frame (`LAGR=1`, C26) measured $\Delta u$ directly: a 9% rise
+before the merge at both viscosities. The narrowing that occurs is small and does not compound.
+
+**What a paper would have to bound.** The in-plane compression of a sheet is induced by the strain of the whole
+field; for a pair it is dominated by the pair's own Biot-Savart induction, which for two antiparallel sheets of
+strength $\gamma$ at gap $g$ is of order $\gamma/g$ across the gap and of lower order along the sheets. The question
+that would close the seam class is whether
+
+$$\int_0^T \big(\hat t\cdot S\,\hat t\big)_-\,dt \;\le\; C\big(\gamma_0, g_0, \text{geometry}\big) < \infty$$
+
+for a pair evolving under its own induction with $g(t)$ governed by Theorem 7's race - a two-sheet Biot-Savart
+estimate, pen-and-paper mathematics of the Helmholtz-Kelvin kind. Not proved here; stated so that it can be attacked.
+
+Status: **[Lemma 8 classical, stated; the corollary is a reformulation; the bound is the open question, now geometric]**.
