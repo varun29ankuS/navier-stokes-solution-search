@@ -1,6 +1,6 @@
 # The view from above
 
-*Rewritten at milestones, not appended to. Last rewrite: 2026-09-08. The chronological record is [LOG.md](LOG.md);
+*Rewritten at milestones, not appended to. Last rewrite: 2026-09-08, after the forced run. The chronological record is [LOG.md](LOG.md);
 the registered scores are [../CLAIMS.md](../CLAIMS.md).*
 
 ## The objects
@@ -39,7 +39,10 @@ merge is above sqrt(nu/s): the Euler seam race starts there, and the clock canno
 contact, guaranteed, the literature's gap law), the mean free path, thermal noise. Navier-Stokes has one length,
 sqrt(nu/s), and s is the flow's own. Regularity is a theorem for (-Delta)^alpha with alpha >= 5/4; viscosity is
 alpha = 1. The forced route (Fefferman (C)/(D)) removes the floor's foundation instead: a smooth force replenishes the
-budget, phase 1 never has to hand over.
+budget. Measured (C24, v6): a *steady* smooth large-scale force does not carry the seam through the floor - the twist
+turns over and the seam is cut exactly as unforced - but growth continues by re-supply, the pumped large scales
+rebuilding seams (max|w| 9.9x and rising at T = 3, against 5.7x peak-and-decay). A driven flow, not a collapse. The
+forced proofs use forces that track the collapse; a force that merely pushes gives turbulence.
 
 ## The patterns, across the whole
 
@@ -74,7 +77,9 @@ rigorous cousin; the converse is open).
   reaches 1e-3 (a T4 at its limit); 5e-4 needs ~640^3.
 - **The Lagrangian descent.** Kelvin's frame: tag the two sheets as material surfaces, measure gap and circulation
   along paths; the rate is then Helmholtz's law with circulation fixed, and "self-induced" is tested directly.
-- **The forced seam race (C24).** How a steady smooth force turns the V bottom into a pass-through - running.
+- **The forced seam race with a tracking force.** C24 showed a steady force drives rather than collapses; the next
+  question is the smallest *time-dependent* force that carries the seam through sqrt(nu/s) - the shape of the force
+  the proofs need, measured.
 - **The travelling axisymmetric profile.** When public: evolve it in this solver, perturbed and periodised, with the
   clock; a stable singularity should show a finite-T* descent in the coherent regime.
 - **Generality with more seeds.** Everything above is one adversarial field, one second field, one pair, Kida-Pelz.

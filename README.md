@@ -47,6 +47,49 @@ table) - [`THEORY.md`](THEORY.md) (the propositions proved and the theorem that 
    Navier-Stokes' only one, sqrt(nu/s), moves with the flow. The gap between them is a quarter of a Laplacian
    (regularity is a theorem for (-Delta)^alpha, alpha >= 5/4).
 
+## What it found, forced
+
+7. **A steady smooth force does not carry the seam through the floor.** Fefferman's (C)/(D) admit a smooth f; with
+   f = eps x (the initial field's large scales) held on, resolved to T = 3 at nu = 2e-3, the twist still peaks at t = 1.4
+   and falls 59%, the seam is cut as unforced (cut fraction 0.3-0.5, race variable never below 1.2) - and growth
+   continues anyway, by re-supply: the pumped large scales rebuild seams and max|w| climbs to 9.9x and rising (unforced:
+   5.7x, peak and decay), Z 7.2, energy 2.5x. A driven flow, not a collapse. C24 refuted as registered, and the
+   refutation clause is the finding: a forced blow-up needs a force that tracks the collapse in space and time, which
+   is how the Córdoba-Martínez-Zoroa forces are built. "Push harder" is not the route; "push exactly where the
+   self-similar solution needs it" is.
+
+## The structures, and where each stands
+
+The premise of this repository is that the problem will be understood through its structures before it is proved
+through its norms. These are the ones found, with what was measured about each and what remains.
+
+```
+structure         what it is                            measured                                   open
+sheet             the adversary's fastest object;       CKN exponent ~4 (sub-singular); strip      whether anything sharper is
+                  nilpotent, pressed and narrowed       decays smoothly; coherence preserved       reachable resolved (ckn: unresolved)
+seam              two sheets antiparallel; |w| -> 0     growth needs the strong reversal at 32^3,  the seam race at Re > 1500
+                  across it; Biot-Savart cancels        adds ~40% at 64^3; every literature
+                  there; KH rolls it; viscosity cuts it candidate sits on one
+twist wave        the reversal descending through the   inviscid (peak times agree across nu to    the Lagrangian frame (Kelvin);
+                  scales                                 one step) when fast; accelerating,         more seeds
+                                                         gap = 0.51 (1.78 - t); tube pair shows
+                                                         both phases; Kida-Pelz shows none
+two phases        external squeeze (equal octaves,      3.7/2.7/2.4 then 0.6-0.7 per octave on     whether phase 2's law persists
+                  stopped at sqrt(nu/s)) then self-     the pair; sheet field already in phase 2   below the clock
+                  induced roll-up (shrinking octaves)
+thickness arm     the analyticity strip; the sheets'    exponential, viscous (e-fold shifts        its law in Euler
+                  own thickness                          with nu), never zero on its own
+the V             gap arm meets thickness arm; the      t = 1.65-1.74 at all nu; at sqrt(nu/s)     the Re ladder (384^3 for 1e-3)
+                  pair merges before the gap closes     for 2e-3 (merge = cut, enstrophy peaks
+                                                         and decays); above it for 1e-3
+the floor         the one fixed length a fluid has      GPE: healing length, cut on contact;       -
+                                                         NS: sqrt(nu/s), moves with the flow;
+                                                         Euler: none; forced: replenished budget,
+                                                         still cut, growth by re-supply
+```
+
+`docs/MAP.md` is the same table with the reasoning around it, and the list of what is closed.
+
 ## The field on 2026-09-08
 
 Buckmaster and Alpöge posted Lean-verified finite-time blow-up *with smooth forcing* for 3-D Euler (and Boussinesq,
