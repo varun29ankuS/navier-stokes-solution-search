@@ -39,7 +39,7 @@ enstrophy $Z_0 = 0.375$.
 | $\lambda$ | the collapse exponent: gap $\propto (T^\ast - t)^\lambda$. Measured 1 on the sheet field. The critical class is $\lambda = \tfrac12$ (Theorem 7). |
 | $T^\ast$ | the arrival time of the gap arm's straight line; 1.78 for the sheet field. Not a blow-up time - the merge happens first. |
 | **time per octave** | time for the wave to descend one halving of separation. Equal octaves = external strain (phase 1); shrinking = self-induced (phase 2). |
-| **phase 1 / phase 2** | phase 1: external squeeze at fixed rate, exponential thinning, stopped at $\sqrt{\nu/s}$. Phase 2: self-induced strain $\sim\Delta u/\ell$, geometric descent, unpriced by the energy budget. |
+| **phase 1 / phase 2** | the budget argument: an external squeeze at fixed rate thins exponentially and stops at $\sqrt{\nu/s}$; a collapse whose speed does not fall is unpriced by the budget. The sheet field's descent is constant-speed closing driven by the sheets' own (cancelling) induction - not self-accelerating; that earlier reading is withdrawn (C30). |
 | **the floor** | the length below which a fluid cannot be squeezed: the healing length (quantum), $\sqrt{\nu/s}$ (Navier-Stokes, moving), none (Euler). |
 | **FORCE** ($\varepsilon$) | a smooth, steady, divergence-free force $\varepsilon\times$(the initial field's modes with $\lvert k\rvert \le 4$), Fefferman's (C)/(D) admit such an $f$. |
 

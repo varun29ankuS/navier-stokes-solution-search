@@ -52,9 +52,12 @@ ones (2e-3) until their clocks expire. `plot_seam.py` from the run logs.*
    Denied the twist the searcher walks to the helicity plateau, where stretching dies.
 4. **The seam descends through the scales as a wave, and the descent is a measurable inviscid law.** Twist measured at
    fixed separations peaks in sequence 0.56, 0.40, ..., 0.05; the peak times agree across nu = 2e-3, 1e-3, 5e-4 within
-   one sampling step; the time per octave shrinks from ~0.55 to ~0.25 - rhythmic in the collapse's own clock,
-   accelerating in ours; gap = 0.51 (1.78 - t). A hand-built tube pair shows the two phases in one run (3.7, 2.7, 2.4
-   then 0.6-0.7 per octave). A second adversarial field descends in one abrupt step. Kida-Pelz shows no wave.
+   one sampling step; gap = 0.51 (1.78 - t) - the sheets close at a nearly constant speed, and the shrinking time per
+   octave (~0.55 to ~0.25) is that constant speed seen on a log axis. In Kelvin's frame the closing is 84% the sheets'
+   own induction, which *cancels* as they approach (the pair's induced rate goes to zero at the merge), the far field
+   carrying the last stretch; the curvature (Da Rios) law is refuted. An earlier reading of the descent as
+   self-accelerating induction is withdrawn. A hand-built tube pair shows a mild late speed-up (3.7, 2.7, 2.4 then
+   0.6-0.7 per octave). A second adversarial field descends in one abrupt step. Kida-Pelz shows no wave.
 5. **The V.** The gap arm (inviscid, linear) meets the thickness arm (viscous, exponential) at t = 1.69-1.72, and the
    meeting scale sits on sqrt(nu/s) at both viscosities (0.052 vs 0.051 at 2e-3; 0.031 vs 0.028 at 1e-3, 320^3): the
    merge is the cut. An earlier reading that the merge sits above the viscous scale at 1e-3 came from a thickness fit
@@ -112,9 +115,9 @@ twist wave        the reversal descending through the   inviscid (peak times agr
                   scales                                 one step) when fast; accelerating,         more seeds
                                                          gap = 0.51 (1.78 - t); tube pair shows
                                                          both phases; Kida-Pelz shows none
-two phases        external squeeze (equal octaves,      3.7/2.7/2.4 then 0.6-0.7 per octave on     whether phase 2's law persists
-                  stopped at sqrt(nu/s)) then self-     the pair; sheet field already in phase 2   below the clock
-                  induced roll-up (shrinking octaves)
+who closes it     the sheets' own induction, which      sheets 84% (pair 58%), far field 16%       whether the far field's share
+                  cancels as they approach; the far     rising to 29% at the merge; curvature       keeps rising at higher Re
+                  field carries the last stretch        (Da Rios) law refuted; constant speed
 thickness arm     the analyticity strip; the sheets'    exponential, viscous (e-fold shifts        its law in Euler
                   own thickness                          with nu), never zero on its own
 the V             gap arm meets thickness arm; the      t = 1.69-1.72; meeting scale on sqrt(nu/s)   the 5e-4 rung (~450^3)

@@ -21,11 +21,13 @@ structure descending through the scales as the sheets are pressed together. Abov
 is inviscid (peak times agree across viscosities to one sampling step) when it is fast; a slow descent (a tube pair
 over eight time units) gives viscosity time to act on the cores and the inviscid clause fails.
 
-**Two phases.** Phase 1: external strain, fixed rate s, exponential thinning with equal time per octave - the budget
-runs out at sqrt(nu/s), the classical viscous sheet, safe. Phase 2: self-induced strain s ~ Delta_u / ell, time per
-octave proportional to the separation, a geometric series - the budget is indifferent because the collapse's energy
-shrinks with it. The sheet field is already in phase 2 when we meet it (0.55 -> 0.25 per octave); the tube pair shows
-the handover in one run (3.7, 2.7, 2.4 then 0.6-0.7).
+**Who closes the gap (corrected 2026-09-08).** The sheets close at nearly constant speed (lambda = 1); the shrinking
+time per octave is that speed on a log axis, not an acceleration. In Kelvin's frame 84% of the closing is the sheets'
+own Biot-Savart induction, which cancels to zero as the antiparallel sheets meet (depletion), the far field (16%,
+rising to 29%) carrying the last stretch; the curvature (Da Rios) law is refuted. The earlier "phase 2 = self-induced
+roll-up" mechanism for the sheet field is withdrawn. What survives of the two-phase picture: the budget argument (an
+external squeeze at fixed rate stops at sqrt(nu/s); a collapse whose speed does not fall would not) and the tube
+pair's mild late speed-up (3.7, 2.7, 2.4 then 0.6-0.7 per octave).
 
 **Thickness arm.** The analyticity strip delta(t): the sharpest scale in the flow, the sheets' own thickness. It decays
 exponentially and never reaches zero on its own. It is viscous (its e-folding changes with nu) where the gap arm is not.

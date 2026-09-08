@@ -302,6 +302,22 @@ curvature-driven), or a sheet share below 0.5.
 **C31 (registered 2026-09-08, before the run). The far field is part of what closes the gap, as C17 said it is part
 of what makes it grow.** The far-field share of the closing rate (full minus the sheets' own induction) is between
 0.2 and 0.5 on the descent and does not fall as the merge approaches. Refuted by: a far-field share below 0.1.
+**Results (2026-09-08, v12, 320^3, nu = 2e-3).** C30 **refuted**: the vortex-line curvature at the particles rises
+0.75 -> 3.6 as the sheets bend toward each other while the pair's induced closing rate falls 0.17 -> 0 at the merge;
+C_LIA spans x30 (the script's ratio failed on the sign and printed "between"; the numbers are a KILL). Antiparallel
+sheets' induced fields cancel as they approach (Biot-Savart depletion): self-induction weakens with approach, it does
+not accelerate. The second clause holds: the whole sheets (> 0.1 max) supply 0.84 of the closing (pair alone 0.58).
+C31 between: far-field share 0.16 on the descent, rising 0.14 -> 0.29 toward the merge as the sheets' induction dies -
+real, small, and not C17's global-pressure share (0.42); the two are different quantities. C26 passes a fifth time.
+C28's KILL clause fired again by the window (0.046 at a clock 0.35 past the merge; the T = 2.4 run reached 0.127).
+
+**Correction to the descent story (2026-09-08, after v12).** The seam does not descend by self-accelerating
+induction. It closes at a nearly constant speed (0.36 falling to 0.2), and "time per octave proportional to the
+separation" is what constant speed looks like on a log axis: lambda = 1 is constant closing speed, and the
+acceleration was only in -log(T* - t). Four-fifths of the speed is the sheets' own induction early, cancelling to
+zero as they meet, the far field carrying the last stretch. Theorem 7 and Lemma 8 are unaffected (they use lambda = 1).
+The "phase 2 = self-induced roll-up" mechanism attached to the sheet field's descent is withdrawn; the tube pair's
+late speed-up (0.09 -> 0.17) stands as a mild, real acceleration on a different structure.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.

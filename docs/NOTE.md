@@ -25,10 +25,13 @@ $\nu = 2\times10^{-3}, 10^{-3}, 5\times10^{-4}$.
 1. **The reversal descends through the scales as a wave.** The twist at each separation rises and falls in turn,
    largest separation first; the peak times agree across the three viscosities to one sampling step (0.05) at every
    separation resolved. The descent is inviscid above the viscous thickness. (C22, passes.)
-2. **It accelerates, as Kelvin-Helmholtz says it should.** Time per octave of descent falls from $\approx 0.55$ to
-   $\approx 0.25$; the gap between the sheets closes linearly, $g = 0.51\,(1.78 - t)$: exponent $\lambda = 1$. A
-   hand-built tube pair shows the two phases in one run - 3.7, 2.7, 2.4 per octave under mutual induction, then
-   0.6-0.7 once self-induction takes over. (C22, C23.)
+2. **The sheets close at constant speed, driven by their own induction, which cancels as they meet.** The gap closes
+   linearly, $g = 0.51\,(1.78 - t)$, exponent $\lambda = 1$; the shrinking time per octave ($\approx 0.55$ to
+   $\approx 0.25$) is constant speed on a log axis. In Kelvin's frame the sheets' own Biot-Savart field supplies 84%
+   of the closing early and goes to zero at the merge - antiparallel sheets' fields cancel as they approach - with
+   the far field (16%, rising to 29%) carrying the end. The curvature law (Da Rios) is refuted: $\kappa$ rises
+   $0.75 \to 3.6$ while the induced closing falls. A hand-built tube pair shows a mild late speed-up (3.7, 2.7, 2.4
+   then 0.6-0.7 per octave). (C22, C23, C29-C31; an earlier reading of self-accelerating induction is withdrawn.)
 3. **The pair merges on the viscous scale.** The gap arm (inviscid, linear) meets the sheets' thickness arm
    ($\delta(t)$, viscous, exponential) at $t = 1.69$ and $1.72$; the meeting scale is $0.052$ vs $\sqrt{\nu/s} =
    0.051$ at $\nu = 2\times10^{-3}$ and $0.031$ vs $0.028$ at $10^{-3}$ ($320^3$). The merge is the cut: enstrophy
