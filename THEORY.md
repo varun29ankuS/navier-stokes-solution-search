@@ -294,3 +294,61 @@ $\sup_t s_A < 0.35$, or a fast amplifier with $h_A \ge 0$ throughout. Both are o
 (`OBJ=quiet`).
 
 Status: **[conjecture with a stable curve; not a theorem; the closing statement C17b is unsupported at resolved scales]**.
+
+## 9. The race, stated as a theorem (2026-09-08), and the hypothesis that would finish it
+
+The runs of 2026-09-08 (`docs/LOG.md`, "The descent law and the V") measured, on the adversary's sheet field at
+$256^3$, that the gap between the two antiparallel sheets closes linearly, $g(t) \approx 0.51\,(T^\ast - t)$, with
+the peak times independent of viscosity to one sampling step, and that the pair merges where the gap meets the sheets'
+thickness - at the viscous scale $\sqrt{\nu/s}$ for $\nu = 2\times10^{-3}$, where enstrophy and $\max|\omega|$ peak and
+decay inside the reliable window. The following is the part of that picture that is a theorem.
+
+**Theorem 7 (the race between a collapse scale and the viscous scale). [elementary; proved here]**
+Let $u$ be a smooth solution of Navier-Stokes on $\mathbb{T}^3\times[0,T)$ and set $s(t) = \sup_x |\nabla u(x,t)|$,
+the viscous scale $\ell_\nu(t) = \sqrt{\nu/s(t)}$. Suppose
+
+$$\text{(Type I)}\qquad s(t) \;\le\; \frac{A}{T-t}\,,$$
+
+and let $\ell(t)$ be any length attached to the solution (a gap, a core radius, a sheet thickness) with
+
+$$\ell(t) \;\le\; L\,(T-t)^{\lambda}\qquad\text{on } [t_0, T).$$
+
+Then
+
+$$\frac{\ell(t)}{\ell_\nu(t)} \;\le\; L\sqrt{\frac{A}{\nu}}\;(T-t)^{\lambda - \frac12}\,,$$
+
+so that: if $\lambda > \tfrac12$ the structure is inside its own viscous scale before $T$ ($\ell/\ell_\nu \to 0$); if
+$\lambda = \tfrac12$ the ratio is bounded by the constant $L\sqrt{A/\nu}$, a Reynolds number of the structure; if
+$\lambda < \tfrac12$ no such conclusion holds.
+
+*Proof.* $\ell_\nu(t) = \sqrt{\nu/s(t)} \ge \sqrt{\nu (T-t)/A}$ by Type I. Divide. $\square$
+
+**What it says and what it does not.** With the measured $\lambda = 1$ the sheet pair's gap falls below the viscous
+scale before $T^\ast$ whatever the constants: a seam that closes linearly cannot outrun viscosity - which is what the
+resolved runs show, and why the fastest collapse in Euler is the one viscosity kills most surely. The theorem does
+**not** conclude regularity: "inside the viscous scale" must be handed to a criterion that finishes the argument
+(Caffarelli-Kohn-Nirenberg's $\varepsilon$-regularity on the local dissipation, or Constantin-Fefferman on the
+direction), and that hand-off is the real work. Nor is Type I known in general (it is excluded only under axisymmetry:
+Chen-Strain-Tsai-Yau 2008, Koch-Nadirashvili-Seregin-Šverák 2009). What the theorem fixes is the *shape* of the
+dangerous case: $\lambda = \tfrac12$ exactly - gap and floor descending in lockstep - with the outcome decided by one
+number, the structure's Reynolds number at the turnover, which `seam_gpu.py` reports as `Re_seam` (C21). The Caltech
+travelling profile of 2026-09-07 sits at $\lambda = 0.5$ by construction.
+
+**Conjecture C25 (the seam's velocity jump is bounded by the data).** For smooth solutions whose high-vorticity set is a
+pair of antiparallel sheets with gap $g(t)$ and velocity jump $\Delta u(t)$ across the pair, the self-induced strain
+across the seam satisfies $s(t) \le C\,\Delta u(t)/g(t)$ (Biot-Savart for a sheet pair), and
+
+$$\Delta u(t) \;\le\; C_0 \quad\text{on } [0,T)\quad\text{with } C_0 = C_0(u_0).$$
+
+*If C25 held it would finish the seam class:* $\dot g \ge -c\,\Delta u \ge -c\,C_0$ gives $g(t) \ge g(t_0) - c C_0 (t -
+t_0)$, i.e. $\lambda \ge 1$ for the gap, and Theorem 7 puts the pair inside its viscous scale before any collapse; the
+measured $\lambda = 1$ is this bound saturated. *Why it is a conjecture and not a lemma:* a bounded velocity jump is a
+bounded velocity, and bounded velocity implies regularity (Serrin). C25 is the wall, located: it names the quantity that
+stayed bounded in every resolved run ($\Delta u \sim |\omega|\,\ell$ on the seam, `Re_seam`$\cdot\nu/\ell$), and it says
+that proving it bounded *for the seam class only* - a geometric assumption in exchange for a global one - is what a
+structural proof would have to do. Refutation of C25 (numerical): a resolved run in which $\Delta u$ across the seam
+grows without bound while the gap closes - $\lambda < 1$ with `Re_seam` rising through the turnover. The Re ladder
+(384^3 at $\nu = 10^{-3}$) is that test.
+
+Status: **[Theorem 7 proved (elementary); C25 stated; the hand-off from "inside the viscous scale" to regularity not
+carried out]**.
