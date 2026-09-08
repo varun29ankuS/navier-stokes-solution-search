@@ -23,6 +23,19 @@ happened) - [`docs/LOG.md`](docs/LOG.md) (the full chronological log, 1200 lines
 - **Retracted in the open.** Wrong predictions stay on the page with the word "wrong" next to them.
 - **Cross-checked.** Two solvers (numpy, PyTorch/GPU), two precisions, same growth to three digits; energy 1.000000.
 
+![The seam race: |w| through its maximum (left), the signed reversal marking the seam (right), the twist at four separations and the clock below](figures/seam_race.gif)
+
+*The seam race, nu = 2e-3, 256^3, t = 0 to 2.4. Left: |w| on the plane through its maximum - the sheets fold and roll
+up. Right: the signed reversal beta at separation 0.1; red is antiparallel - the seams, along the folds. Below: the
+strong twist at four separations descending in turn, the frame's time in red, the clock dotted. `seam_gif.py` from the
+snapshot run.*
+
+![The twist wave: the reversal descends through the scales, identically at three viscosities](figures/twist_wave.png)
+
+*The twist measured at eight fixed separations on the adversary's sheet field, 256^3. Each separation's reversal
+rises and falls in turn as the seam passes through it; the dashed and dotted curves (nu = 1e-3, 5e-4) lie on the solid
+ones (2e-3) until their clocks expire. `plot_seam.py` from the run logs.*
+
 ## What it found, unforced
 
 1. **Growth builds sheets, and the sheets are sub-singular in every view.** The adversary's fastest fields are
@@ -48,6 +61,14 @@ happened) - [`docs/LOG.md`](docs/LOG.md) (the full chronological log, 1200 lines
    Navier-Stokes' only one, sqrt(nu/s), moves with the flow. The gap between them is a quarter of a Laplacian
    (regularity is a theorem for (-Delta)^alpha, alpha >= 5/4).
 
+![The V: the inviscid gap arm meets the viscous thickness arm at the viscous scale](figures/seam_V.png)
+![Time per octave of descent for three structures](figures/octaves.png)
+
+*Above: the gap between the sheets (peak times of the twist, all three viscosities on one line) and their thickness
+(the analyticity strip) meet at t ~ 1.7 at sqrt(nu/s). Below it: how fast the wave descends - the sheet field near the
+self-induced law (time per octave proportional to the separation), the second field in one step, the tube pair slow
+then fast.*
+
 ## What it found, forced
 
 7. **A steady smooth force does not carry the seam through the floor.** Fefferman's (C)/(D) admit a smooth f; with
@@ -58,6 +79,12 @@ happened) - [`docs/LOG.md`](docs/LOG.md) (the full chronological log, 1200 lines
    refutation clause is the finding: a forced blow-up needs a force that tracks the collapse in space and time, which
    is how the Córdoba-Martínez-Zoroa forces are built. "Push harder" is not the route; "push exactly where the
    self-similar solution needs it" is.
+
+![2-D turbulence at 256^2, vorticity, with energy and enstrophy on every frame](figures/turbulence_2d.gif)
+
+*The solver itself: 2-D decaying turbulence, energy on every frame decaying only by the physical viscous rate. The
+earlier figures (Burgers blow-up, 3-D stretching converging upward, Tao's wall, the helicity threshold, the Jacobi
+ladder, the strip decay) are in `docs/LOG.md` and `figures/`.*
 
 ## The structures, and where each stands
 

@@ -1171,6 +1171,37 @@ fitted from the first real delta to the twist peak. (E) A column maximal at t = 
 (F) The tube pair's apex gap was D - 2A = 0.2 = one core radius: the tubes overlapped at t = 0, so the v4 pair rows
 test a touching pair, not an approach; the approach (apex gap 2.5 sigma, T = 8) is rerun as v5.
 
+## The forced seam race (C24), v6 (`results/seam_gpu/v6/`, 2026-09-08)
+
+A smooth, steady, divergence-free force f = eps x (the initial field, |k| <= 4) - Fefferman's (C)/(D) admit such an f -
+held on for the whole run. Energy injection at t = 0: 0.022 (eps 0.5) and 0.066 (eps 1.5) against a viscous drain of
+0.0015. Registered: the V bottom stops being the end of the descent (twist@0.05 keeps rising past t ~ 1.7, max|w|
+accelerates, the wave passes sqrt(nu/s) with the twist still rising).
+
+```
+nu = 2e-3, eps = 0.5, resolved to T = 3 (delta 0.051-0.078):
+  t      Z/Z0    max|w|   twist@0.1   twist@0.05   anti    race   cut    E/E0
+ 0.9     3.32     26.7     0.004       0.00002      0.10    2.7    0.21   1.58
+ 1.2     4.50     29.0     0.057       0.0027       0.44    5.0    0.29   1.74
+ 1.5     5.43     46.3     0.106       0.019        0.57    4.4    0.28   1.88     <- twist@0.1 peaks at 1.4 (0.110), as unforced
+ 1.8     5.78     52.1     0.068       0.010        0.42    2.5    0.30   2.01
+ 2.4     6.45     69.2     0.050       0.007        0.60    2.0    0.29   2.25
+ 2.7     6.89     73.9     0.070       0.012        0.73    2.4    0.30   2.37     <- a second seam forms
+ 3.0     7.21     70.6     0.045       0.006        0.73    1.2    0.49   2.47
+eps = 1.5 at 2e-3: the clock expires at 1.25 (the pumped cascade fills the tail); 7.9x at the clock, twist@0.1 at its
+peak there. nu = 1e-3: clocks at 1.10 (eps 0.5) and 0.90 (eps 1.5); nothing past them is a number.
+```
+
+**C24 refuted on its mechanism clauses.** With the force on, the twist@0.1 still peaks at t = 1.4 and falls 59%; the
+twist@0.05 peaks at 1.5 and falls; the race variable never drops below 1.18; the cut fraction sits at 0.3-0.5. The seam
+is cut exactly as it was unforced. What changes is what happens *after*: unforced, max|w| peaked at 41 and decayed and
+Z peaked at 3.2; forced, the pumped large scales rebuild seams (a second twist rise at 2.4-2.7) and max|w| climbs to 74
+at t = 2.7 (9.9x at the clock, still rising) with Z at 7.2 and the energy at 2.5x. A steady smooth force gives a driven
+flow that keeps cutting and rebuilding - forced turbulence - not a collapse that passes the floor. A forced blow-up
+needs a force that tracks the collapse in space and time, which is how the Cordoba-Martinez-Zoroa forces are built.
+That is the refutation clause as registered, and it is the informative outcome: the forced route is not "push harder",
+it is "push exactly where the self-similar solution needs it".
+
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
 Theorem 4 (Tao 2016) says that the exact structure this repository verifies - energy conservation, the scaling, the

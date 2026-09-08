@@ -212,6 +212,11 @@ external squeeze held on forever, the budget replenished from outside. With eps 
 the twist still rising) inside the clock. Refuted by: a forced run whose twist still turns over and whose max|w|
 still peaks inside the clock - which would mean a steady large-scale force does not by itself defeat the cut, and
 the forced blow-ups in the literature need a force that tracks the collapse.
+**Result (2026-09-08, v6, resolved at nu = 2e-3, eps = 0.5, T = 3): REFUTED on the mechanism.** The twist still
+turns over (peak 0.110 at t = 1.4, fall 59%), the race variable stays >= 1.18, the cut fraction 0.3-0.5 - the seam is
+cut as unforced. Growth continues by re-supply instead: max|w| 9.9x at the clock and rising (unforced: 5.7x peak and
+decay), Z 7.2, E/E0 2.5, a second seam at t ~ 2.6. A steady force drives; it does not carry the seam through the floor.
+eps = 1.5 and nu = 1e-3 leave the clock before t = 1.3 and are not counted.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
