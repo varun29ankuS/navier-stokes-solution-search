@@ -83,6 +83,11 @@ REGISTERED (C31): the far-field share of the closing rate is between 0.2 and 0.5
 approaches (the global help that C17 found necessary for growth is also part of what closes the gap). Refuted by:
 C_LIA varying by more than x2 (the approach is not curvature-driven), or a far-field share below 0.1 (the gap closes
 without the rest of the box).
+THE ONE-VARIABLE SEAM (2026-09-08, C33): on the tagged sheets, the material thickness delta_m = |w|/|grad|w|| and
+the compression across the sheet s_m = -n.S.n at the particles (medians). The reduced model
+    g' = -k (g - delta),   delta' = -a s(g) delta + nu/delta,   s(g) = c g^-p, cut off where the pair's induction dies
+is fitted on the descent (k, c, p, a, and the cancellation onset g/delta) and integrated from the seeding row; its
+V (gap minimum: time and scale) is compared with the measured one. REGISTERED: time within 0.15, scale within 30%.
 usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4 FMODE=steady|track] [LAGR=1 TSEED=1.0 NP=4000] python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
@@ -90,7 +95,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=pair NU=1e-3 T=8 N=256 LAGR=1 TSEED=3.0;IC=found NU=5e-4 T=1.6 N=320 LAGR=1 TSEED=1.0"   # v13: k for the pair (seeded when its wave is under way), k at 5e-4
+    SCHEDULE = "IC=found NU=2e-3 T=2.0 N=320 LAGR=1 TSEED=1.0;IC=found NU=1e-3 T=1.8 N=320 LAGR=1 TSEED=1.0"   # v14: the one-variable seam
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -194,11 +199,19 @@ def lagr_diag(U, P, sgn):
     w = [ifft(1j * K[(i + 1) % 3] * Ud[(i + 2) % 3] - 1j * K[(i + 2) % 3] * Ud[(i + 1) % 3]).real for i in range(3)]
     wm = torch.sqrt(sum(wi**2 for wi in w))
     wmp = interp3(wm, P); A = P[sgn > 0]; B = P[sgn < 0]
-    if len(A) < 10 or len(B) < 10: return (wmp.median().item(),) + (float("nan"),) * 8
+    if len(A) < 10 or len(B) < 10: return (wmp.median().item(),) + (float("nan"),) * 10
     dvec = A[:, None, :] - B[None, :, :]; dvec = (dvec + math.pi) % (2 * math.pi) - math.pi
     dist = torch.sqrt((dvec**2).sum(-1)); j = torch.argmin(dist, 1); gap = dist[torch.arange(len(A), device=DEV), j]
     uA = torch.stack([interp3(ui, A) for ui in u], 1); uB = torch.stack([interp3(ui, B[j]) for ui in u], 1)
     jump = torch.sqrt(((uA - uB) ** 2).sum(1))
+    # material thickness and compression across the sheet at the particles
+    wh_ = fft(wm); gw_ = [ifft(1j * K[i] * wh_).real for i in range(3)]; gwm_ = torch.sqrt(sum(g_**2 for g_ in gw_)) + 1e-30
+    dmat = interp3(wm / gwm_, P).median().item()
+    G_ = [[ifft(1j * K[i] * Ud[j]).real for j in range(3)] for i in range(3)]
+    nrm_ = [g_ / gwm_ for g_ in gw_]
+    snn_ = -sum(nrm_[i] * 0.5 * (G_[i][j] + G_[j][i]) * nrm_[j] for i in range(3) for j in range(3))
+    smat = interp3(snn_, P).median().item()
+    del wh_, gw_, gwm_, G_, nrm_, snn_
     wsign = torch.sign(sum(interp3(w[c], P) * LAG["xi_ref"][c] for c in range(3)))                # the sign of omega . xi_ref carried by each particle now
     flipped = wsign != sgn; flip = flipped.float().mean().item()
     # who closes the gap: closing rate from the full velocity and from the pair's own induced velocity, along the separation
@@ -216,7 +229,7 @@ def lagr_diag(U, P, sgn):
     # where the flipped fluid sits: distance to the other sheet over the gap (0 = between the sheets, ~1 = beside them)
     fA = flipped[sgn > 0]
     where = (gap[fA] / gap.median()).median().item() if fA.sum() >= 5 else float("nan")
-    return wmp.median().item(), gap.median().item(), jump.median().item(), flip, rate_full, rate_self, where, rate_sheet, kappa
+    return wmp.median().item(), gap.median().item(), jump.median().item(), flip, rate_full, rate_self, where, rate_sheet, kappa, dmat, smat
 
 
 def induced_velocity(U, thresh=0.5):
@@ -322,7 +335,7 @@ with torch.no_grad():
         print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
             FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
 print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g (%s)" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE, FMODE), flush=True)
-print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(pair) dgap/dt(sheets) flipped@  kappa  C_LIA" if LAGR else ""))
+print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(pair) dgap/dt(sheets) flipped@  kappa  C_LIA   delta_m  s_m" if LAGR else ""))
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
@@ -336,10 +349,10 @@ while t <= T + 1e-9:
             if "P" not in LAG:
                 with torch.no_grad(): LAG["P"], LAG["sgn"] = lagr_seed(U)
                 print("lagrangian: %d particles seeded on the high set at t = %.2f; sheets A/B = %d/%d" % (len(LAG["P"]), t, int((LAG["sgn"] > 0).sum()), int((LAG["sgn"] < 0).sum())), flush=True)
-            with torch.no_grad(): mw, gap, jump, flip, rf, rs, where, rsh, kappa = lagr_diag(U, LAG["P"], LAG["sgn"])
+            with torch.no_grad(): mw, gap, jump, flip, rf, rs, where, rsh, kappa, dmat, smat = lagr_diag(U, LAG["P"], LAG["sgn"])
             clia = rs / (jump * kappa * gap) if (np.isfinite(kappa) and kappa > 0 and gap > 0) else float("nan")
-            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip, rf, rs, where, rsh, kappa, clia))
-            lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %+.4f   %s   %6.2f  %+.3f" % (mw, gap, jump, flip, rf, rs, rsh, ("%.2f" % where) if np.isfinite(where) else " -  ", kappa, clia)
+            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip, rf, rs, where, rsh, kappa, clia, dmat, smat))
+            lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %+.4f   %s   %6.2f  %+.3f   %.4f  %+.3f" % (mw, gap, jump, flip, rf, rs, rsh, ("%.2f" % where) if np.isfinite(where) else " -  ", kappa, clia, dmat, smat)
         hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d if np.isfinite(d) else 0.0, re_seam, float(valid)) + tuple(softs[v] for v in SEPS) + (Er,))
         print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s%s   (%.0fs)" % (
             t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ("%.4f" % ell_nu) if valid else "   -  ", ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam,
@@ -352,7 +365,7 @@ while t <= T + 1e-9:
         if LAGR and "P" in LAG: LAG["P"] = lagr_advect(U, LAG["P"], dt)
         U = step(U, dt); t += dt
 if LAGR and LAG.get("rows"):
-    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl, rf, rs, wh, rsh, kp, cl = [Lr[:, i] for i in range(11)]
+    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl, rf, rs, wh, rsh, kp, cl, dm, sm = [Lr[:, i] for i in range(13)]
     dcl = np.array([h[8] for h in hist]); tcl = np.array([h[0] for h in hist]); tclock = tcl[dcl > 2 * dx][-1] if (dcl > 2 * dx).any() else tl[0]
     m = (tl <= tclock) & np.isfinite(gp) & (gp > 0)
     imin = int(np.argmin(gp[m])) if m.any() else 0; tmerge = tl[m][imin]
@@ -389,6 +402,26 @@ if LAGR and LAG.get("rows"):
     if kk_m.sum() >= 3:
         kk = -rf[kk_m] / (gp[kk_m] - dl[kk_m])
         print("C32 closing law: k = -dgap/dt / (gap - delta) on the descent: median %.2f, spread %.2f..%.2f over %d rows (t %.2f-%.2f)" % (float(np.median(kk)), kk.min(), kk.max(), kk_m.sum(), tl[kk_m][0], tl[kk_m][-1]))
+    # C33: the one-variable model, fitted on the descent and integrated from the seeding row
+    try:
+        desc2 = m & (tl < tmerge) & (rf < 0) & np.isfinite(dm) & (dm > 0) & np.isfinite(sm) & (sm > 0) & (gp - dm > 0)
+        if desc2.sum() >= 4:
+            kf = float(np.median(-rf[desc2] / (gp[desc2] - dm[desc2])))
+            pp, lc = np.polyfit(np.log(gp[desc2]), np.log(sm[desc2]), 1); cc = float(np.exp(lc))
+            ddm = np.gradient(dm, tl); a_eff = float(np.median((-ddm[desc2] + NU / dm[desc2]) / (sm[desc2] * dm[desc2])))   # delta' = -a s delta + nu/delta
+            ratio = -rs / (gp - dm + 1e-9); early = float(np.median(ratio[desc2][:3])); onset = m & (tl < tmerge) & (ratio < 0.5 * early)
+            gd_on = float((gp / dm)[onset][0]) if onset.any() else float("nan")
+            print("C33 fit: k = %.2f; s(g) = %.4f g^%.2f; thickness efficiency a = %.2f (delta' = -a s delta + nu/delta); cancellation onset at g/delta = %s" % (kf, cc, pp, a_eff, ("%.2f" % gd_on) if np.isfinite(gd_on) else "-"))
+            g, dl, tt, dt = gp[desc2][0], dm[desc2][0], tl[desc2][0], 1e-3; gmin, tmin = 9, None
+            while tt < tl[last] + 0.5:
+                sv = cc * g**pp if (not np.isfinite(gd_on) or g / dl > gd_on) else 0.0
+                g += dt * (-kf * (g - dl)); dl += dt * (-a_eff * sv * dl + NU / dl); tt += dt
+                if g < gmin: gmin, tmin = g, tt
+            print("C33 model: V at t = %.2f, scale %.4f;  measured: gap minimum at t = %.2f, %.4f  (dt %+.2f, scale ratio %.2f)" % (tmin, gmin, tmerge, gp[m].min(), tmin - tmerge, gmin / gp[m].min()))
+            okm = abs(tmin - tmerge) <= 0.15 and 0.7 <= gmin / gp[m].min() <= 1.3
+            print("REGISTERED C33: %s" % ("PASS: the seam is one slow variable" if okm else "FAIL: the reduced model misses the V (dt %+.2f, scale x%.2f)" % (tmin - tmerge, gmin / gp[m].min())))
+    except Exception as e:
+        print("C33: model fit failed (%s)" % e)
     # C28: the flip, and a second closing of the gap after the merge
     post = m & (tl > tmerge); second = False
     if post.sum() >= 3:
