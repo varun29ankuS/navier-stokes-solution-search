@@ -1056,6 +1056,47 @@ as a KILL that fired; the corrected clause for the next run: twist rising AND ma
 rising. Re_seam's definition also switches sets when the twisted set is tiny (the 47 at nu = 1e-3, t = 0.6);
 it needs a minimum count.
 
+### The descent law and the V (2026-09-08, `results/seam_gpu/v3/`)
+
+Eight separations in half-octave steps, output every 0.05, three viscosities. Registered as C22 before the run.
+
+```
+peak time of twist@sep        nu = 2e-3   nu = 1e-3   nu = 5e-4
+  0.56                          0.70        0.70        0.70
+  0.40                          0.95        0.95        0.90
+  0.28                          1.25        1.25        (clock)
+  0.20                          1.40        1.35        (clock)
+  0.14                          1.50        1.50        (clock)
+time per octave, 0.56 -> 0.28   0.52, 0.58  0.52, 0.58
+time per octave, 0.28 -> 0.14   0.31, 0.19  0.21, 0.29
+```
+
+**C22 passes both clauses.** Every resolved peak agrees across viscosities within one sampling step: the descent of
+the reversal through the scales is inviscid, measured resolved at finite nu. And it accelerates - about 0.55 per
+octave at the top of the ladder, about 0.25 at the bottom, identically at both rungs. Successive half-octave times
+shrink by a factor 0.76 on average against 1/sqrt(2) = 0.71 for a rate proportional to 1/ell: the wave is rhythmic
+in the collapse's own clock and accelerating in ours. Pooling the resolved peaks, the gap between the sheets follows
+gap = 0.51 (1.78 - t): a straight line to zero at T* = 1.78 - if nothing intervened.
+
+**The V.** Two arms descend at different speeds: the gap (inviscid, linear, above) and the sheets' own thickness,
+the analyticity strip delta(t) (viscous, exponential, slower). Where they meet the pair merges into one doubled
+structure, before the gap reaches zero. Registered before reading the lower rungs: the meeting time is nearly
+nu-independent (1.65-1.75), its scale falls with nu, and at lower nu the sheets meet above the viscous thickness.
+
+```
+nu        V bottom t    V scale    ell_nu there    clock    reading
+2e-3      1.65          0.068      0.053           2.40     merge at the viscous scale: the merge is the cut
+1e-3      1.70          0.043      0.025           1.60     merge ABOVE the viscous scale: an Euler-like merge
+5e-4      1.74          0.022      0.023           1.10     both arms extrapolated past the clock; not counted
+```
+
+At nu = 2e-3 the V bottom coincides with everything the run itself flagged - the twist@0.07 peak (1.65), the Z peak
+(1.65), sqrt(nu/s) = 0.053 - three lengths meeting at one point. At nu = 1e-3 the sheets meet while viscosity still
+cannot cut them: that is where the Euler seam race starts, located from resolved data at a place the clock cannot
+reach. Caveat recorded: the thickness arm is not nu-independent (e-folding 3.4, 1.6, 0.8) and part of that is the
+fit window; the gap arm is the clean one. C21 (Re_seam at the twist peak across nu) remains inconclusive: only the
+2e-3 peak at separation 0.1 is resolved.
+
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
 Theorem 4 (Tao 2016) says that the exact structure this repository verifies - energy conservation, the scaling, the

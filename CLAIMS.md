@@ -181,6 +181,11 @@ strain, phase 2). Refuted by: constant or growing time per octave (external stra
 zero), or peak times that move with nu above ell_nu. Why it matters: the descent above ell_nu is an inviscid fact
 measured resolved at finite nu; finite-time arrival at zero is the Euler question. Test: `kaggle/seam/seam_gpu.py`
 with the eight-separation ladder (schedule inside).
+**Result (2026-09-08): PASS.** Resolved peak times agree across nu = 2e-3, 1e-3 (and 5e-4 where resolved) within
+0.05; time per octave falls from ~0.55 to ~0.25 between 0.56 and 0.14 at both rungs; gap = 0.51 (1.78 - t). The
+V (gap arm vs thickness arm) meets at t = 1.65 / 1.70 / 1.74, scale 0.068 / 0.043 / 0.022; at 1e-3 the merge is
+above sqrt(nu/s). Registered predictions for the V (time nearly nu-independent, scale falling, merge above the
+viscous scale at lower nu) met at 1e-3; the 5e-4 row is extrapolated and not counted.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
