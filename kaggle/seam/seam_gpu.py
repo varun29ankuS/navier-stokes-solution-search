@@ -24,18 +24,27 @@ separation - one wave descending in scale - and above the viscous thickness its 
 times at 0.4 ... 0.1 agree across nu = 2e-3, 1e-3, 5e-4 within 0.1) and ACCELERATES: the time per halving of the
 separation shrinks as the wave descends between 0.4 and 0.1. Refuted by: constant or growing halving time (the
 wave never arrives: phase 1 all the way down), or peak times that depend on nu above ell_nu.
-usage: IC=found|pair N=256 NU=2e-3 T=3.0 python seam_gpu.py"""
+REGISTERED (C23, 2026-09-08, generality): (a) Kida-Pelz, coherent (anti = 0): twist <= 0.01 at every separation
+through its clock - no wave, the instrument is blind to symmetric focusing; (b) the concentration-rewarded field
+(ckn64): a descending wave, peak times nu-independent within 0.05 at 2e-3 and 1e-3, accelerating octave time, its
+own T*; (c) the tube pair: a descending wave, nu-independent, with CONSTANT octave time early (mutual induction at
+fixed circulation: exponential approach) and acceleration only in the last octaves.
+The V: gap arm fitted to the resolved peaks (gap = a (T* - t)), thickness arm to delta(t) (exponential), crossing
+reported with sqrt(nu/s) there.
+usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
 # On Kaggle (one code file per kernel) this file schedules itself: each configuration runs as a subprocess of this
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=2e-3 T=2.4;IC=found NU=1e-3 T=2.0;IC=found NU=5e-4 T=1.6"
+    SCHEDULE = ("IC=kp NU=2e-3 T=2.4;IC=kp NU=1e-3 T=2.0;"
+                "IC=found FOUND=/kaggle/input/zef-found/ckn64.npz TAG=ckn NU=2e-3 T=2.4;IC=found FOUND=/kaggle/input/zef-found/ckn64.npz TAG=ckn NU=1e-3 T=2.0;"
+                "IC=pair NU=2e-3 T=6;IC=pair NU=1e-3 T=6")
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
-        tag = "_".join(kv.replace("=", "") for kv in cfg.split()); out = os.path.join("/kaggle/working" if os.path.isdir("/kaggle/working") else ".", "seam_%s.txt" % tag)
+        tag = "_".join(kv.replace("=", "") for kv in cfg.split() if not kv.startswith("FOUND=")); out = os.path.join("/kaggle/working" if os.path.isdir("/kaggle/working") else ".", "seam_%s.txt" % tag)
         print("=== %s -> %s" % (cfg, out), flush=True)
         with open(out, "w") as f:
             pr = subprocess.Popen([sys.executable, __file__], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -125,7 +134,7 @@ def diag(U):
 x = torch.arange(N, device=DEV, dtype=RD) * dx
 if IC == "pair":
     # two antiparallel Gaussian vortex tubes along x, separation D, core sigma, bowed toward each other (Kerr-type)
-    D = float(os.environ.get("D", 0.7)); SIG = float(os.environ.get("SIG", 0.22)); A = float(os.environ.get("A", 0.2))
+    D = float(os.environ.get("D", 0.8)); SIG = float(os.environ.get("SIG", 0.2)); A = float(os.environ.get("A", 0.3))
     X, Y, Z_ = torch.meshgrid(x, x, x, indexing="ij"); wx = torch.zeros_like(X)
     for sgn in (+1, -1):
         yc = math.pi + sgn * (D / 2 - A * torch.cos(X - math.pi)); r2 = ((Y - yc) % (2 * math.pi) - math.pi) ** 2 + ((Z_ - math.pi) % (2 * math.pi) - math.pi) ** 2
@@ -134,6 +143,12 @@ if IC == "pair":
     W = project(W)                                                                     # divergence-free vorticity
     U = [(1j * (K[(i + 1) % 3] * W[(i + 2) % 3] - K[(i + 2) % 3] * W[(i + 1) % 3]) / K2S) * deal for i in range(3)]   # u = curl^-1 w
     U = project(U)
+elif IC == "kp":
+    X, Y, Z_ = torch.meshgrid(x, x, x, indexing="ij")
+    U = [fft(torch.sin(X) * (torch.cos(3 * Y) * torch.cos(Z_) - torch.cos(Y) * torch.cos(3 * Z_))).to(CD),
+         fft(torch.sin(Y) * (torch.cos(3 * Z_) * torch.cos(X) - torch.cos(Z_) * torch.cos(3 * X))).to(CD),
+         fft(torch.sin(Z_) * (torch.cos(3 * X) * torch.cos(Y) - torch.cos(X) * torch.cos(3 * Y))).to(CD)]
+    U = [Ui * deal for Ui in U]; U = project(U)
 else:
     uf = np.load(FOUND)["u"].astype(np.float32); n0 = uf.shape[1]; U = []
     for c in range(3):
@@ -177,6 +192,19 @@ if len(good) >= 3:
     print("   halving times (time for the wave to descend one octave), from resolved peaks only:")
     for (s1, t1), (s2, t2) in zip(good[:-1], good[1:]):
         print("      %.2f -> %.2f : %.2f  per octave %.2f" % (s1, s2, t2 - t1, (t2 - t1) / max(math.log2(s1 / s2), 1e-9)))
+    try:
+        # the V: gap arm (linear in t through the resolved peaks) against the thickness arm (delta, exponential, inside the clock)
+        ga, gb = np.polyfit([g[1] for g in good], [g[0] for g in good], 1); Tstar = -gb / ga if ga < 0 else float("nan")
+        m = (tt <= tt[last0]) & (tt >= 0.5 * tt[last0]) & (d > 0)
+        if m.sum() >= 4 and np.isfinite(Tstar):
+            c1, c0 = np.polyfit(tt[m], np.log(d[m]), 1)
+            tq = np.linspace(tt[m][0], Tstar - 1e-3, 3000); gapq = ga * tq + gb; thq = np.exp(c0 + c1 * tq); iv = int(np.argmin(np.abs(gapq - thq)))
+            jv = int(np.argmin(np.abs(tt - tq[iv]))); eln = H[jv, 6]
+            print("   V: gap = %.3f (%.2f - t), T* = %.2f; thickness e-fold %.2f; arms meet at t = %.2f, scale %.3f, sqrt(nu/s) there %.3f (%s the clock)" % (
+                -ga, Tstar, Tstar, -1 / c1 if c1 < 0 else float("inf"), tq[iv], thq[iv], eln, "inside" if tq[iv] <= tt[last0] else "beyond"))
+    except Exception as e:
+        print("   V: analysis failed (%s)" % e)
+
 inclock = d > 2 * dx; ic = np.where(inclock)[0]
 if len(ic) == 0:
     print("VERDICT: never inside the clock"); raise SystemExit

@@ -187,6 +187,16 @@ V (gap arm vs thickness arm) meets at t = 1.65 / 1.70 / 1.74, scale 0.068 / 0.04
 above sqrt(nu/s). Registered predictions for the V (time nearly nu-independent, scale falling, merge above the
 viscous scale at lower nu) met at 1e-3; the 5e-4 row is extrapolated and not counted.
 
+**C23 (registered 2026-09-08, before the run). The descent law is a property of antiparallel sheets, not of one
+field.** Same eight-separation ladder, 256^3, nu = 2e-3 and 1e-3, three initial conditions. (a) Kida-Pelz (coherent,
+anti = 0): twist <= 0.01 at every separation through its clock - no wave; the instrument is blind to symmetric
+focusing, as it should be. (b) The concentration-rewarded adversarial field (`results/found/ckn64.npz`): a
+descending wave, peak times nu-independent within 0.05, accelerating octave time, its own T*. (c) A Kerr-type
+antiparallel tube pair (D 0.8, sigma 0.2, bow 0.3, T = 6): a descending wave, nu-independent, with CONSTANT time per
+octave early (mutual induction at fixed circulation: exponential approach) and acceleration only in the last octaves.
+Each run reports its V (gap arm, thickness arm, crossing, sqrt(nu/s) there). Refuted by: a wave on Kida-Pelz; peak
+times that move with nu on (b) or (c); or a pair whose octave time never shrinks (no self-induced phase at all).
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
