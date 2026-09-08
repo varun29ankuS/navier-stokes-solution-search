@@ -42,9 +42,10 @@ $\nu = 2\times10^{-3}, 10^{-3}, 5\times10^{-4}$.
 5. **A steady smooth force does not carry the seam through the floor.** With $f = \varepsilon\times$(the large scales)
    held on - the smooth force Fefferman's breakdown statements (C)/(D) admit - the twist turns over and the seam is
    cut exactly as unforced; growth continues only by re-supply, the pumped large scales rebuilding seams. A driven
-   flow, not a collapse. A force that *tracks* the collapse (the pair's own induction, amplified) pulls the whole
-   descent forward by a third with its rhythm intact; whether it carries the seam through the floor is being resolved
-   at $320^3$. (C24 refuted as registered; C27 running.)
+   flow, not a collapse. A force that *tracks* the collapse (the pair's own induction, amplified) speeds the descent without
+   changing its shape - gap slope 0.51 → 0.72 → 0.88, the same twist peak arriving earlier, $\max|\omega|$ 4.6× →
+   8.7× → 15× - yet the seam at separation 0.1 still turns over on the viscous scale; a thinner reversal at 0.05 is
+   still rising when the clock expires, undecided at $320^3$. (C24 refuted as registered; C27 between.)
 
 Controls: Kida-Pelz (coherent, symmetric focusing) shows no wave; a Gross-Pitaevskii pair (a fluid with a fixed
 floor, the healing length) reconnects on contact with the literature's gap law and never returns.

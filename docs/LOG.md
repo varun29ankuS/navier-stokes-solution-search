@@ -1200,6 +1200,28 @@ Euler - is the cut acting on the sheets themselves. And the reading of C21's KIL
 on the twisted set grew x2.65 per halving because the sheets are thinner at the same jump (peak |w| 45 vs 29) while the
 proxy ell did not shrink in step; the quantity it was built to track does not grow.
 
+### The tracking force (C27), v9 (`results/seam_gpu/v9/`, 2026-09-08)
+
+`FMODE=track`: the force is eps x the velocity induced by the smoothly-masked high-vorticity set alone, refreshed every
+output step - the pair's own self-induction amplified, nothing else. 320^3, nu = 2e-3.
+
+```
+                          eps = 0             eps = 0.5             eps = 1.0
+gap arm                   0.51 (1.78 - t)     0.72 (1.42 - t)       0.88 (1.20 - t)
+twist@0.1 peak            0.110 at 1.60       0.114 at 1.30         0.113 at 1.05    turns over in all three (11%, 14% by the clock)
+merge scale / sqrt(nu/s)  0.052 / 0.051       0.050 / 0.062         0.039 / (invalid row)
+max|w| at the clock       4.6x                8.7x (clock 1.40)     15.3x (clock 1.60)
+twist@0.05 at the clock   peaked 0.014        0.033 rising          0.040 rising
+```
+
+The tracking force multiplies the rate of a self-similar process and leaves its shape alone: steeper gap arm, same
+twist peak, earlier. It does not carry the seam at 0.1 through the floor - that seam is cut on sqrt(nu/s) as unforced.
+It does leave a thinner reversal at 0.05 growing at 2-3x the unforced peak when the clock expires; whether that one is
+cut needs ~400^3. C27 between. Read with C24: a steady force gives forced turbulence; a tracking force gives a faster
+copy of the unforced collapse with the same floor, at the Reynolds numbers reachable here. The forced proofs' forces
+are neither - they are the residual that makes an exact self-similar solution exact, which no amplification of the
+flow's own induction reproduces.
+
 ### Instrument audit of `seam_gpu.py` (2026-09-08, before the generality run is read)
 
 Six findings, all fixed in the next version; none touches C22 (its peak times are read straight off the twist

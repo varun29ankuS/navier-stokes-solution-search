@@ -252,6 +252,13 @@ t. At nu = 2e-3, 256^3, eps = 1 and 3: inside the clock the twist@0.05 keeps ris
 still rising - the seam passes sqrt(nu/s), which the steady force (C24) never achieved. Refuted by: the twist turning
 over as unforced under the tracking force too, which would say amplifying the pair's self-induction is still not the
 force the forced proofs use.
+**Result (2026-09-08, v9, 320^3, nu = 2e-3): between.** The tracking force speeds the collapse without changing its
+shape - gap arm 0.51 (1.78 - t) -> 0.72 (1.42 - t) -> 0.88 (1.20 - t) for eps 0 / 0.5 / 1, the twist@0.1 peak the same
+0.11 in all three, arriving earlier; max|w| 4.6x -> 8.7x -> 15.3x at the clock. The seam at 0.1 still turns over
+(fall 11%, 14%) and at eps = 0.5 the merge scale is on sqrt(nu/s) (0.050 vs 0.062): amplified self-induction does not
+carry that seam through the floor. The twist@0.05 keeps rising at the clock in both runs (0.033, 0.040 - 2-3x the
+unforced peak): the one clause pointing "through", undecided because the clock expires on it (t = 1.40, 1.60). max|w|
+is not accelerating in the last quarter in either run. At 256^3 the runs leave the clock before t = 1 and say nothing.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
