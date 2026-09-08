@@ -260,6 +260,15 @@ carry that seam through the floor. The twist@0.05 keeps rising at the clock in b
 unforced peak): the one clause pointing "through", undecided because the clock expires on it (t = 1.40, 1.60). max|w|
 is not accelerating in the last quarter in either run. At 256^3 the runs leave the clock before t = 1 and say nothing.
 
+**C28 (registered 2026-09-08, before the run). The seam flips again below the cut.** Reconnection leaves threads that
+are antiparallel to each other at a smaller scale (Hussain's bridging; the Yao-Hussain 2020 reconnection cascade). In
+the Lagrangian mode, FLIP = the fraction of tagged particles whose sign of omega . xi_ref has reversed since seeding.
+At nu = 2e-3, 320^3, seeded at t = 1.0: the flip fraction rises from ~0 to 0.10-0.30 across the merge (t ~ 1.7), and
+the material gap, after re-opening, closes a second time before the clock (2.4) - a second, smaller seam. Refuted by:
+a flip fraction below 0.05 at the clock (a clean cut), or no second closing inside the clock. Why it matters: a seam
+that flips and is cut at every level is the turbulence cascade as a staircase of reconnections (the safe outcome);
+a level that flips and is *not* cut would have to arrive with lambda <= 1/2 (Theorem 7).
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
