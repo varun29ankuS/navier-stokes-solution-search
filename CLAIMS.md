@@ -284,6 +284,17 @@ gap law g = 0.51 (T* - t) is Helmholtz - the pair pressing itself - not a fit an
 self-induced share below 40%. Also reported: where the flipped fluid sits after the merge (distance to the other sheet
 over the gap: ~0 bridges, ~1 threads).
 
+**C30 (registered 2026-09-08, before the run). The pair closes by its own curvature.** Flat antiparallel sheets do
+not approach - they translate as a dipole; self-induced closing needs curvature (Crow; Da Rios 1906). With the
+vortex-line curvature kappa = |(xi . grad) xi| at the tagged particles, the number C_LIA = rate_pair / (Delta_u kappa
+gap) is constant to within x2 along the descent (t = 1.0 to the merge), and the closing rate induced by the whole
+sheets (|w| > 0.1 max) is >= 0.7 of the full rate. Refuted by: C_LIA varying by more than x2 (the approach is not
+curvature-driven), or a sheet share below 0.5.
+
+**C31 (registered 2026-09-08, before the run). The far field is part of what closes the gap, as C17 said it is part
+of what makes it grow.** The far-field share of the closing rate (full minus the sheets' own induction) is between
+0.2 and 0.5 on the descent and does not fall as the merge approaches. Refuted by: a far-field share below 0.1.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
