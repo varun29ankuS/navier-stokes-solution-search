@@ -63,6 +63,7 @@ EVERY = float(os.environ.get("EVERY", 0.05)); DEV = "cuda" if torch.cuda.is_avai
 SEPS = [float(v) for v in os.environ.get("SEPS", "0.05,0.07,0.1,0.14,0.2,0.28,0.4,0.56").split(",")]; VSEP = float(os.environ.get("VSEP", 0.1))
 FOUND = os.environ.get("FOUND", "/kaggle/input/zef-found/leashed64_dmin030.npz")
 FORCE = float(os.environ.get("FORCE", 0.0)); FKMAX = float(os.environ.get("FKMAX", 4.0))
+SNAP = int(os.environ.get("SNAP", 0)); SNAPS = []                                   # SNAP=1: save a slice of |w| and of the signed twist through the |w| maximum at every output
 CD = torch.complex64; RD = torch.float32
 k1 = torch.fft.fftfreq(N, d=1.0 / N).to(DEV).to(RD)
 KX, KY, KZ = torch.meshgrid(k1, k1, k1, indexing="ij"); K = [KX, KY, KZ]
@@ -144,6 +145,13 @@ def diag(U):
     sel = tw if tw.sum() >= 0.01 * high.sum() else high                                  # the twisted set only once it is 1% of the high set
     re_seam = ((wm * (wm / gwm) ** 2)[sel].median() / NU).item() if NU > 0 else float("nan")     # |w| ell^2 / nu = Delta_u ell / nu on the seam
     valid = s_comp > 1e-6
+    if SNAP:
+        iz = int(torch.argmax(wm).item() % N)                                                  # the z-plane through the vorticity maximum (index of the last axis)
+        sh = max(1, int(round(VSEP / dx))); bsum = torch.zeros_like(wm[:, :, iz])
+        for ax in range(2):                                                                  # in-plane signed reversal at separation VSEP: max over the two in-plane directions
+            beta = 1 - sum(xi[c] * torch.roll(xi[c], sh, dims=ax) for c in range(3))
+            bsum = torch.maximum(bsum, beta[:, :, iz])
+        SNAPS.append((wm[:, :, iz].cpu().numpy().astype(np.float32), bsum.cpu().numpy().astype(np.float32), iz))
     return (0.5 * w2.mean().item(), wm.max().item(), soft, anti[high].float().mean().item(), ell, ell_nu, cut, strip(U), softs, re_seam, valid)
 
 
@@ -203,6 +211,10 @@ while t <= T + 1e-9:
         umax = max(ifft(Ui).real.abs().max().item() for Ui in U)
         dt = min(2.0 / N, 0.5 * dx / max(umax, 1e-9), mark - t + 1e-12)
         U = step(U, dt); t += dt
+if SNAP:
+    out = os.path.join("/kaggle/working" if os.path.isdir("/kaggle/working") else ".", "snaps_%s_nu%g.npz" % (IC, NU))
+    np.savez_compressed(out, t=np.array([h[0] for h in hist]), wm=np.stack([s_[0] for s_ in SNAPS]), beta=np.stack([s_[1] for s_ in SNAPS]), iz=np.array([s_[2] for s_ in SNAPS]), maxw=np.array([h[2] for h in hist]), delta=np.array([h[8] for h in hist]))
+    print("snapshots written to", out, flush=True)
 H = np.array(hist); tt, tw, race, d, res, valid = H[:, 0], H[:, 3], H[:, 5] / np.where(H[:, 6] > 0, H[:, 6], np.nan), H[:, 8], H[:, 9], H[:, 10] > 0.5
 race = np.where(valid, race, np.nan)
 # C22: the descent - time of the twist peak at each separation (inside the clock only), and the halving time between scales
