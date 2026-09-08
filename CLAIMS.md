@@ -416,6 +416,16 @@ at lower viscosity, and the growth (0.5-0.6) is shared more evenly between the t
 s = 0.7" (C33's corrected reading) was two viscosities' coincidence; the one-variable model keeps its form with a
 coefficient that depends on the Reynolds number, for a reason not yet known.
 
+**C36 (registered 2026-09-08, before the run). The seam rolls: Lundgren's spiral, not a collapse.** Where the map
+ends - the in-plane strain flipping sign at the clock - is the onset of Kelvin-Helmholtz roll-up. In 2-D the roll is
+proven safe (Baker-Shelley: a sheet with thickness rolls into a spiral, infinite time; Krasny; Pullin's self-similar
+spiral; Kaden 1931); in 3-D under axial stretching Lundgren's spiral is the exactly solved case, safe, its turns
+concentrating dissipation and generating the -5/3 cascade. Cheap test: the winding of the tagged fluid about the
+twisted set's centroid, normal to the vorticity. On the sheet field at nu = 5e-4 and 2e-3 (320^3, seeded at t = 0.6):
+the fluid completes >= 0.5 turn inside the clock after the flip, at a winding rate within x2 of |w|_m/(4 pi) (solid-body
+rotation at the material vorticity). Refuted by: winding below 0.25 turn at the clock with |w|_m still growing - a
+sheet intensifying without rolling, which is the non-spiral case the 2-D theorems do not cover.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
