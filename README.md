@@ -1097,6 +1097,37 @@ reach. Caveat recorded: the thickness arm is not nu-independent (e-folding 3.4, 
 fit window; the gap arm is the clean one. C21 (Re_seam at the twist peak across nu) remains inconclusive: only the
 2e-3 peak at separation 0.1 is resolved.
 
+### Generality (C23), read from v4 (`results/seam_gpu/v4/`, 2026-09-08)
+
+```
+                              nu = 2e-3                        nu = 1e-3
+Kida-Pelz (coherent)          no descending wave; twist at      same; max|w| 0.85x
+                              all separations rises together
+                              (0.56: 0.33, 0.4: 0.28 at t=2.4,
+                              below 0.005 under 0.14); max|w|
+                              0.90x, Z 1.37
+second adversarial field      peaks 0.28@0.95 0.20@1.00 0.14@1.00   0.28@0.90 0.20@0.95 0.14@1.00
+(ckn64, tube-builder)         per octave ~0.9 then ~0.1            0.82, 0.97, then 0.10, 0.10
+                              wave stops at 0.10-0.14 near t=1;    same; delta ~0.05 flat
+                              delta ~0.06-0.07 flat from t=0.7
+touching tube pair            0.56@2.40, 0.40@3.75, rest at the    0.56@2.15 0.40@3.25 0.28@3.75 0.20@4.05
+(apex gap 1 sigma, T=6)       clock (6.0); max|w| 1.7x             0.14@4.30, then 0.1/0.07/0.05 at the clock (4.5)
+                                                                   per octave 2.27, 0.97, 0.62, ~0.5; max|w| 3.4x
+```
+
+(a) Kida-Pelz: no wave, as registered - but the numeric clause (twist <= 0.01 at every separation) is violated at
+0.4 and 0.56 by the pattern's own periodicity growing in place; recorded as violated. The C20 KILL fired there under
+the old clause (race variable from a row where the compression across the "sheet" was ~0, with max|w| falling):
+spurious, and the reason the clause was corrected. (b) The second field: nu-independent within 0.05 and
+accelerating, so C23(b) holds - but not the sheet field's smooth 1/ell law: the octave time drops from ~0.9 to ~0.1 in
+one step near t = 0.9, and the wave stops where the gap meets this field's flat thickness (~0.06), at t ~ 1.0 and
+scale ~0.1 - above sqrt(nu/s) at 1e-3 (0.04-0.05), at it at 2e-3. Same V, T* ~ 1.3 instead of 1.78. (The in-script
+V line for this run is invalid: v4 still counted the t = 0 maximum at 0.56 as a peak.) (c) The touching pair: not the
+registered approach test (audit finding F), but at nu = 1e-3 it shows the two phases in one run anyway - 2.3 per
+octave at the top, then 0.97, 0.62, ~0.5 as the tubes close - and the wave reaches 0.1 exactly as the clock expires
+(t = 4.5), with max|w| 12 -> 42 inside the clock, 62 past it. Under the corrected KILL clause it does not fire:
+max|w| is decelerating at the clock (36.7, 40.5, 41.9). The clean approach (apex gap 2.5 sigma) is v5.
+
 ### Instrument audit of `seam_gpu.py` (2026-09-08, before the generality run is read)
 
 Six findings, all fixed in the next version; none touches C22 (its peak times are read straight off the twist

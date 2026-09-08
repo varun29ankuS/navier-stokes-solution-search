@@ -1,0 +1,43 @@
+[{"stream_name":"stdout","time":7.106719008,"data":"=== IC=found NU=2e-3 T=3 FORCE=0.5 -\u003e /kaggle/working/seam_ICfound_NU2e-3_T3_FORCE0.5.txt\n"}
+,{"stream_name":"stdout","time":9.70293875,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stdout","time":9.702973218,"data":"  File \"/kaggle/src/script.py\", line 169, in \u003cmodule\u003e\n"}
+,{"stream_name":"stdout","time":9.703038389,"data":"    uf = np.load(FOUND)[\"u\"].astype(np.float32); n0 = uf.shape[1]; U = []\n"}
+,{"stream_name":"stdout","time":9.703047208,"data":"         ^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stdout","time":9.703063884,"data":"  File \"/usr/local/lib/python3.12/dist-packages/numpy/lib/_npyio_impl.py\", line 455, in load\n"}
+,{"stream_name":"stdout","time":9.704501182,"data":"    fid = stack.enter_context(open(os.fspath(file), \"rb\"))\n"}
+,{"stream_name":"stdout","time":9.704528631,"data":"                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stdout","time":9.704546376,"data":"FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/input/zef-found/leashed64_dmin030.npz'\n"}
+,{"stream_name":"stdout","time":11.709596492,"data":"=== IC=found NU=2e-3 T=3 FORCE=1.5 -\u003e /kaggle/working/seam_ICfound_NU2e-3_T3_FORCE1.5.txt\n"}
+,{"stream_name":"stdout","time":14.134907341,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stdout","time":14.134948182,"data":"  File \"/kaggle/src/script.py\", line 169, in \u003cmodule\u003e\n"}
+,{"stream_name":"stdout","time":14.135013609,"data":"    uf = np.load(FOUND)[\"u\"].astype(np.float32); n0 = uf.shape[1]; U = []\n"}
+,{"stream_name":"stdout","time":14.135040221,"data":"         ^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stdout","time":14.135048397,"data":"  File \"/usr/local/lib/python3.12/dist-packages/numpy/lib/_npyio_impl.py\", line 455, in load\n"}
+,{"stream_name":"stdout","time":14.135336939,"data":"    fid = stack.enter_context(open(os.fspath(file), \"rb\"))\n"}
+,{"stream_name":"stdout","time":14.135351614,"data":"                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stdout","time":14.135356986,"data":"FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/input/zef-found/leashed64_dmin030.npz'\n"}
+,{"stream_name":"stdout","time":14.67611059,"data":"=== IC=found NU=1e-3 T=2.4 FORCE=0.5 -\u003e /kaggle/working/seam_ICfound_NU1e-3_T2.4_FORCE0.5.txt\n"}
+,{"stream_name":"stdout","time":17.054434849,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stdout","time":17.054473278,"data":"  File \"/kaggle/src/script.py\", line 169, in \u003cmodule\u003e\n"}
+,{"stream_name":"stdout","time":17.054478123,"data":"    uf = np.load(FOUND)[\"u\"].astype(np.float32); n0 = uf.shape[1]; U = []\n"}
+,{"stream_name":"stdout","time":17.05448183,"data":"         ^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stdout","time":17.054503743,"data":"  File \"/usr/local/lib/python3.12/dist-packages/numpy/lib/_npyio_impl.py\", line 455, in load\n"}
+,{"stream_name":"stdout","time":17.054719077,"data":"    fid = stack.enter_context(open(os.fspath(file), \"rb\"))\n"}
+,{"stream_name":"stdout","time":17.054734641,"data":"                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stdout","time":17.054758052,"data":"FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/input/zef-found/leashed64_dmin030.npz'\n"}
+,{"stream_name":"stdout","time":17.663493252,"data":"=== IC=found NU=1e-3 T=2.4 FORCE=1.5 -\u003e /kaggle/working/seam_ICfound_NU1e-3_T2.4_FORCE1.5.txt\n"}
+,{"stream_name":"stdout","time":20.037146551,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stdout","time":20.037204365,"data":"  File \"/kaggle/src/script.py\", line 169, in \u003cmodule\u003e\n"}
+,{"stream_name":"stdout","time":20.037230991,"data":"    uf = np.load(FOUND)[\"u\"].astype(np.float32); n0 = uf.shape[1]; U = []\n"}
+,{"stream_name":"stdout","time":20.037776625,"data":"         ^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stdout","time":20.03780246,"data":"  File \"/usr/local/lib/python3.12/dist-packages/numpy/lib/_npyio_impl.py\", line 455, in load\n"}
+,{"stream_name":"stdout","time":20.037808477,"data":"    fid = stack.enter_context(open(os.fspath(file), \"rb\"))\n"}
+,{"stream_name":"stdout","time":20.037813081,"data":"                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stdout","time":20.03781734,"data":"FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/input/zef-found/leashed64_dmin030.npz'\n"}
+,{"stream_name":"stderr","time":23.116528228,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":23.116614864,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":23.410171636,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":23.410201789,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":24.077761733,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":25.491378943,"data":"[NbConvertApp] Writing 390924 bytes to __results__.html\n"}
+]

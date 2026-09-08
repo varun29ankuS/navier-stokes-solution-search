@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/kaggle/src/script.py", line 169, in <module>
+    uf = np.load(FOUND)["u"].astype(np.float32); n0 = uf.shape[1]; U = []
+         ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/numpy/lib/_npyio_impl.py", line 455, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/input/zef-found/leashed64_dmin030.npz'

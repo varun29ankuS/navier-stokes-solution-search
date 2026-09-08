@@ -166,6 +166,10 @@ elif IC == "kp":
          fft(torch.sin(Z_) * (torch.cos(3 * X) * torch.cos(Y) - torch.cos(X) * torch.cos(3 * Y))).to(CD)]
     U = [Ui * deal for Ui in U]; U = project(U)
 else:
+    if not os.path.exists(FOUND):                                                       # Kaggle mounts datasets under varying paths: find the file by name
+        import glob as _g; hits = _g.glob("/kaggle/input/**/" + os.path.basename(FOUND), recursive=True)
+        if not hits: raise SystemExit("found field %s not under /kaggle/input: %s" % (os.path.basename(FOUND), _g.glob("/kaggle/input/**/*", recursive=True)[:20]))
+        FOUND = hits[0]; print("found field at", FOUND, flush=True)
     uf = np.load(FOUND)["u"].astype(np.float32); n0 = uf.shape[1]; U = []
     for c in range(3):
         uh = np.fft.fftn(uf[c]) * (N / n0) ** 3; big = np.zeros((N, N, N), np.complex64); h = n0 // 2

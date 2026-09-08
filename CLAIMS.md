@@ -196,6 +196,10 @@ antiparallel tube pair (D 0.8, sigma 0.2, bow 0.3, T = 6): a descending wave, nu
 octave early (mutual induction at fixed circulation: exponential approach) and acceleration only in the last octaves.
 Each run reports its V (gap arm, thickness arm, crossing, sqrt(nu/s) there). Refuted by: a wave on Kida-Pelz; peak
 times that move with nu on (b) or (c); or a pair whose octave time never shrinks (no self-induced phase at all).
+**Result (2026-09-08, v4):** (a) holds qualitatively (no descent), numeric clause violated at 0.4/0.56 (pattern
+growth in place). (b) holds: nu-independent within 0.05, accelerating (0.9 -> 0.1 per octave in one step), V at
+t ~ 1.0, scale ~ 0.1, above the viscous scale at 1e-3. (c) run with a touching pair (audit F); at 1e-3 it nonetheless
+shows slow-then-fast octaves (2.3, 0.97, 0.62, ~0.5); the registered approach test is v5.
 
 **C24 (registered 2026-09-08, before the run). The forced route, watched.** Fefferman's (C)/(D) allow a smooth force.
 `FORCE=eps` adds f = eps x (the initial field restricted to |k| <= 4): smooth, periodic, divergence-free, steady - the
