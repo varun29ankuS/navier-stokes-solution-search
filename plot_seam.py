@@ -52,8 +52,7 @@ P = np.array(pool); a, b = np.polyfit(P[:, 0], P[:, 1], 1); tt = np.linspace(0.6
 ax.plot(tt, a * tt + b, "k-", lw=1, label="gap arm: %.2f (%.2f - t)" % (-a, -b / a))
 ax.axhline(0.053, color="C3", ls=":", lw=1, label="sqrt(nu/s) at the merge, nu = 2e-3")
 ax.set_xlabel("t"); ax.set_ylabel("separation / thickness"); ax.set_ylim(0, 0.62); ax.set_xlim(0.5, 1.9)
-ax.set_title("The V: the gap between the sheets (inviscid, linear)
-meets their thickness (viscous, exponential)")
+ax.set_title("The V: the gap between the sheets (inviscid, linear)\nmeets their thickness (viscous, exponential)")
 ax.legend(fontsize=8); ax.grid(alpha=0.3)
 fig.tight_layout(); fig.savefig("figures/seam_V.png", dpi=140); plt.close(fig)
 
@@ -73,8 +72,7 @@ for name, (f, c) in series.items():
     ax.plot(xs, ys, "o-" if "2e-3" in name or "pair" in name or "second" in name else "s--", color=c, label=name)
 ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xlabel("separation (geometric mean of the octave)"); ax.set_ylabel("time per octave of descent")
 xx = np.array([0.1, 0.5]); ax.plot(xx, 1.1 * xx, "k:", lw=1, label="proportional to the separation (rate ~ 1/ell, self-induced)")
-ax.set_title("How fast the wave descends
-equal octaves = phase 1 (external strain); shrinking = phase 2 (self-induced)")
+ax.set_title("How fast the wave descends" + chr(10) + "equal octaves = phase 1 (external strain); shrinking = phase 2 (self-induced)")
 ax.legend(fontsize=8); ax.grid(alpha=0.3, which="both")
 fig.tight_layout(); fig.savefig("figures/octaves.png", dpi=140); plt.close(fig)
 print("wrote figures/twist_wave.png, figures/seam_V.png, figures/octaves.png")
