@@ -90,7 +90,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=2e-3 T=2.0 N=320 LAGR=1 TSEED=1.0"   # v12: curvature and the three masks
+    SCHEDULE = "IC=pair NU=1e-3 T=8 N=256 LAGR=1 TSEED=3.0;IC=found NU=5e-4 T=1.6 N=320 LAGR=1 TSEED=1.0"   # v13: k for the pair (seeded when its wave is under way), k at 5e-4
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -382,6 +382,13 @@ if LAGR and LAG.get("rows"):
         print("REGISTERED C31: %s" % ("PASS: far-field share %.2f, not falling" % sh_far if (0.2 <= sh_far <= 0.5 and far_trend >= -0.1) else ("KILL: the gap closes without the rest of the box (far share %.2f)" % sh_far if sh_far < 0.1 else "between (far share %.2f, trend %+.2f)" % (sh_far, far_trend))))
     wpost = m & (tl > tmerge) & np.isfinite(wh)
     if wpost.any(): print("flipped fluid sits at %.2f of the gap from the other sheet (median over the post-merge rows): %s" % (float(np.median(wh[wpost])), "bridges between the sheets" if np.median(wh[wpost]) < 0.5 else "threads beside them"))
+    # C32: the closing law - k = -rate/(gap - delta) on the descent (rows with the gap still closing and delta real)
+    dcl = np.array([h[8] for h in hist]); tcl2 = np.array([h[0] for h in hist])
+    dl = np.interp(tl, tcl2, dcl)
+    kk_m = m & (tl < tmerge) & (rf < 0) & (dl > 0) & (gp - dl > 0)
+    if kk_m.sum() >= 3:
+        kk = -rf[kk_m] / (gp[kk_m] - dl[kk_m])
+        print("C32 closing law: k = -dgap/dt / (gap - delta) on the descent: median %.2f, spread %.2f..%.2f over %d rows (t %.2f-%.2f)" % (float(np.median(kk)), kk.min(), kk.max(), kk_m.sum(), tl[kk_m][0], tl[kk_m][-1]))
     # C28: the flip, and a second closing of the gap after the merge
     post = m & (tl > tmerge); second = False
     if post.sum() >= 3:
