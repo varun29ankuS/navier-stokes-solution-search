@@ -1156,7 +1156,7 @@ counted. The old C20 KILL clause fired at 2e-3 with max|w| falling 22%; under th
 
 Six findings, all fixed in the next version; none touches C22 (its peak times are read straight off the twist
 columns, which are correct). (A) The GPU port printed no energy - the numpy solver's 1e-16 was the correctness
-evidence and the complex64 port had never been asked; E/E0 is now a column and the nu = 0 run is its certificate.
+evidence and the complex64 port had never been asked; E/E0 is now a column and the nu = 0 run is its certificate. **Closed (v5b):** at nu = 0, E/E0 = 1.000000 at every output to T = 1 at both 256^3 and 128^3; and Z(1)/Z0 = 3.175 at 128^3 / 3.184 at 256^3 against the numpy solver's 3.175 at 128^3 / 3.182 at 192^3 for the same field - two solvers, same growth to three digits.
 (B) Every initial condition has an empty spectral tail at t = 0, so the strip fit read float32 round-off until the
 cascade arrived: the "past the clock" flags before t ~ 0.25 were this, not the clock; now "(tail empty)". (C) The
 in-script gap arm used the wall-affected peaks at 0.07 and 0.05; now sep >= 0.1 (the hand fit above already did).

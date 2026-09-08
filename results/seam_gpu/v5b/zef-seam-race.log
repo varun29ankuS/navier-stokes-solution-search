@@ -1,0 +1,83 @@
+[{"stream_name":"stdout","time":7.068302837,"data":"=== IC=found NU=0 T=1.0 -\u003e /kaggle/working/seam_ICfound_NU0_T1.0.txt\n"}
+,{"stream_name":"stdout","time":9.582867738000001,"data":"found field at /kaggle/input/datasets/anushreekaushal/zef-found/leashed64_dmin030.npz\n"}
+,{"stream_name":"stdout","time":10.247768444,"data":"seam race on GPU: IC=found  N=256^3  nu=0  T=1.0  Z0=0.375  clock 2dx=0.0491  device=cuda  FORCE=0\n"}
+,{"stream_name":"stdout","time":11.560957743,"data":"   t     Z/Z0    max|w|   twist@0.05 @0.07 @0.1 @0.14 @0.2 @0.28 @0.4 @0.56   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0\n"}
+,{"stream_name":"stdout","time":11.560986898,"data":" 0.00    1.000      7.16   0.00000 0.00000 0.00000 0.00001 0.00008 0.00071 0.00821 0.06333   0.000   0.6364   nan     nan   0.000        nan   (tail empty)   1.000000   (1s)\n"}
+,{"stream_name":"stdout","time":20.883324622,"data":" 0.05    1.022      7.41   0.00000 0.00000 0.00000 0.00001 0.00009 0.00080 0.00975 0.07395   0.000   0.6340   nan     nan   0.000        nan   (tail empty)   1.000000   (11s)\n"}
+,{"stream_name":"stdout","time":31.416150175,"data":" 0.10    1.052      8.20   0.00000 0.00000 0.00000 0.00001 0.00011 0.00112 0.01331 0.09183   0.000   0.6310   nan     nan   0.000        nan   (tail empty)   1.000000   (21s)\n"}
+,{"stream_name":"stdout","time":41.916141548,"data":" 0.15    1.092      9.00   0.00000 0.00000 0.00000 0.00002 0.00018 0.00193 0.02003 0.11769   0.000   0.5917   nan     nan   0.000        nan   (tail empty)   1.000000   (32s)\n"}
+,{"stream_name":"stdout","time":52.3891306,"data":" 0.20    1.142      9.79   0.00000 0.00000 0.00000 0.00003 0.00037 0.00360 0.03100 0.15107   0.000   0.5226   nan     nan   0.000        nan   (tail empty)   1.000000   (42s)\n"}
+,{"stream_name":"stdout","time":62.837429268,"data":" 0.25    1.200     10.55   0.00000 0.00000 0.00000 0.00008 0.00079 0.00645 0.04730 0.19007   0.000   0.4670   nan     nan   0.000        nan   (tail empty)   1.000000   (53s)\n"}
+,{"stream_name":"stdout","time":73.274600751,"data":" 0.30    1.268     11.29   0.00000 0.00000 0.00001 0.00018 0.00152 0.01073 0.06987 0.23212   0.000   0.4282   nan     nan   0.000        nan   0.2468   1.000000   (63s)\n"}
+,{"stream_name":"stdout","time":83.68185233,"data":" 0.35    1.346     12.42   0.00000 0.00000 0.00001 0.00036 0.00259 0.01698 0.09855 0.27489   0.000   0.3951   nan     nan   0.000        nan   0.2118   1.000000   (73s)\n"}
+,{"stream_name":"stdout","time":94.070990721,"data":" 0.40    1.433     13.71   0.00000 0.00000 0.00003 0.00063 0.00410 0.02557 0.13222 0.31672   0.000   0.3632   nan     nan   0.000        nan   0.1830   1.000000   (84s)\n"}
+,{"stream_name":"stdout","time":104.439461005,"data":" 0.45    1.529     15.04   0.00000 0.00000 0.00005 0.00099 0.00634 0.03650 0.16911 0.35629   0.000   0.3384   nan     nan   0.000        nan   0.1565   1.000000   (94s)\n"}
+,{"stream_name":"stdout","time":114.785962827,"data":" 0.50    1.633     16.43   0.00000 0.00001 0.00009 0.00155 0.00951 0.04953 0.20748 0.39225   0.000   0.3183   nan     nan   0.000        nan   0.1326   1.000000   (105s)\n"}
+,{"stream_name":"stdout","time":125.148826442,"data":" 0.55    1.747     17.85   0.00000 0.00002 0.00014 0.00242 0.01373 0.06436 0.24592 0.42317   0.000   0.3032   nan     nan   0.000        nan   0.1163   1.000000   (115s)\n"}
+,{"stream_name":"stdout","time":135.537803004,"data":" 0.60    1.870     19.15   0.00000 0.00003 0.00022 0.00374 0.01912 0.08068 0.28334 0.44752   0.000   0.2894   nan     nan   0.000        nan   0.1024   1.000000   (125s)\n"}
+,{"stream_name":"stdout","time":144.718052117,"data":" 0.65    2.001     20.64   0.00000 0.00004 0.00035 0.00559 0.02582 0.09839 0.31924 0.46329   0.004   0.2835   nan     nan   0.000        nan   0.0904   1.000000   (134s)\n"}
+,{"stream_name":"stdout","time":153.900089559,"data":" 0.70    2.140     21.88   0.00000 0.00006 0.00059 0.00814 0.03395 0.11753 0.35386 0.46742   0.013   0.2760   nan     nan   0.000        nan   0.0801   1.000000   (144s)\n"}
+,{"stream_name":"stdout","time":163.080338252,"data":" 0.75    2.289     23.20   0.00000 0.00011 0.00098 0.01159 0.04367 0.13807 0.38811 0.45630   0.026   0.2677   nan     nan   0.000        nan   0.0711   1.000000   (153s)\n"}
+,{"stream_name":"stdout","time":172.25802597,"data":" 0.80    2.447     24.34   0.00001 0.00019 0.00162 0.01625 0.05524 0.16008 0.42334 0.42915   0.047   0.2534   nan     nan   0.000        nan   0.0633   1.000000   (162s)\n"}
+,{"stream_name":"stdout","time":181.434029891,"data":" 0.85    2.614     25.42   0.00001 0.00037 0.00268 0.02260 0.06874 0.18408 0.45725 0.39047   0.079   0.2370   nan     nan   0.000        nan   0.0569   1.000000   (171s)\n"}
+,{"stream_name":"stdout","time":190.604329649,"data":" 0.90    2.792     26.34   0.00003 0.00071 0.00445 0.03114 0.08396 0.21188 0.47343 0.34693   0.128   0.2294   nan     nan   0.000        nan   0.0505   1.000000   (180s)\n"}
+,{"stream_name":"stdout","time":199.769173096,"data":" 0.95    2.981     27.35   0.00007 0.00142 0.00752 0.04183 0.10129 0.25043 0.46415 0.30521   0.212   0.2178   nan     nan   0.000        nan   0.0471   1.000000  \u003c-- past the clock   (190s)\n"}
+,{"stream_name":"stdout","time":210.152873896,"data":" 1.00    3.184     28.31   0.00025 0.00306 0.01279 0.05422 0.12254 0.30285 0.44298 0.26917   0.298   0.2022   nan     nan   0.000        nan   0.0454   1.000000  \u003c-- past the clock   (200s)\n"}
+,{"stream_name":"stdout","time":210.155310836,"data":"\n"}
+,{"stream_name":"stdout","time":210.155336861,"data":"C22 descent: separation -\u003e peak twist, peak time (clock expires at t = 0.90)\n"}
+,{"stream_name":"stdout","time":210.155343796,"data":"   sep 0.05   peak 0.00003 at t = 0.90   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":210.155348688,"data":"   sep 0.07   peak 0.00071 at t = 0.90   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":210.155353455,"data":"   sep 0.10   peak 0.00445 at t = 0.90   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":210.155358214,"data":"   sep 0.14   peak 0.03114 at t = 0.90   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":210.155362943,"data":"   sep 0.20   peak 0.08396 at t = 0.90   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":210.155367881,"data":"   sep 0.28   peak 0.21188 at t = 0.90   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":210.155381894,"data":"   sep 0.40   peak 0.47343 at t = 0.90   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":210.155391072,"data":"   sep 0.56   peak 0.46742 at t = 0.70\n"}
+,{"stream_name":"stdout","time":210.155395918,"data":"\n"}
+,{"stream_name":"stdout","time":210.155400847,"data":"clock expires at t = 0.90 (delta 0.0505); strong twist peak 0.00445 at t = 0.90, at the clock 0.00445 (fall 0%); max|w| growth to the clock 3.68x\n"}
+,{"stream_name":"stdout","time":210.155405806,"data":"REGISTERED C20 at nu=0: twist RISES to the clock\n"}
+,{"stream_name":"stdout","time":212.335050504,"data":"=== IC=found NU=0 T=1.0 N=128 -\u003e /kaggle/working/seam_ICfound_NU0_T1.0_N128.txt\n"}
+,{"stream_name":"stdout","time":214.594145043,"data":"found field at /kaggle/input/datasets/anushreekaushal/zef-found/leashed64_dmin030.npz\n"}
+,{"stream_name":"stdout","time":214.795083986,"data":"seam race on GPU: IC=found  N=128^3  nu=0  T=1.0  Z0=0.375  clock 2dx=0.0982  device=cuda  FORCE=0\n"}
+,{"stream_name":"stdout","time":215.018679244,"data":"   t     Z/Z0    max|w|   twist@0.05 @0.07 @0.1 @0.14 @0.2 @0.28 @0.4 @0.56   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0\n"}
+,{"stream_name":"stdout","time":215.018738114,"data":" 0.00    1.000      7.15   0.00000 0.00000 0.00000 0.00001 0.00008 0.00127 0.00821 0.05061   0.000   0.6362   nan     nan   0.000        nan   (tail empty)   1.000000   (0s)\n"}
+,{"stream_name":"stdout","time":215.691206477,"data":" 0.05    1.022      7.41   0.00000 0.00000 0.00000 0.00001 0.00009 0.00147 0.00975 0.05931   0.000   0.6337   nan     nan   0.000        nan   (tail empty)   1.000000   (1s)\n"}
+,{"stream_name":"stdout","time":216.362695288,"data":" 0.10    1.052      8.19   0.00000 0.00000 0.00000 0.00001 0.00011 0.00207 0.01331 0.07458   0.000   0.6304   nan     nan   0.000        nan   0.5639   1.000000   (2s)\n"}
+,{"stream_name":"stdout","time":217.03347976,"data":" 0.15    1.092      8.98   0.00000 0.00000 0.00000 0.00002 0.00018 0.00348 0.02003 0.09751   0.000   0.5908   nan     nan   0.000        nan   0.4530   1.000000   (2s)\n"}
+,{"stream_name":"stdout","time":217.704739408,"data":" 0.20    1.142      9.78   0.00000 0.00000 0.00000 0.00003 0.00037 0.00621 0.03100 0.12838   0.000   0.5213   nan     nan   0.000        nan   0.3731   1.000000   (3s)\n"}
+,{"stream_name":"stdout","time":218.375752257,"data":" 0.25    1.200     10.55   0.00000 0.00000 0.00000 0.00008 0.00079 0.01068 0.04730 0.16612   0.000   0.4664   nan     nan   0.000        nan   0.3113   1.000000   (4s)\n"}
+,{"stream_name":"stdout","time":219.046956745,"data":" 0.30    1.268     11.28   0.00000 0.00000 0.00001 0.00018 0.00152 0.01734 0.06987 0.20859   0.000   0.4265   nan     nan   0.000        nan   0.2683   1.000000   (4s)\n"}
+,{"stream_name":"stdout","time":219.718157265,"data":" 0.35    1.346     12.41   0.00000 0.00000 0.00001 0.00036 0.00259 0.02689 0.09855 0.25344   0.000   0.3951   nan     nan   0.000        nan   0.2343   1.000000   (5s)\n"}
+,{"stream_name":"stdout","time":220.389891907,"data":" 0.40    1.433     13.63   0.00000 0.00000 0.00003 0.00063 0.00411 0.03952 0.13222 0.29870   0.000   0.3607   nan     nan   0.000        nan   0.2070   1.000000   (6s)\n"}
+,{"stream_name":"stdout","time":221.061378358,"data":" 0.45    1.529     15.03   0.00000 0.00000 0.00005 0.00099 0.00634 0.05496 0.16911 0.34284   0.000   0.3385   nan     nan   0.000        nan   0.1849   1.000000   (6s)\n"}
+,{"stream_name":"stdout","time":221.732689432,"data":" 0.50    1.633     16.40   0.00000 0.00000 0.00009 0.00154 0.00950 0.07268 0.20748 0.38432   0.000   0.3175   nan     nan   0.000        nan   0.1668   1.000000   (7s)\n"}
+,{"stream_name":"stdout","time":222.404314922,"data":" 0.55    1.747     17.60   0.00000 0.00000 0.00014 0.00242 0.01372 0.09207 0.24595 0.42161   0.000   0.3008   nan     nan   0.000        nan   0.1521   1.000000   (8s)\n"}
+,{"stream_name":"stdout","time":223.07618183,"data":" 0.60    1.870     19.02   0.00000 0.00000 0.00022 0.00373 0.01910 0.11271 0.28345 0.45308   0.000   0.2901   nan     nan   0.000        nan   0.1396   1.000000   (8s)\n"}
+,{"stream_name":"stdout","time":223.747783549,"data":" 0.65    2.001     20.45   0.00000 0.00000 0.00036 0.00559 0.02577 0.13455 0.31962 0.47672   0.006   0.2802   nan     nan   0.000        nan   0.1286   1.000000   (9s)\n"}
+,{"stream_name":"stdout","time":224.419537473,"data":" 0.70    2.140     21.61   0.00000 0.00000 0.00062 0.00817 0.03387 0.15767 0.35493 0.48951   0.014   0.2728   nan     nan   0.000        nan   0.1189   1.000000   (10s)\n"}
+,{"stream_name":"stdout","time":225.091787298,"data":" 0.75    2.289     22.86   0.00000 0.00000 0.00109 0.01175 0.04361 0.18232 0.39071 0.48705   0.032   0.2672   nan     nan   0.000        nan   0.1110   1.000000   (10s)\n"}
+,{"stream_name":"stdout","time":225.763427362,"data":" 0.80    2.446     24.20   0.00001 0.00001 0.00195 0.01678 0.05535 0.20907 0.42837 0.46615   0.058   0.2542   nan     nan   0.000        nan   0.1049   1.000000   (11s)\n"}
+,{"stream_name":"stdout","time":226.480810992,"data":" 0.85    2.613     25.54   0.00003 0.00003 0.00351 0.02376 0.06927 0.23967 0.46519 0.43046   0.095   0.2382   nan     nan   0.000        nan   0.0989   1.000000   (12s)\n"}
+,{"stream_name":"stdout","time":227.152368512,"data":" 0.90    2.789     26.71   0.00008 0.00008 0.00618 0.03338 0.08568 0.27895 0.48966 0.38872   0.155   0.2224   nan     nan   0.000        nan   0.0906   1.000000  \u003c-- past the clock   (12s)\n"}
+,{"stream_name":"stdout","time":227.823846395,"data":" 0.95    2.976     27.63   0.00019 0.00019 0.01039 0.04591 0.10570 0.32969 0.49170 0.34719   0.242   0.2080   nan     nan   0.000        nan   0.0802   1.000000  \u003c-- past the clock   (13s)\n"}
+,{"stream_name":"stdout","time":228.495183282,"data":" 1.00    3.175     27.93   0.00042 0.00042 0.01640 0.06108 0.13170 0.37789 0.47720 0.30878   0.321   0.1911   nan     nan   0.000        nan   0.0714   1.000000  \u003c-- past the clock   (14s)\n"}
+,{"stream_name":"stdout","time":228.495773676,"data":"\n"}
+,{"stream_name":"stdout","time":228.495796204,"data":"C22 descent: separation -\u003e peak twist, peak time (clock expires at t = 0.85)\n"}
+,{"stream_name":"stdout","time":228.495802721,"data":"   sep 0.05   peak 0.00003 at t = 0.85   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":228.49580801,"data":"   sep 0.07   peak 0.00003 at t = 0.85   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":228.495812826,"data":"   sep 0.10   peak 0.00351 at t = 0.85   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":228.495817956,"data":"   sep 0.14   peak 0.02376 at t = 0.85   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":228.49582231,"data":"   sep 0.20   peak 0.06927 at t = 0.85   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":228.495827185,"data":"   sep 0.28   peak 0.23967 at t = 0.85   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":228.495831483,"data":"   sep 0.40   peak 0.46519 at t = 0.85   (at the clock or at t = 0: not a peak)\n"}
+,{"stream_name":"stdout","time":228.495835927,"data":"   sep 0.56   peak 0.48951 at t = 0.70\n"}
+,{"stream_name":"stdout","time":228.495840545,"data":"\n"}
+,{"stream_name":"stdout","time":228.495845047,"data":"clock expires at t = 0.85 (delta 0.0989); strong twist peak 0.00351 at t = 0.85, at the clock 0.00351 (fall 0%); max|w| growth to the clock 3.57x\n"}
+,{"stream_name":"stdout","time":228.495850133,"data":"REGISTERED C20 at nu=0: twist RISES to the clock\n"}
+,{"stream_name":"stderr","time":231.526743602,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":231.526789588,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":231.832957944,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":231.832983806,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":232.492898595,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":233.879936276,"data":"[NbConvertApp] Writing 393965 bytes to __results__.html\n"}
+]
