@@ -38,7 +38,7 @@ enstrophy $Z_0 = 0.375$.
 | **the V** | where the gap arm meets the thickness arm: the pair merges into one doubled structure before the gap reaches zero. |
 | $\lambda$ | the collapse exponent: gap $\propto (T^\ast - t)^\lambda$. Measured 1 on the sheet field. The critical class is $\lambda = \tfrac12$ (Theorem 7). |
 | $T^\ast$ | the arrival time of the gap arm's straight line; 1.78 for the sheet field. Not a blow-up time - the merge happens first. |
-| **time per octave** | time for the wave to descend one halving of separation. Equal octaves = external strain (phase 1); shrinking = self-induced (phase 2). |
+| **time per octave** | time for the wave to descend one halving of separation. Shrinking in proportion to the separation = constant closing speed (lambda = 1) seen on a log axis; equal octaves = exponential thinning. |
 | **phase 1 / phase 2** | the budget argument: an external squeeze at fixed rate thins exponentially and stops at $\sqrt{\nu/s}$; a collapse whose speed does not fall is unpriced by the budget. The sheet field's descent is constant-speed closing driven by the sheets' own (cancelling) induction - not self-accelerating; that earlier reading is withdrawn (C30). |
 | **the floor** | the length below which a fluid cannot be squeezed: the healing length (quantum), $\sqrt{\nu/s}$ (Navier-Stokes, moving), none (Euler). |
 | **FORCE** ($\varepsilon$) | a smooth, steady, divergence-free force $\varepsilon\times$(the initial field's modes with $\lvert k\rvert \le 4$), Fefferman's (C)/(D) admit such an $f$. |
@@ -83,7 +83,13 @@ Each was registered with the observation that would refute it before its run; st
 | C22 | the descent law: inviscid and accelerating | **passes** on every clause |
 | C23 | the descent law generalises (Kida-Pelz none; second field; pair) | (a), (b) hold; (c) two phases hold, $\nu$-independence refuted for the slow pair |
 | C24 | a steady smooth force carries the seam through the floor | **refuted**: it drives, rebuilding seams; growth by re-supply |
-| C25 | (conjecture, `THEORY.md` §9) the seam's velocity jump is bounded by the data | stated; the wall, located; first test = the 320^3 rung |
+| C25 | (conjecture, `THEORY.md` §9-10) the seam's velocity jump is bounded by the data, i.e. finite total in-plane compression | holds along five resolved solutions (C26) |
+| C26 | Kelvin's frame: the Lagrangian gap closes linearly, the jump stays bounded | **passes** x5 (lambda 0.99; jump within 9%) |
+| C27 | a tracking force carries the seam through the floor | between: faster, same shape, still cut at 0.1; a reversal at 0.05 rising at the clock |
+| C28 | the seam flips again below the cut | between: the cut is a sign reversal on material fluid (0.13 by the clock, threads beside the sheets); no second seam inside the clock |
+| C29 | the sheets close under their own induction | between at both nu: 0.54 / 0.52 from the top half of the sheets; 0.84 from the whole sheets |
+| C30 | the pair closes by its own curvature (Da Rios) | **refuted**: curvature rises x5 while the induced closing falls to zero - antiparallel induction cancels on approach |
+| C31 | the far field is part of what closes the gap | between: 0.16, rising to 0.29 at the merge; not C17's 0.42 |
 
 ## Theorems and propositions (`THEORY.md`)
 
