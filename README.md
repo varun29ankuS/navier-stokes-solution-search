@@ -1128,6 +1128,30 @@ octave at the top, then 0.97, 0.62, ~0.5 as the tubes close - and the wave reach
 (t = 4.5), with max|w| 12 -> 42 inside the clock, 62 past it. Under the corrected KILL clause it does not fire:
 max|w| is decelerating at the clock (36.7, 40.5, 41.9). The clean approach (apex gap 2.5 sigma) is v5.
 
+### The approaching pair (C23c), v5 (`results/seam_gpu/v5/`, 2026-09-08)
+
+Apex gap 2.5 sigma, T = 8, 256^3.
+
+```
+peak time of twist@sep      nu = 2e-3     nu = 1e-3      per octave (1e-3)
+  0.56                       4.10          3.55
+  0.40                       6.75          5.35           3.7
+  0.28                       (clock)       6.75           2.7
+  0.20                       (clock)       ~7.9 plateau   2.4
+  0.14                       (clock)       7.35
+  0.10                       (clock)       7.70           0.6-0.7
+max|w| at t = 8              0.78x         2.76x
+```
+
+A descending wave, and the cleanest two-phase record on the page: 3.7, 2.7, 2.4 per octave while the tubes close under
+mutual induction, then 0.6-0.7 in the last two octaves - a four-fold jump into the self-induced phase, on a hand-built
+structure with no adversary involved. The nu-independence clause is **refuted** for the pair: peaks shift by 0.5-1.4
+between the viscosities, because at 2e-3 the Gaussian cores diffuse over an 8-unit run (max|w| falls to 0.78x) and the
+approach slows. The descent law is inviscid when the descent is fast (the sheet field, one time unit); a slow descent
+gives viscosity time to act on the cores. The V at 1e-3: gap = 0.099 (9.25 - t), five times slower than the sheet
+field's wave, meeting the thickness arm at t ~ 8.8, scale 0.048, above sqrt(nu/s) = 0.029 - beyond the clock, not
+counted. The old C20 KILL clause fired at 2e-3 with max|w| falling 22%; under the corrected clause it does not.
+
 ### Instrument audit of `seam_gpu.py` (2026-09-08, before the generality run is read)
 
 Six findings, all fixed in the next version; none touches C22 (its peak times are read straight off the twist
