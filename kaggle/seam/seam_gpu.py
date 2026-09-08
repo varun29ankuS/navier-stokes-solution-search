@@ -224,7 +224,11 @@ if NU > 0:
     rmin = np.nanmin(race[:last + 1]); print("race variable ell/ell_nu min inside the clock = %.2f (at t = %.2f); cut fraction at the clock %.3f" % (rmin, tt[int(np.nanargmin(race[:last + 1]))], H[last, 7]))
     print("C21: Re_seam at the twist peak (t = %.2f) = %.1f; twist peak %.5f; max|w| at the peak %.1f" % (tpk, res[ipk], tw[ipk], H[ipk, 2]))
     ok = rmin <= 1.5 and fall >= 0.2 and H[last, 2] / H[0, 2] < 3.0
-    kill = (ipk == last) and rmin < 1.0
+    # KILL only if the twist is still rising at the clock AND max|w| is accelerating over the last quarter of the window
+    # AND Re_seam is rising there - a rising twist with falling max|w| (Kida-Pelz) or a core-thickness race variable (a
+    # diffusing pair) is not the phenomenon. Corrected after two spurious fires (pair v2, Kida-Pelz v4).
+    q = max(1, (last + 1) // 4); wl = np.log(H[:last + 1, 2]); accel = (wl[last] - wl[last - q]) > (wl[last - q] - wl[max(last - 2 * q, 0)]) and wl[last] > wl[last - q]
+    kill = (ipk == last) and rmin < 1.0 and accel and res[last] > res[max(last - q, 0)]
     print("REGISTERED C20 at nu=%g: %s" % (NU, "PASS: the seam reaches its viscous thickness and the twist turns over" if ok else ("KILL: the twist is still rising at the clock with the viscous scale resolved" if kill else "between (see rows)")))
 else:
     print("REGISTERED C20 at nu=0: twist %s to the clock" % ("RISES" if ipk == last else "peaks at t=%.2f and falls %.0f%%" % (tpk, 100 * fall)))
