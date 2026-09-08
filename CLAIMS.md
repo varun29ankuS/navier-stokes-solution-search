@@ -166,6 +166,12 @@ peak arrives later and higher as nu falls. Refuted by: Re_seam at the peak risin
 (the seam needing ever more Reynolds number to be cut - the velocity jump growing with the collapse, the direction
 of a singularity). Also re-tests C20's max|w| clause at lower nu and rebuilds the tube-pair control (D 0.7, sigma
 0.22, T 6). Test: `kaggle/seam/seam_gpu.py` (schedule inside).
+**Result (2026-09-08, 320^3): the KILL clause fired.** The nu = 1e-3 twist peak is resolved at 320^3 (0.182 at t = 1.60,
+clock 1.75). Re_seam at the turnover: 224 (2e-3) -> 594 (1e-3), x2.65 per halving against the registered x2. The seam
+at the merge carries a larger velocity jump at lower viscosity (Delta_u 2.2 -> 3.3): it needs, and gets, more Reynolds
+number before it is cut. Two rungs, one field; the 5e-4 rung needs ~450^3. This is the first registered number in the
+repository pointing in the direction of a singularity, and it is recorded as such. The 320^3 run at 2e-3 reproduces
+the 256^3 descent to three digits.
 **Result (2026-09-08): inconclusive.** Only nu = 2e-3 resolves the twist peak (Re_seam 224, t = 1.6); at 1e-3 and
 5e-4 the 256^3 clock expires (t = 1.6, 1.1) before the peak, so the ladder cannot be compared. The prediction
 "order 10" was wrong by 20x. New, resolved at 2e-3: the twist is a wave in scale (peaks at 0.4, 0.2, 0.1, 0.05 in
@@ -217,6 +223,15 @@ turns over (peak 0.110 at t = 1.4, fall 59%), the race variable stays >= 1.18, t
 cut as unforced. Growth continues by re-supply instead: max|w| 9.9x at the clock and rising (unforced: 5.7x peak and
 decay), Z 7.2, E/E0 2.5, a second seam at t ~ 2.6. A steady force drives; it does not carry the seam through the floor.
 eps = 1.5 and nu = 1e-3 leave the clock before t = 1.3 and are not counted.
+
+**C26 (registered 2026-09-08, before the run). Kelvin's frame: the Lagrangian gap closes linearly and the velocity
+jump stays bounded.** Particles seeded on the high set at t = 1.0 and split into the two sheets by the sign of
+omega . xi_ref, advected with the flow (`LAGR=1`). On the sheet field at nu = 2e-3 (256^3) and 1e-3 (320^3): the
+median distance from one sheet's particles to the other's closes with lambda = 1 +- 0.2 on the resolved window, the
+median velocity jump across the nearest pairs stays within 2x of its value at seeding until the merge, and the material
+|w| grows while the gap closes and turns over at the merge. Refuted by: a jump that grows more than 2x while the gap
+closes (C25 fails on this field along one solution), or lambda < 0.7. Context: the Eulerian rungs (C21) already show
+the jump at the merge rising x1.5 per halving of nu across solutions.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
