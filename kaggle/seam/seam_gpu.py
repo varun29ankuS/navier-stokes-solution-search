@@ -64,6 +64,13 @@ a clean cut, finite if the sheets have bridged; and the gap re-closing after the
 (C28): at nu = 2e-3 the flip fraction rises from ~0 to 0.10-0.30 across the merge, and the material gap, after
 re-opening, closes a second time before the clock. Refuted by: a flip fraction staying below 0.05, or no second
 closing inside the clock.
+WHO CLOSES THE GAP (2026-09-08): in the Lagrangian mode, for every nearest A-B pair, the closing rate from the full
+velocity, (u_A - u_B) . d_hat, and the SELF-INDUCED closing rate from the pair's own Biot-Savart field u_H (the velocity
+induced by the smoothly-masked high set), (u_H,A - u_H,B) . d_hat. Their ratio says whether the sheets close under
+their own induction (Helmholtz) or under external strain. Also, for flipped particles, their distance to the other
+sheet relative to the gap: near 0 = bridges between the sheets, ~1 = threads beside them. REGISTERED (C29): on the
+descent (t = 1.0 to the merge) the self-induced rate accounts for >= 70% of the measured closing rate - the gap law
+g = 0.51 (T* - t) is Helmholtz, not a fit. Refuted by: a self-induced share below 40% (external strain closes the gap).
 usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4 FMODE=steady|track] [LAGR=1 TSEED=1.0 NP=4000] python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
@@ -71,7 +78,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=2e-3 T=2.4 N=320 LAGR=1 TSEED=1.0"   # v10: the flip
+    SCHEDULE = "IC=found NU=2e-3 T=2.4 N=320 LAGR=1 TSEED=1.0;IC=found NU=1e-3 T=1.8 N=320 LAGR=1 TSEED=1.0"   # v11: who closes the gap
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -181,8 +188,26 @@ def lagr_diag(U, P, sgn):
     uA = torch.stack([interp3(ui, A) for ui in u], 1); uB = torch.stack([interp3(ui, B[j]) for ui in u], 1)
     jump = torch.sqrt(((uA - uB) ** 2).sum(1))
     wsign = torch.sign(sum(interp3(w[c], P) * LAG["xi_ref"][c] for c in range(3)))                # the sign of omega . xi_ref carried by each particle now
-    flip = (wsign != sgn).float().mean().item()
-    return wmp.median().item(), gap.median().item(), jump.median().item(), flip
+    flipped = wsign != sgn; flip = flipped.float().mean().item()
+    # who closes the gap: closing rate from the full velocity and from the pair's own induced velocity, along the separation
+    dhat = dvec[torch.arange(len(A), device=DEV), j] / (gap[:, None] + 1e-30)                      # unit vector from B to A (periodic)
+    rate_full = ((uA - uB) * dhat).sum(1).median().item()                                        # d gap / dt from u (negative = closing)
+    uH = induced_velocity(U); hA = torch.stack([interp3(hi, A) for hi in uH], 1); hB = torch.stack([interp3(hi, B[j]) for hi in uH], 1)
+    rate_self = ((hA - hB) * dhat).sum(1).median().item()
+    # where the flipped fluid sits: distance to the other sheet over the gap (0 = between the sheets, ~1 = beside them)
+    fA = flipped[sgn > 0]
+    where = (gap[fA] / gap.median()).median().item() if fA.sum() >= 5 else float("nan")
+    return wmp.median().item(), gap.median().item(), jump.median().item(), flip, rate_full, rate_self, where
+
+
+def induced_velocity(U):
+    """u_H: the velocity induced (Biot-Savart) by the smoothly-masked high-vorticity set alone, in physical space"""
+    Ud = [Ui * deal for Ui in U]
+    w = [ifft(1j * K[(i + 1) % 3] * Ud[(i + 2) % 3] - 1j * K[(i + 2) % 3] * Ud[(i + 1) % 3]).real for i in range(3)]
+    wm = torch.sqrt(sum(wi**2 for wi in w)); mask = torch.sigmoid((wm / wm.max() - 0.5) / 0.1)
+    W = project([fft(wi * mask) for wi in w])
+    uH = project([(1j * (K[(i + 1) % 3] * W[(i + 2) % 3] - K[(i + 2) % 3] * W[(i + 1) % 3]) / K2S) * deal for i in range(3)])
+    return [ifft(Ui).real for Ui in uH]
 
 
 def tracking_force(U):
@@ -278,7 +303,7 @@ with torch.no_grad():
         print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
             FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
 print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g (%s)" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE, FMODE), flush=True)
-print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip" if LAGR else ""))
+print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(self)  flipped@" if LAGR else ""))
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
@@ -292,8 +317,8 @@ while t <= T + 1e-9:
             if "P" not in LAG:
                 with torch.no_grad(): LAG["P"], LAG["sgn"] = lagr_seed(U)
                 print("lagrangian: %d particles seeded on the high set at t = %.2f; sheets A/B = %d/%d" % (len(LAG["P"]), t, int((LAG["sgn"] > 0).sum()), int((LAG["sgn"] < 0).sum())), flush=True)
-            with torch.no_grad(): mw, gap, jump, flip = lagr_diag(U, LAG["P"], LAG["sgn"])
-            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip)); lag = "   | %8.2f   %.4f   %.4f   %.3f" % (mw, gap, jump, flip)
+            with torch.no_grad(): mw, gap, jump, flip, rf, rs, where = lagr_diag(U, LAG["P"], LAG["sgn"])
+            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip, rf, rs, where)); lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %s" % (mw, gap, jump, flip, rf, rs, ("%.2f" % where) if np.isfinite(where) else "  -  ")
         hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d if np.isfinite(d) else 0.0, re_seam, float(valid)) + tuple(softs[v] for v in SEPS) + (Er,))
         print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s%s   (%.0fs)" % (
             t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ("%.4f" % ell_nu) if valid else "   -  ", ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam,
@@ -306,7 +331,7 @@ while t <= T + 1e-9:
         if LAGR and "P" in LAG: LAG["P"] = lagr_advect(U, LAG["P"], dt)
         U = step(U, dt); t += dt
 if LAGR and LAG.get("rows"):
-    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl = Lr[:, 0], Lr[:, 1], Lr[:, 2], Lr[:, 3], Lr[:, 4]
+    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl, rf, rs, wh = Lr[:, 0], Lr[:, 1], Lr[:, 2], Lr[:, 3], Lr[:, 4], Lr[:, 5], Lr[:, 6], Lr[:, 7]
     dcl = np.array([h[8] for h in hist]); tcl = np.array([h[0] for h in hist]); tclock = tcl[dcl > 2 * dx][-1] if (dcl > 2 * dx).any() else tl[0]
     m = (tl <= tclock) & np.isfinite(gp) & (gp > 0)
     imin = int(np.argmin(gp[m])) if m.any() else 0; tmerge = tl[m][imin]
@@ -319,6 +344,15 @@ if LAGR and LAG.get("rows"):
     print("\nC26 Lagrangian: gap %.4f -> %.4f (min at t = %.2f, inside the clock %.2f); linear fit T* = %s, lambda = %s; jump %.4f at seed -> max %.4f before the merge (x%.2f); material |w| %.1f -> %.1f" % (
         gp[m][0], gp[m].min(), tmerge, tclock, ("%.2f" % Tst) if mm.sum() >= 4 and np.isfinite(Tst) else "-", ("%.2f" % lam) if np.isfinite(lam) else "-", j0, jmax, jmax / j0, mw[m][0], mw[m].max()))
     ok = np.isfinite(lam) and abs(lam - 1) <= 0.2 and jmax / j0 <= 2.0
+    # C29: who closes the gap - the self-induced share of the closing rate on the descent
+    desc = m & (tl < tmerge) & (rf < 0)
+    if desc.sum() >= 3:
+        share = float(np.median(rs[desc] / rf[desc])); fd = float(np.polyfit(tl[desc], gp[desc], 1)[0])
+        print("C29 who closes the gap: on the descent the measured closing rate (u) is %+.4f median (finite-difference of the gap %+.4f), the self-induced rate (u_H) %+.4f: self-induced share %.2f" % (
+            float(np.median(rf[desc])), fd, float(np.median(rs[desc])), share))
+        print("REGISTERED C29: %s" % ("PASS: the sheets close under their own induction" if share >= 0.7 else ("KILL: external strain closes the gap (share %.2f)" % share if share < 0.4 else "between (share %.2f)" % share)))
+    wpost = m & (tl > tmerge) & np.isfinite(wh)
+    if wpost.any(): print("flipped fluid sits at %.2f of the gap from the other sheet (median over the post-merge rows): %s" % (float(np.median(wh[wpost])), "bridges between the sheets" if np.median(wh[wpost]) < 0.5 else "threads beside them"))
     # C28: the flip, and a second closing of the gap after the merge
     post = m & (tl > tmerge); second = False
     if post.sum() >= 3:
