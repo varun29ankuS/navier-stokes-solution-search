@@ -340,6 +340,19 @@ refuted on the pair as well (C_LIA -0.4 -> 0). C26 passes on the pair (lambda 1.
 its form, its rate, its division between self and surroundings - is an inviscid property of the structure; viscosity
 enters only through where delta sits.
 
+**C33 (found 2026-09-08 on existing data; the model part registered for the next run). The compression across the
+sheet is a dipole gradient: s ~ gap^-3, viscosity-independent.** On the Lagrangian rows at nu = 2e-3, 1e-3, 5e-4
+(t = 1.0-1.4), s = nu / ell_nu^2 rises from ~0.21 to ~0.8-1.1 as the gap closes from 0.27 to 0.16, on one curve:
+s ~ g^-2.9 pooled (g^-3.4 with the 1.4 rows). An inverse cube is the gradient of a dipole field - each sheet feels the
+other's Biot-Savart gradient - and it dies at the merge when the dipole cancels (the pair's induced rate -> 0, ell_nu
+rising afterwards). Poincare's reduction: the gap is slaved to the thickness (k = 1.7), so the seam is one slow
+variable, delta, with delta' = -s delta + nu/delta and s the closure above. A first toy with s cut off at g = delta
+merges a full time unit late and 3x too small at all three nu: the cancellation sets in at g ~ 2 delta, and the
+thickness thins faster (0.7-1.1 per unit) than s delta gives - the thickness arm's own law is unmeasured. Registered
+for the next run: with delta' measured directly on the tagged sheets and the cancellation onset fitted, the reduced
+model reproduces the V's time within 0.15 and scale within 30% at all three viscosities. Refuted by: a model that
+still misses by a time unit once both are in - which would mean the seam is not one slow variable.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 

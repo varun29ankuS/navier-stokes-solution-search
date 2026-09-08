@@ -47,6 +47,14 @@ turns over and the seam is cut exactly as unforced - but growth continues by re-
 rebuilding seams (max|w| 9.9x and rising at T = 3, against 5.7x peak-and-decay). A driven flow, not a collapse. The
 forced proofs use forces that track the collapse; a force that merely pushes gives turbulence.
 
+**The reduction (2026-09-08).** Poincare's move: how few variables does the seam have? The gap relaxes onto the
+thickness at k = 1.7, so after one 1/k it is slaved; the jump is fixed by Kelvin; what remains is one slow variable,
+the thickness delta - which is Riemann's object, the distance of the nearest complex singularity from the real axis
+(the strip). Its equation is delta' = -s delta + nu/delta, fixed point sqrt(nu/s) (the V), and its fate is the closure
+s: measured as a dipole gradient, s ~ g^-3, inviscid, extinguished by cancellation as the sheets meet. Two vortex
+sheets are two branch cuts of the complex velocity; the cut is a change in the topology of the Riemann surface. The
+reduced model does not yet reproduce the V (C33): the thickness arm's law is the unmeasured half.
+
 ## The patterns, across the whole
 
 1. **Every candidate fails the same way, and the way tracks the theorem.** Burgers: monotone and dominating sets
