@@ -1171,6 +1171,31 @@ built like this one. Shahmurov (arXiv 2604.09949, 2026) proves for axisymmetric 
 elliptic response decides blow-up - the physical sign is global, the reversed sign blows up - which is the analytic
 face of the projection experiment above.
 
+## The field on 2026-09-08: the forced route
+
+Two developments this week bear directly on how to read everything above.
+
+**Verified.** Buckmaster and Alpöge posted finite-time blow-up *with smooth forcing* for incompressible porous media,
+Boussinesq and 3-D incompressible Euler, Lean-verified (Euler on 2026-08-22), built on the Córdoba-Martínez-Zoroa
+program of forced blow-ups and pushed to smooth forcing with heavy use of language models. They report a
+hypo-dissipative Navier-Stokes blow-up in preparation. (Buckmaster's statement: cims.nyu.edu/~tristanb/statement.pdf.)
+
+**Claimed, unseen.** Per the same statement, OpenAI reported to Buckmaster an internal ~100-page proof of forced
+blow-up for Navier-Stokes on R^3 and T^3 with smooth forcing. Nobody outside has seen it as of this writing.
+
+**Why forcing is the Clay problem and not a loophole.** Fefferman's official statement offers four options: (A), (B)
+existence and smoothness on R^3 / T^3 with f = 0; (C), (D) breakdown on R^3 / T^3 for *some* smooth divergence-free
+u0 and *some* smooth f(x, t) with the stated decay. A correct forced blow-up on T^3 is statement (D).
+
+**What it means for this page.** Everything here concerns the unforced dynamics - the physical question, (A)/(B). The
+leak budget, the free collapse, the seam race, the descent law and the V are all statements about a fluid nobody is
+pushing. With a smooth force the budget is replenished from outside: the external squeeze (phase 1 above) can be
+held on indefinitely and never has to hand over to the self-induced roll-up; the thickness arm can be driven down
+without the cut winning any race. The forced route goes around the wall by removing the one assumption every
+energy-based argument rests on. If the forced proofs hold, the prize is resolved on the negative side and the
+question "does water do this on its own" stays exactly where it was, with the measurements above as one answer's
+worth of evidence about the mechanism.
+
 ## What this is and is not
 - It is a measurement of an **instrument property**: no artefact dissipation. Numerical searches for self-similar
   blow-up (Hou; Gomez-Serrano, Buckmaster et al. 2022; and later neural-network-assisted searches) are limited by
