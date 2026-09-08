@@ -88,6 +88,12 @@ the compression across the sheet s_m = -n.S.n at the particles (medians). The re
     g' = -k (g - delta),   delta' = -a s(g) delta + nu/delta,   s(g) = c g^-p, cut off where the pair's induction dies
 is fitted on the descent (k, c, p, a, and the cancellation onset g/delta) and integrated from the seeding row; its
 V (gap minimum: time and scale) is compared with the measured one. REGISTERED: time within 0.15, scale within 30%.
+THE STRAIN BUDGET ON MATERIAL SHEETS (2026-09-08, C34): for a sheet, d log|w|/dt = -(n.S.n) - (t.S.t) exactly
+(growth = thinning + narrowing), t = xi x n the in-plane transverse direction. All three at the tagged fluid: the
+material |w| growth rate from the rows, the compression across (s_m) and along (n_m) the sheet. If the identity
+closes there is no new term and the excess thinning at lower viscosity is the narrowing component; if the two strains
+fall short of the growth, something outside the strain budget thins the sheets. REGISTERED: closes within 15% at both
+nu; narrowing ~0-0.1 at 2e-3 and ~0.2-0.3 at 1e-3. Refuted by: a residual above 30% of the growth at 1e-3.
 usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4 FMODE=steady|track] [LAGR=1 TSEED=1.0 NP=4000] python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
@@ -199,7 +205,7 @@ def lagr_diag(U, P, sgn):
     w = [ifft(1j * K[(i + 1) % 3] * Ud[(i + 2) % 3] - 1j * K[(i + 2) % 3] * Ud[(i + 1) % 3]).real for i in range(3)]
     wm = torch.sqrt(sum(wi**2 for wi in w))
     wmp = interp3(wm, P); A = P[sgn > 0]; B = P[sgn < 0]
-    if len(A) < 10 or len(B) < 10: return (wmp.median().item(),) + (float("nan"),) * 10
+    if len(A) < 10 or len(B) < 10: return (wmp.median().item(),) + (float("nan"),) * 11
     dvec = A[:, None, :] - B[None, :, :]; dvec = (dvec + math.pi) % (2 * math.pi) - math.pi
     dist = torch.sqrt((dvec**2).sum(-1)); j = torch.argmin(dist, 1); gap = dist[torch.arange(len(A), device=DEV), j]
     uA = torch.stack([interp3(ui, A) for ui in u], 1); uB = torch.stack([interp3(ui, B[j]) for ui in u], 1)
@@ -211,7 +217,12 @@ def lagr_diag(U, P, sgn):
     nrm_ = [g_ / gwm_ for g_ in gw_]
     snn_ = -sum(nrm_[i] * 0.5 * (G_[i][j] + G_[j][i]) * nrm_[j] for i in range(3) for j in range(3))
     smat = interp3(snn_, P).median().item()
-    del wh_, gw_, gwm_, G_, nrm_, snn_
+    xi_ = [wi / (wm + 1e-30) for wi in w]
+    tt_ = [xi_[1] * nrm_[2] - xi_[2] * nrm_[1], xi_[2] * nrm_[0] - xi_[0] * nrm_[2], xi_[0] * nrm_[1] - xi_[1] * nrm_[0]]
+    ttn_ = torch.sqrt(sum(c_**2 for c_ in tt_)) + 1e-30; tt_ = [c_ / ttn_ for c_ in tt_]
+    stt_ = -sum(tt_[i] * 0.5 * (G_[i][j] + G_[j][i]) * tt_[j] for i in range(3) for j in range(3))            # compression ALONG the sheet: the narrowing
+    nmat = interp3(stt_, P).median().item()
+    del wh_, gw_, gwm_, G_, nrm_, snn_, xi_, tt_, ttn_, stt_
     wsign = torch.sign(sum(interp3(w[c], P) * LAG["xi_ref"][c] for c in range(3)))                # the sign of omega . xi_ref carried by each particle now
     flipped = wsign != sgn; flip = flipped.float().mean().item()
     # who closes the gap: closing rate from the full velocity and from the pair's own induced velocity, along the separation
@@ -229,7 +240,7 @@ def lagr_diag(U, P, sgn):
     # where the flipped fluid sits: distance to the other sheet over the gap (0 = between the sheets, ~1 = beside them)
     fA = flipped[sgn > 0]
     where = (gap[fA] / gap.median()).median().item() if fA.sum() >= 5 else float("nan")
-    return wmp.median().item(), gap.median().item(), jump.median().item(), flip, rate_full, rate_self, where, rate_sheet, kappa, dmat, smat
+    return wmp.median().item(), gap.median().item(), jump.median().item(), flip, rate_full, rate_self, where, rate_sheet, kappa, dmat, smat, nmat
 
 
 def induced_velocity(U, thresh=0.5):
@@ -335,7 +346,7 @@ with torch.no_grad():
         print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
             FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
 print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g (%s)" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE, FMODE), flush=True)
-print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(pair) dgap/dt(sheets) flipped@  kappa  C_LIA   delta_m  s_m" if LAGR else ""))
+print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip   dgap/dt(u) dgap/dt(pair) dgap/dt(sheets) flipped@  kappa  C_LIA   delta_m  s_m    n_m" if LAGR else ""))
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
@@ -349,10 +360,10 @@ while t <= T + 1e-9:
             if "P" not in LAG:
                 with torch.no_grad(): LAG["P"], LAG["sgn"] = lagr_seed(U)
                 print("lagrangian: %d particles seeded on the high set at t = %.2f; sheets A/B = %d/%d" % (len(LAG["P"]), t, int((LAG["sgn"] > 0).sum()), int((LAG["sgn"] < 0).sum())), flush=True)
-            with torch.no_grad(): mw, gap, jump, flip, rf, rs, where, rsh, kappa, dmat, smat = lagr_diag(U, LAG["P"], LAG["sgn"])
+            with torch.no_grad(): mw, gap, jump, flip, rf, rs, where, rsh, kappa, dmat, smat, nmat = lagr_diag(U, LAG["P"], LAG["sgn"])
             clia = rs / (jump * kappa * gap) if (np.isfinite(kappa) and kappa > 0 and gap > 0) else float("nan")
-            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip, rf, rs, where, rsh, kappa, clia, dmat, smat))
-            lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %+.4f   %s   %6.2f  %+.3f   %.4f  %+.3f" % (mw, gap, jump, flip, rf, rs, rsh, ("%.2f" % where) if np.isfinite(where) else " -  ", kappa, clia, dmat, smat)
+            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip, rf, rs, where, rsh, kappa, clia, dmat, smat, nmat))
+            lag = "   | %8.2f   %.4f   %.4f   %.3f   %+.4f  %+.4f  %+.4f   %s   %6.2f  %+.3f   %.4f  %+.3f  %+.3f" % (mw, gap, jump, flip, rf, rs, rsh, ("%.2f" % where) if np.isfinite(where) else " -  ", kappa, clia, dmat, smat, nmat)
         hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d if np.isfinite(d) else 0.0, re_seam, float(valid)) + tuple(softs[v] for v in SEPS) + (Er,))
         print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s%s   (%.0fs)" % (
             t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ("%.4f" % ell_nu) if valid else "   -  ", ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam,
@@ -365,7 +376,7 @@ while t <= T + 1e-9:
         if LAGR and "P" in LAG: LAG["P"] = lagr_advect(U, LAG["P"], dt)
         U = step(U, dt); t += dt
 if LAGR and LAG.get("rows"):
-    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl, rf, rs, wh, rsh, kp, cl, dm, sm = [Lr[:, i] for i in range(13)]
+    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl, rf, rs, wh, rsh, kp, cl, dm, sm, nm = [Lr[:, i] for i in range(14)]
     dcl = np.array([h[8] for h in hist]); tcl = np.array([h[0] for h in hist]); tclock = tcl[dcl > 2 * dx][-1] if (dcl > 2 * dx).any() else tl[0]
     m = (tl <= tclock) & np.isfinite(gp) & (gp > 0)
     imin = int(np.argmin(gp[m])) if m.any() else 0; tmerge = tl[m][imin]
@@ -402,6 +413,18 @@ if LAGR and LAG.get("rows"):
     if kk_m.sum() >= 3:
         kk = -rf[kk_m] / (gp[kk_m] - dl[kk_m])
         print("C32 closing law: k = -dgap/dt / (gap - delta) on the descent: median %.2f, spread %.2f..%.2f over %d rows (t %.2f-%.2f)" % (float(np.median(kk)), kk.min(), kk.max(), kk_m.sum(), tl[kk_m][0], tl[kk_m][-1]))
+    # C34: the strain budget on the material sheets - growth = thinning + narrowing?
+    try:
+        bud = m & (tl < tmerge) & np.isfinite(sm) & np.isfinite(nm)
+        if bud.sum() >= 4:
+            gr = float(np.polyfit(tl[bud], np.log(mw[bud]), 1)[0]); thin = float(np.mean(sm[bud])); narrow = float(np.mean(nm[bud]))
+            thin_m = float(-np.polyfit(tl[bud], np.log(dm[bud]), 1)[0])
+            resid = gr - (thin + narrow)
+            print("C34 strain budget on the material sheets (t %.2f-%.2f): d log|w|/dt = %+.3f ; thinning n.S.n = %+.3f (material thickness thins at %.3f) ; narrowing t.S.t = %+.3f ; sum %+.3f ; residual %+.3f (%.0f%% of the growth)" % (
+                tl[bud][0], tl[bud][-1], gr, thin, thin_m, narrow, thin + narrow, resid, 100 * abs(resid) / max(abs(gr), 1e-9)))
+            print("REGISTERED C34: %s" % ("PASS: the budget closes - no new term" if abs(resid) <= 0.15 * abs(gr) else ("KILL: a residual of %.0f%% - something outside the strain budget" % (100 * abs(resid) / abs(gr)) if abs(resid) > 0.30 * abs(gr) else "between")))
+    except Exception as e:
+        print("C34: budget failed (%s)" % e)
     # C33: the one-variable model, fitted on the descent and integrated from the seeding row
     try:
         desc2 = m & (tl < tmerge) & (rf < 0) & np.isfinite(dm) & (dm > 0) & np.isfinite(sm) & (sm > 0) & (gp - dm > 0)
