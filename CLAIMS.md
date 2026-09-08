@@ -352,6 +352,18 @@ thickness thins faster (0.7-1.1 per unit) than s delta gives - the thickness arm
 for the next run: with delta' measured directly on the tagged sheets and the cancellation onset fitted, the reduced
 model reproduces the V's time within 0.15 and scale within 30% at all three viscosities. Refuted by: a model that
 still misses by a time unit once both are in - which would mean the seam is not one slow variable.
+**Result (2026-09-08, v14, 320^3, nu = 2e-3 and 1e-3): the closure clause is retracted, the reduction half-passes.**
+The compression across the sheet measured *at the tagged fluid* (s_m = -n.S.n at the particles) is constant along
+the descent: 0.69 (0.65-0.77) at 2e-3 and 0.75 (0.61-0.91) at 1e-3 - the same number at both viscosities. The
+g^-3 law was the Eulerian estimator (nu/ell_nu^2 over a high set whose membership sharpens as the sheets thin); there
+is no dipole-gradient closure. The seam is a sheet thinned by a constant external strain, floored at Burgers' layer.
+Scored: delta' = -s delta + nu/delta with the measured s gives a floor sqrt(nu/s) of 0.054 / 0.037 against the
+measured merge scale 0.052 / 0.031 - the *scale* of the V from one measured number at both nu (PASS on scale). The
+*time* fails: from the strip's delta at seeding the model reaches the floor at t ~ 3.5 against the measured 1.65-1.72;
+the strip thins about twice as fast as s delta on the early descent. A second thinning term is missing (in-plane
+narrowing, or the strip reading the sharpest feature rather than the sheets' median) - one more column, not a new
+mechanism. The in-script fit did not run (it used delta_m, which reads the ridge width, 3x the strip; a defect).
+An earlier hand estimate that the model reproduced the merge times to 0.05 was wrong and is withdrawn.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.

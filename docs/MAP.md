@@ -51,9 +51,12 @@ forced proofs use forces that track the collapse; a force that merely pushes giv
 thickness at k = 1.7, so after one 1/k it is slaved; the jump is fixed by Kelvin; what remains is one slow variable,
 the thickness delta - which is Riemann's object, the distance of the nearest complex singularity from the real axis
 (the strip). Its equation is delta' = -s delta + nu/delta, fixed point sqrt(nu/s) (the V), and its fate is the closure
-s: measured as a dipole gradient, s ~ g^-3, inviscid, extinguished by cancellation as the sheets meet. Two vortex
+s. Measured at the tagged fluid (v14): s is *constant* along the descent, 0.7 at both viscosities - an external
+strain, not a dipole gradient (the g^-3 reading was an Eulerian estimator, withdrawn). The floor sqrt(nu/s) gives the
+merge scale at both viscosities from that one number; the merge time is missed by a factor two - the thickness arm
+has a second thinning term still unmeasured. Two vortex
 sheets are two branch cuts of the complex velocity; the cut is a change in the topology of the Riemann surface. The
-reduced model does not yet reproduce the V (C33): the thickness arm's law is the unmeasured half.
+reduced model reproduces the V's scale and not yet its time (C33).
 
 ## The patterns, across the whole
 
