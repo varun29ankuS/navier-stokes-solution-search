@@ -173,6 +173,15 @@ sequence) arrested at the viscous thickness. The pair control's KILL clause fire
 flat and Re_seam falling; judged post hoc to be a defect of the clause (core thickness vs seam gap) - recorded as
 fired, clause corrected for the next run, judgement flagged as post hoc.
 
+**C22 (registered 2026-09-08, before the run). The descent law.** The twist measured at fixed separations peaks in
+sequence from large to small separation - one wave descending in scale, arrested at the viscous thickness. Above
+that thickness the descent is nu-independent (peak times at separations 0.56 ... 0.1 agree across nu = 2e-3, 1e-3,
+5e-4 within 0.1) and it accelerates: the time per octave of descent shrinks between 0.4 and 0.1 (self-induced
+strain, phase 2). Refuted by: constant or growing time per octave (external strain only - the wave never reaches
+zero), or peak times that move with nu above ell_nu. Why it matters: the descent above ell_nu is an inviscid fact
+measured resolved at finite nu; finite-time arrival at zero is the Euler question. Test: `kaggle/seam/seam_gpu.py`
+with the eight-separation ladder (schedule inside).
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 

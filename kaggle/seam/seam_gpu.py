@@ -19,6 +19,11 @@ REGISTERED (C21, 2026-09-08, the feedback law): the twist obeys dtau/dt ~ (s - n
 seam Reynolds number crosses a fixed threshold: Re_seam at the twist peak is the SAME number (within x2) at
 nu = 2e-3, 1e-3, 5e-4, while the peak arrives later and higher as nu falls. KILL: Re_seam at the peak rises by more
 than x2 per halving of nu (the seam needs ever more Reynolds number to be cut: Delta_u growing with the collapse).
+REGISTERED (C22, 2026-09-08, the descent law): the twist at fixed separations peaks in sequence from large to small
+separation - one wave descending in scale - and above the viscous thickness its descent is nu-INDEPENDENT (peak
+times at 0.4 ... 0.1 agree across nu = 2e-3, 1e-3, 5e-4 within 0.1) and ACCELERATES: the time per halving of the
+separation shrinks as the wave descends between 0.4 and 0.1. Refuted by: constant or growing halving time (the
+wave never arrives: phase 1 all the way down), or peak times that depend on nu above ell_nu.
 usage: IC=found|pair N=256 NU=2e-3 T=3.0 python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
@@ -26,7 +31,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=2e-3;IC=found NU=1e-3;IC=found NU=5e-4;IC=pair NU=2e-3 T=6"
+    SCHEDULE = "IC=found NU=2e-3 T=2.4;IC=found NU=1e-3 T=2.0;IC=found NU=5e-4 T=1.6"
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -39,8 +44,8 @@ if SCHEDULE:
     raise SystemExit
 
 IC = os.environ.get("IC", "found"); N = int(os.environ.get("N", 256)); NU = float(os.environ.get("NU", 2e-3)); T = float(os.environ.get("T", 3.0))
-EVERY = float(os.environ.get("EVERY", 0.1)); DEV = "cuda" if torch.cuda.is_available() else "cpu"
-SEPS = [float(v) for v in os.environ.get("SEPS", "0.05,0.1,0.2,0.4").split(",")]; VSEP = float(os.environ.get("VSEP", 0.1))
+EVERY = float(os.environ.get("EVERY", 0.05)); DEV = "cuda" if torch.cuda.is_available() else "cpu"
+SEPS = [float(v) for v in os.environ.get("SEPS", "0.05,0.07,0.1,0.14,0.2,0.28,0.4,0.56").split(",")]; VSEP = float(os.environ.get("VSEP", 0.1))
 FOUND = os.environ.get("FOUND", "/kaggle/input/zef-found/leashed64_dmin030.npz")
 CD = torch.complex64; RD = torch.float32
 k1 = torch.fft.fftfreq(N, d=1.0 / N).to(DEV).to(RD)
@@ -111,7 +116,7 @@ def diag(U):
     annih = -NU * sum(w[i] * lapw[i] for i in range(3))
     tw = high & anti
     cut = ((annih[tw] > torch.relu(stretch[tw])) & (stretch[tw] > 0)).float().mean().item() if tw.sum() > 0 else 0.0
-    sel = tw if tw.sum() > 0 else high
+    sel = tw if tw.sum() >= 0.01 * high.sum() else high                                  # the twisted set only once it is 1% of the high set
     re_seam = ((wm * (wm / gwm) ** 2)[sel].median() / NU).item() if NU > 0 else float("nan")     # |w| ell^2 / nu = Delta_u ell / nu on the seam
     valid = s_comp > 1e-6
     return (0.5 * w2.mean().item(), wm.max().item(), soft, anti[high].float().mean().item(), ell, ell_nu, cut, strip(U), softs, re_seam, valid)
@@ -147,7 +152,7 @@ print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
-        Z, wmax, soft, anti, ell, ell_nu, cut, d, softs, re_seam, valid = diag(U); hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d, re_seam, float(valid)))
+        Z, wmax, soft, anti, ell, ell_nu, cut, d, softs, re_seam, valid = diag(U); hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d, re_seam, float(valid)) + tuple(softs[v] for v in SEPS))
         print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %.4f   %5.2f   %.3f   %8.1f   %.4f%s   (%.0fs)" % (
             t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ell_nu, ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam, d,
             "" if d > 2 * dx else "  <-- past the clock", time.time() - t0), flush=True)
@@ -159,6 +164,19 @@ while t <= T + 1e-9:
         U = step(U, dt); t += dt
 H = np.array(hist); tt, tw, race, d, res, valid = H[:, 0], H[:, 3], H[:, 5] / np.where(H[:, 6] > 0, H[:, 6], np.nan), H[:, 8], H[:, 9], H[:, 10] > 0.5
 race = np.where(valid, race, np.nan)
+# C22: the descent - time of the twist peak at each separation (inside the clock only), and the halving time between scales
+inclock0 = d > 2 * dx; last0 = np.where(inclock0)[0][-1] if inclock0.any() else 0
+print("\nC22 descent: separation -> peak twist, peak time (clock expires at t = %.2f)" % tt[last0])
+peaks = {}
+for j, sep in enumerate(SEPS):
+    col = H[:last0 + 1, 11 + j]; ip = int(np.argmax(col)); at_clock = ip == last0
+    peaks[sep] = (tt[ip], col[ip], at_clock)
+    print("   sep %.2f   peak %.5f at t = %.2f%s" % (sep, col[ip], tt[ip], "   (at the clock: not a peak)" if at_clock else ""))
+good = [(sep, peaks[sep][0]) for sep in sorted(SEPS, reverse=True) if not peaks[sep][2] and peaks[sep][1] > 1e-4]
+if len(good) >= 3:
+    print("   halving times (time for the wave to descend one octave), from resolved peaks only:")
+    for (s1, t1), (s2, t2) in zip(good[:-1], good[1:]):
+        print("      %.2f -> %.2f : %.2f  per octave %.2f" % (s1, s2, t2 - t1, (t2 - t1) / max(math.log2(s1 / s2), 1e-9)))
 inclock = d > 2 * dx; ic = np.where(inclock)[0]
 if len(ic) == 0:
     print("VERDICT: never inside the clock"); raise SystemExit
