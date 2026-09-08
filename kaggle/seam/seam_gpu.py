@@ -57,6 +57,13 @@ unforced turnover (t ~ 1.7), max|w| accelerates over the last quarter of the win
 1 with the twist still rising; the steady force (C24) did none of these. Refuted by: the twist turning over as
 unforced under the tracking force too - which would say a force that merely amplifies the pair's self-induction is
 still not the force the proofs need.
+THE FLIP (2026-09-08): does the seam flip again below the cut? Reconnection leaves threads that are antiparallel to
+each other at a smaller scale (Hussain's bridging; Yao-Hussain 2020's reconnection cascade). In the Lagrangian mode
+the FLIP column is the fraction of tagged particles whose sign of omega . xi_ref has reversed since seeding: zero for
+a clean cut, finite if the sheets have bridged; and the gap re-closing after the merge is a second seam. REGISTERED
+(C28): at nu = 2e-3 the flip fraction rises from ~0 to 0.10-0.30 across the merge, and the material gap, after
+re-opening, closes a second time before the clock. Refuted by: a flip fraction staying below 0.05, or no second
+closing inside the clock.
 usage: IC=found|kp|pair N=256 NU=2e-3 T=3.0 [FORCE=0.5 FKMAX=4 FMODE=steady|track] [LAGR=1 TSEED=1.0 NP=4000] python seam_gpu.py"""
 import os, sys, time, math, subprocess, numpy as np, torch
 
@@ -64,7 +71,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = "IC=found NU=2e-3 T=3 FORCE=1.0 FMODE=track;IC=found NU=2e-3 T=3 FORCE=3.0 FMODE=track;IC=found NU=1e-3 T=2.2 FORCE=1.0 FMODE=track"   # v9: the tracking force
+    SCHEDULE = "IC=found NU=2e-3 T=2.4 N=320 LAGR=1 TSEED=1.0"   # v10: the flip
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -152,6 +159,7 @@ def lagr_seed(U):
     P = (sel.float() + 0.5) * dx
     xi = torch.stack([wi[high] / wm[high] for wi in w], 1); M = xi.T @ xi; xi_ref = torch.linalg.eigh(M)[1][:, -1]
     sgn = torch.sign(sum(w[c][sel[:, 0], sel[:, 1], sel[:, 2]] * xi_ref[c] for c in range(3)))
+    LAG["xi_ref"] = xi_ref
     return P, sgn
 
 
@@ -167,12 +175,14 @@ def lagr_diag(U, P, sgn):
     w = [ifft(1j * K[(i + 1) % 3] * Ud[(i + 2) % 3] - 1j * K[(i + 2) % 3] * Ud[(i + 1) % 3]).real for i in range(3)]
     wm = torch.sqrt(sum(wi**2 for wi in w))
     wmp = interp3(wm, P); A = P[sgn > 0]; B = P[sgn < 0]
-    if len(A) < 10 or len(B) < 10: return wmp.median().item(), float("nan"), float("nan")
+    if len(A) < 10 or len(B) < 10: return wmp.median().item(), float("nan"), float("nan"), float("nan")
     dvec = A[:, None, :] - B[None, :, :]; dvec = (dvec + math.pi) % (2 * math.pi) - math.pi
     dist = torch.sqrt((dvec**2).sum(-1)); j = torch.argmin(dist, 1); gap = dist[torch.arange(len(A), device=DEV), j]
     uA = torch.stack([interp3(ui, A) for ui in u], 1); uB = torch.stack([interp3(ui, B[j]) for ui in u], 1)
     jump = torch.sqrt(((uA - uB) ** 2).sum(1))
-    return wmp.median().item(), gap.median().item(), jump.median().item()
+    wsign = torch.sign(sum(interp3(w[c], P) * LAG["xi_ref"][c] for c in range(3)))                # the sign of omega . xi_ref carried by each particle now
+    flip = (wsign != sgn).float().mean().item()
+    return wmp.median().item(), gap.median().item(), jump.median().item(), flip
 
 
 def tracking_force(U):
@@ -268,7 +278,7 @@ with torch.no_grad():
         print("forced: f = %.2f x (initial field, |k| <= %g), |f|_rms = %.4f, energy injection rate at t=0 = %.4f (vs 2 nu Z0 = %.4f)" % (
             FORCE, FKMAX, fpow, sum((ifft(Fi).real * ifft(Ui * deal).real).mean().item() for Fi, Ui in zip(FHAT, U)), 2 * NU * Z0), flush=True)
 print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s  FORCE=%g (%s)" % (IC, N, NU, T, Z0, 2 * dx, DEV, FORCE, FMODE), flush=True)
-print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump" if LAGR else ""))
+print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0" + ("   | material|w|  gap   jump   flip" if LAGR else ""))
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
@@ -282,8 +292,8 @@ while t <= T + 1e-9:
             if "P" not in LAG:
                 with torch.no_grad(): LAG["P"], LAG["sgn"] = lagr_seed(U)
                 print("lagrangian: %d particles seeded on the high set at t = %.2f; sheets A/B = %d/%d" % (len(LAG["P"]), t, int((LAG["sgn"] > 0).sum()), int((LAG["sgn"] < 0).sum())), flush=True)
-            with torch.no_grad(): mw, gap, jump = lagr_diag(U, LAG["P"], LAG["sgn"])
-            LAG.setdefault("rows", []).append((t, mw, gap, jump)); lag = "   | %8.2f   %.4f   %.4f" % (mw, gap, jump)
+            with torch.no_grad(): mw, gap, jump, flip = lagr_diag(U, LAG["P"], LAG["sgn"])
+            LAG.setdefault("rows", []).append((t, mw, gap, jump, flip)); lag = "   | %8.2f   %.4f   %.4f   %.3f" % (mw, gap, jump, flip)
         hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d if np.isfinite(d) else 0.0, re_seam, float(valid)) + tuple(softs[v] for v in SEPS) + (Er,))
         print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s%s   (%.0fs)" % (
             t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ("%.4f" % ell_nu) if valid else "   -  ", ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam,
@@ -296,7 +306,7 @@ while t <= T + 1e-9:
         if LAGR and "P" in LAG: LAG["P"] = lagr_advect(U, LAG["P"], dt)
         U = step(U, dt); t += dt
 if LAGR and LAG.get("rows"):
-    Lr = np.array(LAG["rows"]); tl, mw, gp, jp = Lr[:, 0], Lr[:, 1], Lr[:, 2], Lr[:, 3]
+    Lr = np.array(LAG["rows"]); tl, mw, gp, jp, fl = Lr[:, 0], Lr[:, 1], Lr[:, 2], Lr[:, 3], Lr[:, 4]
     dcl = np.array([h[8] for h in hist]); tcl = np.array([h[0] for h in hist]); tclock = tcl[dcl > 2 * dx][-1] if (dcl > 2 * dx).any() else tl[0]
     m = (tl <= tclock) & np.isfinite(gp) & (gp > 0)
     imin = int(np.argmin(gp[m])) if m.any() else 0; tmerge = tl[m][imin]
@@ -309,6 +319,14 @@ if LAGR and LAG.get("rows"):
     print("\nC26 Lagrangian: gap %.4f -> %.4f (min at t = %.2f, inside the clock %.2f); linear fit T* = %s, lambda = %s; jump %.4f at seed -> max %.4f before the merge (x%.2f); material |w| %.1f -> %.1f" % (
         gp[m][0], gp[m].min(), tmerge, tclock, ("%.2f" % Tst) if mm.sum() >= 4 and np.isfinite(Tst) else "-", ("%.2f" % lam) if np.isfinite(lam) else "-", j0, jmax, jmax / j0, mw[m][0], mw[m].max()))
     ok = np.isfinite(lam) and abs(lam - 1) <= 0.2 and jmax / j0 <= 2.0
+    # C28: the flip, and a second closing of the gap after the merge
+    post = m & (tl > tmerge); second = False
+    if post.sum() >= 3:
+        gpost = gp[post]; ip = int(np.argmax(gpost)); second = ip < len(gpost) - 1 and gpost[ip:].min() < 0.9 * gpost[ip]
+    fmerge = fl[m][imin] if m.any() else float("nan"); fend = fl[m][-1] if m.any() else float("nan")
+    print("C28 flip: fraction of tagged particles with reversed omega . xi_ref: %.3f at seed -> %.3f at the merge -> %.3f at the clock; gap after the merge %s" % (
+        fl[m][0], fmerge, fend, ("re-opens to %.4f then closes again to %.4f: a SECOND seam" % (gpost[ip], gpost[ip:].min())) if second else ("re-opens, no second closing inside the clock" if post.sum() >= 3 else "no rows after the merge inside the clock")))
+    print("REGISTERED C28: %s" % ("PASS: the seam flips again" if (fend >= 0.10 and second) else ("KILL: clean cut (flip %.3f)" % fend if fend < 0.05 else "between")))
     print("REGISTERED C26: %s" % ("PASS: linear closing, bounded jump" if ok else ("KILL: the jump grows more than 2x while the gap closes (C25 fails here)" if jmax / j0 > 2.0 else ("KILL: lambda = %.2f < 0.7" % lam if np.isfinite(lam) and lam < 0.7 else "between (see rows)"))))
 if SNAP:
     out = os.path.join("/kaggle/working" if os.path.isdir("/kaggle/working") else ".", "snaps_%s_nu%g.npz" % (IC, NU))
