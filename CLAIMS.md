@@ -268,6 +268,13 @@ the material gap, after re-opening, closes a second time before the clock (2.4) 
 a flip fraction below 0.05 at the clock (a clean cut), or no second closing inside the clock. Why it matters: a seam
 that flips and is cut at every level is the turbulence cascade as a staircase of reconnections (the safe outcome);
 a level that flips and is *not* cut would have to arrive with lambda <= 1/2 (Theorem 7).
+**Result (2026-09-08, v10, 320^3, nu = 2e-3): between.** Flip fraction 0.000 through the merge (t = 1.55), then
+rising steadily as the material vorticity falls and the jump collapses: 0.01 (1.8), 0.04 (2.0), 0.09 (2.2), 0.127 at
+the clock (2.4), ~0.2 per time unit and still climbing - the cut is a sign reversal on material fluid, one particle in
+eight by the clock (first clause met). The material gap re-opens monotonically after the merge (0.156 -> 0.188) and
+does not close again inside the clock: no second seam among the tagged fluid at this Reynolds number (second clause
+fails). C26 passes a third time (lambda 0.99, jump x1.04). The staircase's first step exists; its exponent lambda_stair
+= log(r_s)/log(r_t) needs a second step, beyond ~400^3.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.

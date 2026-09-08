@@ -1222,6 +1222,27 @@ copy of the unforced collapse with the same floor, at the Reynolds numbers reach
 are neither - they are the residual that makes an exact self-similar solution exact, which no amplification of the
 flow's own induction reproduces.
 
+### The flip (C28), v10 (`results/seam_gpu/v10/`, 2026-09-08)
+
+Does the seam flip again below the cut? FLIP = the fraction of tagged particles whose sign of omega . xi_ref has
+reversed since seeding. 320^3, nu = 2e-3, seeded at t = 1.0.
+
+```
+t       gap      jump     flip     material |w|
+1.00    0.273    1.03     0.000    13.2
+1.55    0.156    1.02     0.000    13.6      the merge
+1.70    0.159    0.89     0.001    12.5
+2.00    0.172    0.73     0.042    10.1
+2.40    0.188    0.61     0.127     8.3      the clock
+```
+
+The flip is real and it is the cut: not one particle had changed sign by the merge; afterwards, as the material
+vorticity falls and the jump collapses, the fraction of one sheet's fluid carrying the other's sign rises at ~0.2 per
+time unit to 0.127 at the clock - reconnection bridging the sheets, watched on the fluid it happens to. No second
+seam: the material gap re-opens monotonically and never closes again inside the clock. C28 between: the staircase's
+first step exists; the second, if any, is below the grid or past 2.4. The tightened question - the staircase exponent
+lambda_stair = log(r_s)/log(r_t), which decides by Theorem 7 whether each level is cut - needs a second step, ~800^3.
+
 ### Instrument audit of `seam_gpu.py` (2026-09-08, before the generality run is read)
 
 Six findings, all fixed in the next version; none touches C22 (its peak times are read straight off the twist
