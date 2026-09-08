@@ -1097,6 +1097,19 @@ reach. Caveat recorded: the thickness arm is not nu-independent (e-folding 3.4, 
 fit window; the gap arm is the clean one. C21 (Re_seam at the twist peak across nu) remains inconclusive: only the
 2e-3 peak at separation 0.1 is resolved.
 
+### Instrument audit of `seam_gpu.py` (2026-09-08, before the generality run is read)
+
+Six findings, all fixed in the next version; none touches C22 (its peak times are read straight off the twist
+columns, which are correct). (A) The GPU port printed no energy - the numpy solver's 1e-16 was the correctness
+evidence and the complex64 port had never been asked; E/E0 is now a column and the nu = 0 run is its certificate.
+(B) Every initial condition has an empty spectral tail at t = 0, so the strip fit read float32 round-off until the
+cascade arrived: the "past the clock" flags before t ~ 0.25 were this, not the clock; now "(tail empty)". (C) The
+in-script gap arm used the wall-affected peaks at 0.07 and 0.05; now sep >= 0.1 (the hand fit above already did).
+(D) The thickness arm was fitted through the post-merge plateau, biasing its e-fold (3.35 vs 2.1 pre-merge); now
+fitted from the first real delta to the twist peak. (E) A column maximal at t = 0 counted as a peak; excluded.
+(F) The tube pair's apex gap was D - 2A = 0.2 = one core radius: the tubes overlapped at t = 0, so the v4 pair rows
+test a touching pair, not an approach; the approach (apex gap 2.5 sigma, T = 8) is rerun as v5.
+
 ## Tao's wall, in pictures: an energy-conserving equation that provably blows up
 
 Theorem 4 (Tao 2016) says that the exact structure this repository verifies - energy conservation, the scaling, the

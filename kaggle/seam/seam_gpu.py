@@ -38,9 +38,7 @@ import os, sys, time, math, subprocess, numpy as np, torch
 # script with SCHEDULE cleared, its log written to /kaggle/working.
 SCHEDULE = os.environ.get("SCHEDULE")
 if SCHEDULE is None and os.path.isdir("/kaggle/working"):
-    SCHEDULE = ("IC=kp NU=2e-3 T=2.4;IC=kp NU=1e-3 T=2.0;"
-                "IC=found FOUND=/kaggle/input/zef-found/ckn64.npz TAG=ckn NU=2e-3 T=2.4;IC=found FOUND=/kaggle/input/zef-found/ckn64.npz TAG=ckn NU=1e-3 T=2.0;"
-                "IC=pair NU=2e-3 T=6;IC=pair NU=1e-3 T=6")
+    SCHEDULE = "IC=pair NU=2e-3 T=8;IC=pair NU=1e-3 T=8;IC=found NU=0 T=1.0"      # v5: the approaching pair, and the nu = 0 energy certificate
 if SCHEDULE:
     for cfg in [c for c in SCHEDULE.split(";") if c.strip()]:
         env = dict(os.environ); env["SCHEDULE"] = ""; env.update(dict(kv.split("=") for kv in cfg.split()))
@@ -89,10 +87,16 @@ def step(U, dt):
 
 
 def strip(U):
+    """analyticity-strip width from the tail of the energy spectrum; nan while the tail is still empty (below 1e-12 of
+    the peak shell: an upsampled low-mode field has nothing there but float32 round-off until the cascade arrives)"""
     e = 0.5 * sum(Ui.abs() ** 2 for Ui in U) / N**6
-    spec = torch.stack([e[(KMAG >= n - 0.5) & (KMAG < n + 0.5)].sum() for n in range(1, NB)]).cpu().numpy()
-    ks = np.arange(1, NB); sel = (ks >= NB // 2) & (spec > 1e-300)
+    spec = torch.stack([e[(KMAG >= n - 0.5) & (KMAG < n + 0.5)].sum() for n in range(1, NB)]).cpu().numpy().astype(np.float64)
+    ks = np.arange(1, NB); sel = (ks >= NB // 2) & (spec > 1e-12 * spec.max())
     return -np.polyfit(ks[sel], np.log(spec[sel]), 1)[0] / 2 if sel.sum() > 4 else float("nan")
+
+
+def energy(U):
+    return 0.5 * sum((ifft(Ui * deal).real ** 2).mean() for Ui in U).item()
 
 
 @torch.no_grad()
@@ -134,7 +138,7 @@ def diag(U):
 x = torch.arange(N, device=DEV, dtype=RD) * dx
 if IC == "pair":
     # two antiparallel Gaussian vortex tubes along x, separation D, core sigma, bowed toward each other (Kerr-type)
-    D = float(os.environ.get("D", 0.8)); SIG = float(os.environ.get("SIG", 0.2)); A = float(os.environ.get("A", 0.3))
+    D = float(os.environ.get("D", 0.8)); SIG = float(os.environ.get("SIG", 0.2)); A = float(os.environ.get("A", 0.15))   # apex gap D - 2A = 0.5 = 2.5 sigma: apart, then approaching
     X, Y, Z_ = torch.meshgrid(x, x, x, indexing="ij"); wx = torch.zeros_like(X)
     for sgn in (+1, -1):
         yc = math.pi + sgn * (D / 2 - A * torch.cos(X - math.pi)); r2 = ((Y - yc) % (2 * math.pi) - math.pi) ** 2 + ((Z_ - math.pi) % (2 * math.pi) - math.pi) ** 2
@@ -161,16 +165,17 @@ else:
     U = project(U)
 with torch.no_grad():
     Z0 = 0.5 * sum((ifft(1j * K[a] * U[b] - 1j * K[b] * U[a]).real ** 2).mean() for a, b in ((1, 2), (2, 0), (0, 1))).item()
-    U = [Ui * math.sqrt(0.375 / Z0) for Ui in U]; Z0 = 0.375
+    U = [Ui * math.sqrt(0.375 / Z0) for Ui in U]; Z0 = 0.375; E0 = energy(U)
 print("seam race on GPU: IC=%s  N=%d^3  nu=%g  T=%.1f  Z0=%.3f  clock 2dx=%.4f  device=%s" % (IC, N, NU, T, Z0, 2 * dx, DEV), flush=True)
-print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta")
+print("   t     Z/Z0    max|w|   twist@" + " @".join("%g" % v for v in SEPS) + "   anti    ell     ell_nu   race   cut    Re_seam   delta     E/E0")
 t, mark, t0 = 0.0, 0.0, time.time(); hist = []
 while t <= T + 1e-9:
     if t >= mark - 1e-9:
-        Z, wmax, soft, anti, ell, ell_nu, cut, d, softs, re_seam, valid = diag(U); hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d, re_seam, float(valid)) + tuple(softs[v] for v in SEPS))
-        print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %.4f   %5.2f   %.3f   %8.1f   %.4f%s   (%.0fs)" % (
-            t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ell_nu, ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam, d,
-            "" if d > 2 * dx else "  <-- past the clock", time.time() - t0), flush=True)
+        Z, wmax, soft, anti, ell, ell_nu, cut, d, softs, re_seam, valid = diag(U); Er = energy(U) / E0
+        hist.append((t, Z / Z0, wmax, soft, anti, ell, ell_nu, cut, d if np.isfinite(d) else 0.0, re_seam, float(valid)) + tuple(softs[v] for v in SEPS) + (Er,))
+        print("%5.2f   %6.3f   %7.2f   %s   %.3f   %.4f   %s   %5.2f   %.3f   %8.1f   %s   %.6f%s   (%.0fs)" % (
+            t, Z / Z0, wmax, " ".join("%.5f" % softs[v] for v in SEPS), anti, ell, ("%.4f" % ell_nu) if valid else "   -  ", ell / ell_nu if (NU > 0 and valid) else float("nan"), cut, re_seam,
+            ("%.4f" % d) if np.isfinite(d) else "(tail empty)", Er, "" if (np.isfinite(d) and d > 2 * dx) else ("" if not np.isfinite(d) else "  <-- past the clock"), time.time() - t0), flush=True)
         mark += EVERY
         if t >= T - 1e-9: break
     with torch.no_grad():
@@ -184,9 +189,9 @@ inclock0 = d > 2 * dx; last0 = np.where(inclock0)[0][-1] if inclock0.any() else 
 print("\nC22 descent: separation -> peak twist, peak time (clock expires at t = %.2f)" % tt[last0])
 peaks = {}
 for j, sep in enumerate(SEPS):
-    col = H[:last0 + 1, 11 + j]; ip = int(np.argmax(col)); at_clock = ip == last0
+    col = H[:last0 + 1, 11 + j]; ip = int(np.argmax(col)); at_clock = (ip == last0) or (ip == 0)
     peaks[sep] = (tt[ip], col[ip], at_clock)
-    print("   sep %.2f   peak %.5f at t = %.2f%s" % (sep, col[ip], tt[ip], "   (at the clock: not a peak)" if at_clock else ""))
+    print("   sep %.2f   peak %.5f at t = %.2f%s" % (sep, col[ip], tt[ip], "   (at the clock or at t = 0: not a peak)" if at_clock else ""))
 good = [(sep, peaks[sep][0]) for sep in sorted(SEPS, reverse=True) if not peaks[sep][2] and peaks[sep][1] > 1e-4]
 if len(good) >= 3:
     print("   halving times (time for the wave to descend one octave), from resolved peaks only:")
@@ -194,14 +199,16 @@ if len(good) >= 3:
         print("      %.2f -> %.2f : %.2f  per octave %.2f" % (s1, s2, t2 - t1, (t2 - t1) / max(math.log2(s1 / s2), 1e-9)))
     try:
         # the V: gap arm (linear in t through the resolved peaks) against the thickness arm (delta, exponential, inside the clock)
-        ga, gb = np.polyfit([g[1] for g in good], [g[0] for g in good], 1); Tstar = -gb / ga if ga < 0 else float("nan")
-        m = (tt <= tt[last0]) & (tt >= 0.5 * tt[last0]) & (d > 0)
+        gfit = [g for g in good if g[0] >= 0.1]                                          # the gap arm above the wall only
+        ga, gb = np.polyfit([g[1] for g in gfit], [g[0] for g in gfit], 1); Tstar = -gb / ga if ga < 0 else float("nan")
+        tpeak = tt[int(np.argmax(H[:last0 + 1, 11 + SEPS.index(VSEP)]))]                  # the thickness arm before the merge: first real delta -> twist@VSEP peak
+        m = (tt <= tpeak) & (d > 2 * dx)
         if m.sum() >= 4 and np.isfinite(Tstar):
             c1, c0 = np.polyfit(tt[m], np.log(d[m]), 1)
             tq = np.linspace(tt[m][0], Tstar - 1e-3, 3000); gapq = ga * tq + gb; thq = np.exp(c0 + c1 * tq); iv = int(np.argmin(np.abs(gapq - thq)))
             jv = int(np.argmin(np.abs(tt - tq[iv]))); eln = H[jv, 6]
-            print("   V: gap = %.3f (%.2f - t), T* = %.2f; thickness e-fold %.2f; arms meet at t = %.2f, scale %.3f, sqrt(nu/s) there %.3f (%s the clock)" % (
-                -ga, Tstar, Tstar, -1 / c1 if c1 < 0 else float("inf"), tq[iv], thq[iv], eln, "inside" if tq[iv] <= tt[last0] else "beyond"))
+            print("   V: gap = %.3f (%.2f - t) from sep >= 0.1, T* = %.2f; thickness e-fold %.2f fitted on t in [%.2f, %.2f]; arms meet at t = %.2f, scale %.3f, sqrt(nu/s) there %.3f (%s the clock)" % (
+                -ga, Tstar, Tstar, -1 / c1 if c1 < 0 else float("inf"), tt[m][0], tt[m][-1], tq[iv], thq[iv], eln, "inside" if tq[iv] <= tt[last0] else "beyond"))
     except Exception as e:
         print("   V: analysis failed (%s)" % e)
 
