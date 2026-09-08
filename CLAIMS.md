@@ -365,6 +365,13 @@ narrowing, or the strip reading the sharpest feature rather than the sheets' med
 mechanism. The in-script fit did not run (it used delta_m, which reads the ridge width, 3x the strip; a defect).
 An earlier hand estimate that the model reproduced the merge times to 0.05 was wrong and is withdrawn.
 
+**C34 (registered 2026-09-08, before the run). The strain budget closes on the material sheets - no new term.** For
+a material sheet, d log|w|/dt = -(n.S.n) - (t.S.t) exactly: growth = thinning across + narrowing along. Measured at
+the tagged fluid at nu = 2e-3 and 1e-3 (320^3): the identity closes within 15% at both viscosities; the narrowing
+is ~0-0.1 at 2e-3 and ~0.2-0.3 at 1e-3, accounting for the sheets thinning faster than the compression alone at the
+lower viscosity (0.93-0.98 vs 0.75). Refuted by: a residual above 30% of the growth at 1e-3 - a thinning mechanism
+outside the strain budget, which would be a new term.
+
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.
 
