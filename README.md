@@ -1,6 +1,7 @@
-# zero-entropy-flow
+# navier-stokes-solution-search
 
-An instrument for the mechanism of singularity formation in incompressible flow, and an honest log of what it found.
+A search, not a solution: an instrument for the mechanism of singularity formation in incompressible flow, and an
+honest log of what it found. (Formerly `zero-entropy-flow`, after the solver's defining property.)
 
 One pseudo-spectral solver for the Navier-Stokes family in 1-D, 2-D and 3-D whose own numerical dissipation is zero
 (skew transport exactly energy-conserving on the grid, viscosity an exact per-mode contraction), a differentiable copy
