@@ -96,6 +96,7 @@ Each was registered with the observation that would refute it before its run; st
 | C33 | the compression across the sheet is a dipole gradient, s ~ g^-3; the seam is one slow variable | closure withdrawn (estimator); the model gives the merge scale from the measured strain, not yet its time |
 | C34 | the strain budget closes on the material sheets | **KILL** at 2e-3 and 1e-3, outcome (ii): viscous diffusion removes ~half the strain input; t.S.t has the opposite sign to the model |
 | C35 | the diffusive loss fraction falls with viscosity and does not vanish | **passes** on the fall: 0.48, 0.33, 0.07, 0.00 - it does vanish; the seam has an Euler limit |
+| C37 | the merging pair does not close into a toroidal (non-radiating) structure | **passes**: it seals (induction -> 0) but stays flat - poloidal circulation < 0.09, axis ratio 0.47 |
 | C36 | the seam rolls (Lundgren's spiral) | **KILL**: 0.06-0.11 turn at one-twentieth of the solid-body rate with the vorticity growing - the antiparallel pair is stabilised against K-H and merges flat |
 
 ## Theorems and propositions (`THEORY.md`)

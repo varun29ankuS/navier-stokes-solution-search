@@ -105,6 +105,12 @@ suppresses the roll that regularises a single sheet. Every safe result about she
 Lundgren's spiral) assumes the roll. A flat, non-rolling antiparallel pair whose thickness goes to zero is the open
 question of 3-D Euler, reached and not crossed.
 
+**And it seals (C37, 2026-09-09).** Past the merge the pair's induced field goes to exactly zero and stays: a bound,
+non-radiating object. Its shape is not a torus - the poloidal circulation stays under 8% of the material vorticity
+and the tagged cloud stays a slab (axis ratio 0.47). A flat self-screened pair, sealed by the same antiparallel
+cancellation that suppressed the roll, the curvature closure and the induced approach. One mechanism explains every
+negative result on this structure.
+
 ## Open, and not reachable here
 
 Whether the wave arrives at zero in Euler (the clock expires at t ~ 0.9 even at 256^3; the strip collapses

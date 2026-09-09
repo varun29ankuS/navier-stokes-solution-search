@@ -1,0 +1,29 @@
+toroidal seam test: N=96^3 nu=0.002 T=2.2 seed at 1.0; clock 2dx = 0.1309
+   t     |w|_m    pair induction   C_along(jump)   C_around/|w|_m   cloud axes (small/mid/large)   ratio   delta
+  0.00   (not yet seeded)   delta nan  <-- past the clock   (1s)
+  0.10   (not yet seeded)   delta 0.5798   (47s)
+  0.20   (not yet seeded)   delta 0.3909   (98s)
+  0.30   (not yet seeded)   delta 0.2953   (171s)
+  0.40   (not yet seeded)   delta 0.2358   (244s)
+  0.50   (not yet seeded)   delta 0.1944   (306s)
+  0.60   (not yet seeded)   delta 0.1629   (380s)
+  0.70   (not yet seeded)   delta 0.1359   (438s)
+  0.80   (not yet seeded)   delta 0.1095  <-- past the clock   (478s)
+  0.90   (not yet seeded)   delta 0.0919  <-- past the clock   (516s)
+seeded 2141 particles (A/B 635/1506), xi_ref = (-0.99, -0.03, -0.14)
+  1.00    11.64   -0.1505          1.2684          +0.0159           0.209 / 0.432 / 0.584          0.48    0.0907  <-- past the clock
+  1.10    11.98   -0.1143          1.1755          +0.0004           0.214 / 0.432 / 0.594          0.50    0.0997  <-- past the clock
+  1.20    11.97   -0.0659          1.0012          -0.0148           0.220 / 0.435 / 0.610          0.51    0.1160  <-- past the clock
+  1.30    11.78   -0.0035          0.8460          -0.0463           0.225 / 0.445 / 0.631          0.51    0.1323
+  1.40    11.67   +0.0166          0.6786          -0.0631           0.229 / 0.460 / 0.655          0.50    0.1286  <-- past the clock
+  1.50    11.44   +0.0161          0.5604          -0.0590           0.233 / 0.480 / 0.680          0.49    0.1075  <-- past the clock
+  1.60    10.66   -0.0026          0.5373          -0.0596           0.239 / 0.502 / 0.703          0.48    0.0937  <-- past the clock
+  1.70     9.65   -0.0034          0.5661          -0.0617           0.245 / 0.526 / 0.723          0.47    0.0886  <-- past the clock
+  1.80     9.01   -0.0021          0.6008          -0.0697           0.249 / 0.549 / 0.739          0.45    0.0857  <-- past the clock
+  1.90     8.36   +0.0051          0.6149          -0.0844           0.252 / 0.572 / 0.753          0.44    0.0847  <-- past the clock
+  2.00     7.94   +0.0049          0.5984          -0.0943           0.255 / 0.592 / 0.765          0.43    0.0830  <-- past the clock
+  2.10     7.59   +0.0005          0.5656          -0.0932           0.261 / 0.610 / 0.776          0.43    0.0816  <-- past the clock
+  2.20     7.34   -0.0018          0.5466          -0.0925           0.271 / 0.627 / 0.787          0.43    0.0797  <-- past the clock
+
+C37: pair induction -0.1505 at seed -> -0.0035 at the clock (dies below 20% at t = 1.30); C_around/|w|_m max inside the clock 0.046; cloud ratio 0.48 -> 0.51
+REGISTERED C37: between

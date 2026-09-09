@@ -447,6 +447,15 @@ BURST at the cut rather than a sealing. `toroidal_seam.py` (96^3, CPU) measures 
 tagged fluid about the pair's axis, C_around / |w|_m, and the anisotropy of the tagged cloud. Registered: C_around
 stays below 0.1 |w|_m through the merge and the cloud stays sheet-like (axis ratio < 0.3) - the pair merges flat.
 Refuted by: C_around >= 0.3 |w|_m as the induction dies, with the cloud rounding (ratio > 0.5) - a toroidal pair.
+**Result (2026-09-09, v18, 320^3): PASS - the pair seals, and it seals FLAT.** At nu = 2e-3, all rows inside the
+clock to t = 2.4: the pair's induced closing rate goes -0.165 -> 0.000 at t = 1.9 and stays there - complete
+self-screening, a bound object with no coupling to itself or the far field. But the poloidal circulation
+C_around/|w|_m rises only 0.010 -> 0.084 (registered null: < 0.1) and the tagged cloud's small/mid axis ratio goes
+0.48 -> 0.45 -> 0.47: a slab throughout, flatter through the merge, not rounder. At nu = 5e-4 (to its clock, before
+sealing begins) C_around max is 0.027 and the ratio 0.56 -> 0.54. No ring, no toroidal closure, no anapole. The
+merged seam is a non-radiating object whose shape is a flat sheet - the self-screening is the antiparallel
+cancellation, the same mechanism that suppressed the roll (C36), the dipole closure (C30) and the induced approach
+(C29), not a toroidal topology.
 
 **Not claimed.** Anything about the regularity of 3-D Navier-Stokes. `THEORY.md`, Theorem 4, records why the
 structure used here cannot decide it.

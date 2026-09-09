@@ -443,7 +443,7 @@ if LAGR and LAG.get("rows"):
     try:
         Tr = np.array(LAG.get("tor", []));
         if len(Tr) >= 3:
-            tt_ = Tr[:, 0]; ca_ = Tr[:, 1]; rt_ = Tr[:, 2]; okc = tt_ <= tl[last]
+            tt_ = Tr[:, 0]; ca_ = Tr[:, 1]; rt_ = Tr[:, 2]; okc = tt_ <= tl[last0] if 'last0' in dir() else np.ones(len(tt_), bool)
             ind = rs; i_die = np.where(okc & (np.abs(ind) < 0.2 * np.abs(ind[0])))[0]
             print("C37 toroidal closure: pair induction %+.4f at seed -> %+.4f at the clock (below 20%% at t = %s); C_around/|w|_m %+.3f at seed, max |.| inside the clock %.3f (at t = %.2f); cloud axis ratio small/mid %.2f -> %.2f" % (
                 ind[0], ind[okc][-1], ("%.2f" % tt_[i_die[0]]) if len(i_die) else "never", ca_[0], np.abs(ca_[okc]).max(), tt_[okc][int(np.argmax(np.abs(ca_[okc])))], rt_[0], rt_[okc][-1]))
